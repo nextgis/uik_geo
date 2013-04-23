@@ -20,5 +20,6 @@ def main(global_config, **settings):
     config.set_session_factory(session_factory)
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
+    config.add_route('uiks', '/uik/all')
     config.scan()
     return config.make_wsgi_app()
