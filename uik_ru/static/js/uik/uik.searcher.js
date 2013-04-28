@@ -109,12 +109,10 @@
 		},
 
 		updateSearch: function () {
-			var stops = UIK.viewmodel.stops,
+			var uiks = UIK.viewmodel.uiks,
 				$divSearchResults = UIK.view.$searchResults.find('div'),
 				html;
-			html = this.getHtmlForSearchResults('non_check', stops.non_block.non_check.elements)
-			html += this.getHtmlForSearchResults('check', stops.non_block.check.elements)
-			html += this.getHtmlForSearchResults('block', stops.block.elements)
+			html = this.getHtmlForSearchResults('non_check', uiks.elements);
 			$divSearchResults.empty().append(html);
 			$divSearchResults.find('a').on('click', function () {
 				var $li = $(this).parent();
@@ -122,13 +120,12 @@
 				$('#target').show().delay(1000).fadeOut(1000);
 			});
 			UIK.view.$searchResults.prop('class', 'active');
-//			UIK.view.$searchResults.addClass('active');
 		},
 
-		getHtmlForSearchResults: function (cssClass, stops) {
+		getHtmlForSearchResults: function (cssClass, uiks) {
 			return UIK.templates.searchResultsTemplate({
 				cssClass: cssClass,
-				stops: stops
+                uiks: uiks
 			});
 		}
 	});

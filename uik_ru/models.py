@@ -129,4 +129,3 @@ class UikVotingStation(Base):
     size = Column(Text, nullable=True)
     location = relationship('Location')
     location_id = Column('location_id', Integer, ForeignKey('location.id'))
-

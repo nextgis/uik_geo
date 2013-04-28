@@ -1,8 +1,8 @@
 (function ($, UIK) {
     $.extend(UIK.viewmodel, {
-        stopSelected: null,
-        stopSelectedId: null,
-        stops: null
+        uikSelected: null,
+        uikSelectedId: null,
+        uiks: null
     });
     $.extend(UIK.view, {
 
@@ -28,10 +28,10 @@
         },
 
         buildStopsLayers: function () {
-            var stopsGroup = new L.layerGroup(),
+            var uiksGroup = new L.layerGroup(),
                 editGroup = new L.layerGroup();
-            UIK.viewmodel.map.addLayer(stopsGroup);
-            UIK.viewmodel.mapLayers['stops'] = stopsGroup;
+            UIK.viewmodel.map.addLayer(uiksGroup);
+            UIK.viewmodel.mapLayers['uiks'] = uiksGroup;
 
             UIK.viewmodel.map.addLayer(editGroup);
             UIK.viewmodel.mapLayers['edit'] = editGroup;
@@ -39,7 +39,7 @@
 
         updateStops: function () {
             var validateZoom = this.validateZoom();
-            UIK.viewmodel.mapLayers.stops.clearLayers();
+            UIK.viewmodel.mapLayers.uiks.clearLayers();
             if (!validateZoom) { return; }
             UIK.view.$document.trigger('/sm/stops/startUpdate');
             this.updateUiksByAjax();
@@ -69,64 +69,64 @@
         renderUiks: function (data) {
             var mp = UIK.map,
                 vm = UIK.viewmodel,
-                stopsLayer = vm.mapLayers.stops,
+                uiksLayer = vm.mapLayers.uiks,
                 iconBlock = mp.getIcon('stop-block', 20),
                 iconEdit = mp.getIcon('stop-edit', 20),
-                iconCheck = mp.getIcon('stop-check', 20),
-                stopsIterable, stopsIterableLength, indexStop,
-                stop, marker, popupHtml,
-                htmlPopup = UIK.templates.stopPopupTemplate({ css: 'edit' }),
+                iconUik = mp.getIcon('stop-check', 20),
+                uiksIterable, uiksIterableLength, i,
+                uik, marker, popupHtml,
+                htmlPopup = UIK.templates.uikPopupTemplate({ css: 'edit' }),
                 context = this;
 
-            vm.stops = data.stops;
+            vm.uiks = data.uiks;
 
-            stopsIterable = data.stops.block.elements;
-            stopsIterableLength = data.stops.block.count;
-            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
-                stop = stopsIterable[indexStop];
-                marker = L.marker([stop.lat, stop.lon], {icon: iconBlock})
-                    .on('click', function (e) {
-                        var marker = e.target;
-                        UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                        context.buildStopPopup(marker.stop_id);
-                    });
-                marker['stop_id'] = stop.id;
-                stopsLayer.addLayer(marker);
-            }
+//            stopsIterable = data.stops.block.elements;
+//            stopsIterableLength = data.stops.block.count;
+//            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
+//                stop = stopsIterable[indexStop];
+//                marker = L.marker([stop.lat, stop.lon], {icon: iconBlock})
+//                    .on('click', function (e) {
+//                        var marker = e.target;
+//                        UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
+//                        context.buildStopPopup(marker.stop_id);
+//                    });
+//                marker['stop_id'] = stop.id;
+//                stopsLayer.addLayer(marker);
+//            }
+//
+//            stopsIterable = data.stops.non_block.non_check.elements;
+//            stopsIterableLength = data.stops.non_block.non_check.count;
+//            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
+//                stop = stopsIterable[indexStop];
+//                marker = L.marker([stop.lat, stop.lon], {icon: iconEdit})
+//                    .on('click', function (e) {
+//                        var marker = e.target;
+//                        UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
+//                        context.buildStopPopup(marker.stop_id);
+//                    });
+//                marker['stop_id'] = stop.id;
+//                stopsLayer.addLayer(marker);
+//            }
 
-            stopsIterable = data.stops.non_block.non_check.elements;
-            stopsIterableLength = data.stops.non_block.non_check.count;
-            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
-                stop = stopsIterable[indexStop];
-                marker = L.marker([stop.lat, stop.lon], {icon: iconEdit})
-                    .on('click', function (e) {
-                        var marker = e.target;
-                        UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                        context.buildStopPopup(marker.stop_id);
-                    });
-                marker['stop_id'] = stop.id;
-                stopsLayer.addLayer(marker);
-            }
 
-
-            stopsIterable = data.stops.non_block.check.elements;
-            stopsIterableLength = data.stops.non_block.check.count;
-            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
-                stop = stopsIterable[indexStop];
-                marker = L.marker([stop.lat, stop.lon], {icon: iconCheck}).on('click', function (e) {
+            uiksIterable = data.uiks.elements;
+            uiksIterableLength = data.uiks.count;
+            for (i = 0; i < uiksIterableLength; i += 1) {
+                uik = uiksIterable[i];
+                marker = L.marker([uik.lat, uik.lon], {icon: iconUik}).on('click', function (e) {
                     var marker = e.target;
                     UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                    context.buildStopPopup(marker.stop_id);
+                    context.buildStopPopup(marker.uik_id);
                 });
-                marker['stop_id'] = stop.id;
-                stopsLayer.addLayer(marker);
+                marker['uik_id'] = uik.id;
+                uiksLayer.addLayer(marker);
             }
         },
 
-        buildStopPopup: function (stopId) {
-            return $.getJSON(document['url_root'] + 'stop/' + stopId,function (data) {
+        buildUikPopup: function (uikId) {
+            return $.getJSON(document['url_root'] + 'uik/' + uikId,function (data) {
                 if (!UIK.viewmodel.editable) {
-                    UIK.viewmodel.stopSelected = data.stop;
+                    UIK.viewmodel.uikSelected = data.uik;
                 }
                 var helper = UIK.helpers,
                     html = UIK.templates.stopPopupInfoTemplate({

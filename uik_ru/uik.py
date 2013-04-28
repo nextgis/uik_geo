@@ -24,11 +24,11 @@ def get_all(context, request):
                 bbox['_southWest']['lng'], bbox['_southWest']['lat'])
 
     # todo need add other clauses
-    # clauses = [].append(UikVotingStation.location.point.within(box_geom))
+    clauses = [Location.point.within(box_geom)]
 
     uiks_from_db = session.query(UikVotingStation, Location.point.x, Location.point.y) \
                           .join(UikVotingStation.location) \
-                          .filter(Location.point.within(box_geom)) \
+                          .filter(*clauses) \
                           .all()
 
     uiks_for_json = [{'id': uik[0].id, 'name': uik[0].name, 'lon': uik[1], 'lat': uik[2]} for uik in uiks_from_db]

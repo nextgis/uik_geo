@@ -14,7 +14,7 @@ UIK.templates = {};
 
 	UIK.loader = {};
 	$.extend(UIK.loader, {
-		templates: ['osmPopupTemplate', 'stopPopupTemplate', 'stopPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate'],
+		templates: ['uikPopupTemplate', 'uikPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate'],
 
 		init: function () {
 			this.setDomOptions();
