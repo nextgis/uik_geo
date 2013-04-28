@@ -4,7 +4,9 @@ __author__ = 'karavanjo'
 from pyramid.view import view_config
 from pyramid.response import Response
 
-from models import DBSession, Uik
+from sqlalchemy.orm import joinedload
+
+from models import DBSession, UikVotingStation, Location
 
 import json
 
@@ -22,12 +24,15 @@ def get_all(context, request):
                 bbox['_southWest']['lng'], bbox['_southWest']['lat'])
 
     # todo need add other clauses
-    clauses = [Uik.geom.within(box_geom)]
+    # clauses = [].append(UikVotingStation.location.point.within(box_geom))
 
-    uiks_from_db = session.query(Uik, Uik.point.x, Uik.point.y) \
-                          .filter(*clauses) \
+    uiks_from_db = session.query(UikVotingStation, Location.point.x, Location.point.y) \
+                          .join(UikVotingStation.location) \
+                          .filter(Location.point.within(box_geom)) \
                           .all()
 
-    uiks_result = {'uiks': {'count': len(uiks_from_db), 'elements': uiks_from_db}}
+    uiks_for_json = [{'id': uik[0].id, 'name': uik[0].name, 'lon': uik[1], 'lat': uik[2]} for uik in uiks_from_db]
+
+    uiks_result = {'uiks': {'count': len(uiks_from_db), 'elements': uiks_for_json}}
 
     return Response(json.dumps(uiks_result))

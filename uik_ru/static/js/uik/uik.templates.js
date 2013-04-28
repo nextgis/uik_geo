@@ -1,6 +1,6 @@
-(function ($) {
-	$.templates = {};
-	$.extend($.templates, {
+(function ($, UIK) {
+	UIK.templates = {};
+	$.extend(UIK.templates, {
 		// Mustache.compile('')
 		osmPopupTemplate: Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>'),
 		searchResultsTemplate: Mustache.compile('<ul class="{{cssClass}}">{{#stops}}<li data-lat={{lat}} data-lon={{lon}}>{{id}} {{name}} <a></a></li>{{/stops}}</ul>'),
@@ -8,4 +8,4 @@
 		stopPopupTemplate: Mustache.compile('<div id="stop-popup" class="{{css}} loader"></div>'),
 		userLogsTemplate: Mustache.compile('<table class="table table-striped logs"><tr><th>Пользователь</th><th>Кол-во остановок</th></tr>{{#user_logs}}<tr><td>{{user_name}}</td><td class="stop">{{count_stops}}</td></tr>{{/user_logs}}</table>')
 	});
-})(jQuery);
+})(jQuery, UIK);

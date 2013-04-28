@@ -1,16 +1,16 @@
-(function ($) {
-	$.extend($.viewmodel, {
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		editorCollapsed: false,
 		editable: false,
 		routeTypeSelected: null
 	});
 
-	$.extend($.view, {
+	$.extend(UIK.view, {
 		$editorContainer: null
 	});
 
-	$.sm.editor = {};
-	$.extend($.sm.editor, {
+	UIK.editor = {};
+	$.extend(UIK.editor, {
 		regex: { url : new RegExp("(https?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]") },
 
 		init: function () {
@@ -23,14 +23,14 @@
 
 		bindEvents: function () {
 			var context = this;
-			$.view.$editorContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
-				$.viewmodel.editorCollapsed = !$.viewmodel.editorCollapsed;
-				$.view.$body.toggleClass('editor-collapsed', context.editorCollapsed);
+			UIK.view.$editorContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
+				UIK.viewmodel.editorCollapsed = !UIK.viewmodel.editorCollapsed;
+				UIK.view.$body.toggleClass('editor-collapsed', context.editorCollapsed);
 			});
 			$('#pan_link').off('input').on('input', function () {
 				context.validateLink();
 			});
-			$.view.$document.on('/sm/editor/startEdit', function (e) {
+			UIK.view.$document.on('/sm/editor/startEdit', function (e) {
 				context.startAjaxEdition();
 			});
 			$('#save').off('click').on('click', function (e) {
@@ -43,12 +43,12 @@
 			});
 			$('#route_type').off('change').on('change', function (e) {
 				var newRouteType = e.target.value;
-				$('#route_type_' + $.viewmodel.routeTypeSelected).hide();
+				$('#route_type_' + UIK.viewmodel.routeTypeSelected).hide();
 				$('#route_type_' + newRouteType).show();
-				$.viewmodel.routeTypeSelected = newRouteType;
+				UIK.viewmodel.routeTypeSelected = newRouteType;
 			});
 			$('#add-route').off('click').on('click', function (e) {
-				var $selectedOption = $('#route_type_' + $.viewmodel.routeTypeSelected).find(":selected");
+				var $selectedOption = $('#route_type_' + UIK.viewmodel.routeTypeSelected).find(":selected");
 				context.addRoute($selectedOption.val(), $selectedOption.text());
 			});
 			$('#editorForm').find(':checkbox').off('click').on('click', function () {
@@ -63,7 +63,7 @@
 		},
 
 		setDomOptions: function () {
-			$.view.$editorContainer = $('#editorContainer');
+			UIK.view.$editorContainer = $('#editorContainer');
 		},
 
 		buildTags: function () {
@@ -81,13 +81,13 @@
 
 		buildEditLayer: function () {
 			var editedLayer = L.layerGroup();
-			$.viewmodel.mapLayers['edit'] = $.viewmodel.map.addLayer(editedLayer);
+			UIK.viewmodel.mapLayers['edit'] = UIK.viewmodel.map.addLayer(editedLayer);
 		},
 
 		buildRoutesSelector: function () {
 			var route_type_selected = $('#route_type').find(":selected").val();
 			$('#route_type_' + route_type_selected).show();
-			$.viewmodel.routeTypeSelected = route_type_selected;
+			UIK.viewmodel.routeTypeSelected = route_type_selected;
 		},
 
 		validateLink: function () {
@@ -108,7 +108,7 @@
 				data_serialized = frm.serializeArray(),
 				i = 0,
 				ds_length = data_serialized.length,
-				stop_selected = $.viewmodel.stopSelected,
+				stop_selected = UIK.viewmodel.stopSelected,
 				url = document['url_root'] + 'stop/' + stop_selected.id,
 				stop = { 'id' :  stop_selected.id },
 				name;
@@ -167,16 +167,16 @@
 			var context = this;
 			$.ajax({
 				type: 'GET',
-				url: document['url_root'] + 'stop/block/' + $.viewmodel.stopSelected.id
+				url: document['url_root'] + 'stop/block/' + UIK.viewmodel.stopSelected.id
 			}).done(function () {
 					context.startEdit();
 				});
 		},
 
 		startEdit: function () {
-			var icon = $.sm.helpers.getIcon('stop-editable', 25),
-				vm = $.viewmodel,
-				v = $.view,
+			var icon = UIK.helpers.getIcon('stop-editable', 25),
+				vm = UIK.viewmodel,
+				v = UIK.view,
 				marker;
 			v.$body.addClass('editable');
 			v.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
@@ -202,7 +202,7 @@
 		},
 
 		bindEventsForTypes: function () {
-			var v = $.view;
+			var v = UIK.view;
 			$('#stype_0').off('change').on('change', function () {
 				if (this.checked) {
 					$('#types .parameters input').not('#stype_0').prop('checked', false).not('#other_stype').prop('disabled', true);
@@ -227,7 +227,7 @@
 		},
 
 		fillEditor: function (stop) {
-			var helpers = $.sm.helpers;
+			var helpers = UIK.helpers;
 			$('#name').val(stop.name);
 			$('#id').val(stop.id).attr('disabled', 'disabled');
 			$('#lat').val(stop.geom.lat);
@@ -273,7 +273,7 @@
 		},
 
 		fillRoutes: function (routes) {
-			var helpers = $.sm.helpers,
+			var helpers = UIK.helpers,
 				routes_sorted = routes.sort(helpers.sortByFields('route_type_id', 'name')),
 				i = 0,
 				routesCount= routes_sorted.length,
@@ -284,11 +284,11 @@
 				$('#routes').addTag(routes_sorted[i].name, { 'css_class' : 'tag type-id-' + routes_sorted[i].route_type_id});
 			}
 
-			$.viewmodel.stopSelected['routes'] = routesEditable;
+			UIK.viewmodel.stopSelected['routes'] = routesEditable;
 		},
 
 		addRoute: function (id, name) {
-			var vm = $.viewmodel,
+			var vm = UIK.viewmodel,
 				routeTypeId = vm.routeTypeSelected,
 				routes = vm.stopSelected.routes;
 			if (routes.ids[id]) {
@@ -305,7 +305,7 @@
 		},
 
 		removeRoute: function (name) {
-			var vm = $.viewmodel,
+			var vm = UIK.viewmodel,
 				routes = vm.stopSelected.routes,
 				removedRoute,
 				i = 0,
@@ -325,7 +325,7 @@
 			var i = 0,
 				routesCount= routes.length;
 
-			routes = routes.sort($.sm.helpers.sortByFields('route_type_id', 'name'));
+			routes = routes.sort(UIK.helpers.sortByFields('route_type_id', 'name'));
 			this.clearUIRoutes();
 
 			for (i; i < routesCount; i += 1) {
@@ -341,16 +341,16 @@
 			var context = this;
 			$.ajax({
 				type: 'GET',
-				url: document['url_root'] + 'stop/unblock/' + $.viewmodel.stopSelected.id
+				url: document['url_root'] + 'stop/unblock/' + UIK.viewmodel.stopSelected.id
 			}).done(function () {
 					context.finishEditing();
 				});
 		},
 
 		finishEditing: function () {
-			var vd = $.view.$document,
-				vm = $.viewmodel,
-				v = $.view;
+			var vd = UIK.view.$document,
+				vm = UIK.viewmodel,
+				v = UIK.view;
 			vm.map.closePopup();
 			vm.mapLayers['edit'].clearLayers();
 			vm.editable = false;
@@ -361,8 +361,8 @@
 			v.$editorContainer.find('form').addClass('disabled');
 			$('#auto_link').prop('href', '');
 			$('#routes').importTags('');
-			$.view.$document.trigger('/sm/map/updateAllLayers');
+			UIK.view.$document.trigger('/sm/map/updateAllLayers');
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);
 

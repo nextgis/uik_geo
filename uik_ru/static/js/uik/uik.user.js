@@ -1,24 +1,24 @@
-(function ($) {
-	$.extend($.viewmodel, {
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		isAuth: false
 	});
-	$.extend($.view, {
+	$.extend(UIK.view, {
 		$userContainer: null,
 		$signInForm: null,
 		$signOutForm: null
 	});
-	$.sm.user = {};
-	$.extend($.sm.user, {
+	UIK.user = {};
+	$.extend(UIK.user, {
 		init: function () {
 			this.setDomOptions();
 			this.bindEvents();
 		},
 
 		setDomOptions: function () {
-			$.view.$userContainer = $('#userContainer');
-			$.view.$signInForm = $('#signInForm');
-			$.view.$signOutForm = $('#signOutForm');
-			if ($.view.$userContainer.hasClass('inner')) { $.viewmodel.isAuth = true; }
+			UIK.view.$userContainer = $('#userContainer');
+			UIK.view.$signInForm = $('#signInForm');
+			UIK.view.$signOutForm = $('#signOutForm');
+			if (UIK.view.$userContainer.hasClass('inner')) { UIK.viewmodel.isAuth = true; }
 		},
 
 		bindEvents: function () {
@@ -30,23 +30,23 @@
 
 		renderLogs: function () {
 			var url = document['url_root'] + 'logs';
-			$.view.$document.trigger('/sm/common/setMainLoad');
+			UIK.view.$document.trigger('/sm/common/setMainLoad');
 			$.ajax({
 				type: "GET",
 				url: url,
 				dataType: 'json',
 				success: function(data) {
-					var html = $.templates.userLogsTemplate({
+					var html = UIK.templates.userLogsTemplate({
 						user_logs: data.stops_by_users,
 						count_all: data.count.all,
 						count_editable: data.count.editable,
 						percent: (data.count.editable / data.count.all * 100).toFixed(2)
 					});
-					$.view.$body.removeClass('loader');
-					$.view.$document.trigger('/sm/common/openPopup', ['Статистика пользователей', html]);
+					UIK.view.$body.removeClass('loader');
+					UIK.view.$document.trigger('/sm/common/openPopup', ['Статистика пользователей', html]);
 				}
 			});
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);
 

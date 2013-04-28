@@ -1,15 +1,15 @@
-(function ($) {
-	$.extend($.viewmodel, {
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		bodyPanelsVisible: [true, true, true, true]
 	});
 
-	$.extend($.view, {
+	$.extend(UIK.view, {
 		$body: null,
 		$popup: null
 	});
 
-	$.sm.common = {};
-	$.extend($.sm.common, {
+	UIK.common = {};
+	$.extend(UIK.common, {
 		init: function () {
 			this.setDomOptions();
 			this.bindEvents();
@@ -17,19 +17,19 @@
 
 		bindEvents: function () {
 			var context = this;
-			$.view.$document.on('/sm/common/openPopup', function (e, header, contentPopup) {
+			UIK.view.$document.on('/sm/common/openPopup', function (e, header, contentPopup) {
 				context.openPopup(header, contentPopup);
 			});
-			$.view.$popup.find('a.close').off('click').on('click', function () {
-				$.view.$body.removeClass('popup');
+			UIK.view.$popup.find('a.close').off('click').on('click', function () {
+				UIK.view.$body.removeClass('popup');
 			});
-			$.view.$document.on('/sm/common/setMainLoad', function () {
-				$.view.$body.addClass('loader');
+			UIK.view.$document.on('/sm/common/setMainLoad', function () {
+				UIK.view.$body.addClass('loader');
 			});
 		},
 
 		openPopup: function (header, content) {
-			var $popup = $.view.$popup,
+			var $popup = UIK.view.$popup,
 				marginLeft, marginTop;
 			$popup.find('div.header').text(header);
 			$popup.find('div.content').html(content);
@@ -39,7 +39,7 @@
 				'margin-left' : -marginLeft + 'px',
 				'margin-top' :  -marginTop  + 'px'
 			});
-			$.view.$body.addClass('popup');
+			UIK.view.$body.addClass('popup');
 		},
 
 		closePopup: function () {
@@ -47,8 +47,8 @@
 		},
 
 		setDomOptions: function () {
-			$.view.$body = $('body');
-			$.view.$popup = $('#popup');
+			UIK.view.$body = $('body');
+			UIK.view.$popup = $('#popup');
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);

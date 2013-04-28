@@ -42,7 +42,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.osm.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.stops.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
 </head>
 <body class="searcher-collapsed loading">

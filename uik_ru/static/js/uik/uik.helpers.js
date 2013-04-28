@@ -1,6 +1,6 @@
-(function ($) {
-	$.sm.helpers = {};
-	$.extend($.sm.helpers, {
+(function ($, UIK) {
+	UIK.helpers = {};
+	$.extend(UIK.helpers, {
 		getIcon: function (cssClass, iconSize) {
 			return L.divIcon({
 				className: cssClass,
@@ -87,4 +87,4 @@
 			}
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);

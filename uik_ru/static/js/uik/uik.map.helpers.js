@@ -1,5 +1,5 @@
-(function ($) {
-	$.extend($.sm.map, {
+(function ($, UIK) {
+	$.extend(UIK.map, {
 		getIcon: function (cssClass, iconSize) {
 			return L.divIcon({
 				className: cssClass,
@@ -9,4 +9,4 @@
 			});
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);

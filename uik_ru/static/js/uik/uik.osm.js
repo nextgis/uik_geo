@@ -1,12 +1,12 @@
-(function ($) {
-	$.extend($.viewmodel, {
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		osmStops: {}
 	});
-	$.extend($.view, {
+	$.extend(UIK.view, {
 
 	});
-	$.sm.osm = {};
-	$.extend($.sm.osm, {
+	UIK.osm = {};
+	$.extend(UIK.osm, {
 		osmMaxClusterRadius: 80,
 
 		init: function () {
@@ -18,7 +18,7 @@
 
 		bindEvents: function () {
 			var context = this;
-			$.view.$document.on('/sm/osm/updateOsmLayer', function () {
+			UIK.view.$document.on('/sm/osm/updateOsmLayer', function () {
 				context.updateOsmLayer();
 			});
 		},
@@ -29,49 +29,49 @@
 
 		buildOsmStopsLayer: function () {
 			var osmStopsLayerGroup  = new L.layerGroup();
-			$.viewmodel.map.addLayer(osmStopsLayerGroup);
-			$.viewmodel.mapLayers['osmStops'] = osmStopsLayerGroup;
+			UIK.viewmodel.map.addLayer(osmStopsLayerGroup);
+			UIK.viewmodel.mapLayers['osmStops'] = osmStopsLayerGroup;
 		},
 
 		updateOsmLayer: function () {
 			var validateZoom = this.validateZoom();
-			$.viewmodel.mapLayers.osmStops.clearLayers();
+			UIK.viewmodel.mapLayers.osmStops.clearLayers();
 			if (!validateZoom) { return; }
 
 			this.updateStopsFromXapi();
 		},
 
 		offOsmLayer: function () {
-			$.viewmodel.mapLayers.osmStops.clearLayers();
+			UIK.viewmodel.mapLayers.osmStops.clearLayers();
 		},
 
 		onOsmLayer: function () {
 			this.updateOsmLayer(false);
 		},
 
-		renderStops: function (overpassStops) {
+		renderUiks: function (overpassStops) {
 			var stops = overpassStops.elements,
-				vm = $.viewmodel,
+				vm = UIK.viewmodel,
 				osmLayer = vm.mapLayers.osmStops,
-				icon = $.sm.map.getIcon('osm-bus-stop', 16),
+				icon = UIK.map.getIcon('osm-bus-stop', 16),
 				marker;
 			vm.osmStops = {};
-			popupHtml = $.templates.stopPopupTemplate({
+			popupHtml = UIK.templates.stopPopupTemplate({
 				css: 'block'
 			});
 			for (var i = 0, stopsCount = stops.length; i < stopsCount; i++) {
 				vm.osmStops[stops[i].id] = stops[i];
 				marker = L.marker([stops[i].lat, stops[i].lon], {icon:icon})
 					.on('click', function (e) {
-						$.view.$document.trigger('/sm/map/MarkerClick');
+						UIK.view.$document.trigger('/sm/map/MarkerClick');
 						var marker = e.target,
-							stop = $.viewmodel.osmStops[marker.id_osm],
-							html = $.templates.osmPopupTemplate({
-								tags: $.sm.helpers.hashToArrayKeyValues(stop.tags),
+							stop = UIK.viewmodel.osmStops[marker.id_osm],
+							html = UIK.templates.osmPopupTemplate({
+								tags: UIK.helpers.hashToArrayKeyValues(stop.tags),
 								id: stop.id,
 								link: 'http://www.openstreetmap.org/browse/node/' + stop.id
 							});
-							$.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), html]);
+							UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), html]);
 					});
 				marker['id_osm'] = stops[i].id;
 				osmLayer.addLayer(marker);
@@ -80,12 +80,12 @@
 
 		updateStopsFromXapi: function () {
 			var context = this,
-				url = context.getApiUrl($.viewmodel.map.getBounds());
+				url = context.getApiUrl(UIK.viewmodel.map.getBounds());
 			$.ajax({
 					type: "GET",
 					url: url,
 					dataType: 'json',
-					success: context.renderStops,
+					success: context.renderUiks,
 					context: context
 				});
 		},
@@ -102,11 +102,11 @@
 		},
 
 		validateZoom: function () {
-			if ($.viewmodel.map.getZoom() < 14) {
+			if (UIK.viewmodel.map.getZoom() < 14) {
 				return false;
 			}
 			return true;
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);
 

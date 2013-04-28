@@ -98,7 +98,7 @@ class SubArea(Base):
     box = GeometryColumn(Polygon(2))
 
 
-class Uik(Base):
+class Location(Base):
     __tablename__ = 'location'
 
     id = Column(Integer, Sequence('location_id_seq'), primary_key=True)
@@ -127,6 +127,6 @@ class UikVotingStation(Base):
     address = Column(Text, index=True, nullable=True)
     is_standalone = Column(Boolean)
     size = Column(Text, nullable=True)
-    uik = relationship('Uik')
-    uik_id = Column('location_id', Integer, ForeignKey('location.id'))
+    location = relationship('Location')
+    location_id = Column('location_id', Integer, ForeignKey('location.id'))
 

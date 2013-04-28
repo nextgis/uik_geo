@@ -1,15 +1,15 @@
-(function ($) {
-	$.extend($.viewmodel, {
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		map: null,
 		mapLayers: {},
 		isPopupOpened: false
 	});
-	$.extend($.view, {
+	$.extend(UIK.view, {
 		$map: null
 	});
 
-	$.sm.map = {};
-	$.extend($.sm.map, {
+	UIK.map = {};
+	$.extend(UIK.map, {
 		init: function () {
 			this.buildMap();
 			this.buildLayerManager();
@@ -18,25 +18,25 @@
 
 		bindEvents: function () {
 			var context = this;
-			$.viewmodel.map.on('moveend', function (e) {
+			UIK.viewmodel.map.on('moveend', function (e) {
 				var map = e.target;
-				$.view.$document.trigger('/sm/map/updateAllLayers');
+				UIK.view.$document.trigger('/sm/map/updateAllLayers');
 				context.setLastExtent(map.getCenter(), map.getZoom());
 			});
-			$.view.$document.on('/sm/map/updateAllLayers', function () {
-				$.view.$document.trigger('/sm/stops/updateStops');
-				$.view.$document.trigger('/sm/osm/updateOsmLayer');
+			UIK.view.$document.on('/sm/map/updateAllLayers', function () {
+				UIK.view.$document.trigger('/sm/stops/updateStops');
+				UIK.view.$document.trigger('/sm/osm/updateOsmLayer');
 			});
-			$.view.$document.on('/sm/map/openPopup', function (e, latlng, html) {
-				var vm = $.viewmodel,
+			UIK.view.$document.on('/sm/map/openPopup', function (e, latlng, html) {
+				var vm = UIK.viewmodel,
 					selectLayer = vm.mapLayers.select,
 					map = vm.map;
 				map.panTo(latlng);
 				map.openPopup(L.popup().setLatLng(latlng).setContent(html));
 
 			});
-			$.viewmodel.map.on('popupclose', function () {
-				var vm = $.viewmodel;
+			UIK.viewmodel.map.on('popupclose', function () {
+				var vm = UIK.viewmodel;
 				vm.isPopupOpened = false;
 				vm.mapLayers.select.clearLayers();
 			});
@@ -44,10 +44,10 @@
 
 		buildMap: function () {
 			var context = this,
-				vm = $.viewmodel,
+				vm = UIK.viewmodel,
 				selectLayer = L.layerGroup(),
 				lastExtent = this.getLastExtent();
-			$.view.$map = $('#map');
+			UIK.view.$map = $('#map');
 			vm.map = new L.Map('map');
 			L.control.scale().addTo(vm.map);
 
@@ -79,5 +79,5 @@
 			$.cookie('map.zoom', zoom, { expires: 7, path: '/' });
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);
 

@@ -1,18 +1,19 @@
-(function ($) {
-	$.sm = {};
-	$.viewmodel = {};
-	$.view = {};
-	$.templates = {};
+var UIK = {};
+UIK.viewmodel = {};
+UIK.view = {};
+UIK.templates = {};
 
-	$.extend($.viewmodel, {
+
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		version : null
 	});
-	$.extend($.view, {
+	$.extend(UIK.view, {
 		$document: null
 	});
 
-	$.sm.loader = {};
-	$.extend($.sm.loader, {
+	UIK.loader = {};
+	$.extend(UIK.loader, {
 		templates: ['osmPopupTemplate', 'stopPopupTemplate', 'stopPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate'],
 
 		init: function () {
@@ -21,21 +22,21 @@
 		},
 
 		initModules: function () {
-			try {
-				$.sm.common.init();
-				$.sm.map.init();
-				$.sm.searcher.init();
-//				$.sm.editor.init();
-//				$.sm.osm.init();
-				$.sm.user.init();
-				$.sm.stops.init();
-			} catch (e) {
-				alert(e);
-			}
+//			try {
+				UIK.common.init();
+				UIK.map.init();
+				UIK.searcher.init();
+//				UIK.editor.init();
+//				UIK.osm.init();
+				UIK.user.init();
+				UIK.uiks.init();
+//			} catch (e) {
+//				alert(e);
+//			}
 		},
 
 		setDomOptions: function () {
-			$.view.$document = $(document);
+			UIK.view.$document = $(document);
 		},
 
 		compileTemplates: function () {
@@ -45,24 +46,27 @@
 				deferreds.push($.get(document['url_root'] + 'static/js/templates/' + this.templates[templateIndex] + '.htm', function (doc, state, response) {
 					htmlTemplates.push({
 						'name' : this.url.substr((this.url.lastIndexOf("/") + 1)).replace('.htm', ''),
-						'html' : response.responseText });
+						'html' : response.responseText
+                    });
 				}));
 			}
 			$.when.apply(null, deferreds).done(function () {
 				for (templateIndex = 0; templateIndex < templatesCount; templateIndex++) {
 					var name = htmlTemplates[templateIndex].name;
-					$.templates[name] = Mustache.compile(htmlTemplates[templateIndex].html);
+					UIK.templates[name] = Mustache.compile(htmlTemplates[templateIndex].html);
 				}
-				window.setTimeout(function() {
+				window.setTimeout(function () {
 					context.initModules();
-					$('img').imagesLoaded( function () {
-						$.view.$body.removeClass('loading');
+					$('img').imagesLoaded(function () {
+						UIK.view.$body.removeClass('loading');
 					});
 				}, 1000);
 			});
 		}
 	});
+
 	$(document).ready(function () {
-		$.sm.loader.init();
+		UIK.loader.init();
 	});
-})(jQuery);
+
+})(jQuery, UIK);

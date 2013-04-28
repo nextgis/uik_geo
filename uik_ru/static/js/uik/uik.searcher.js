@@ -1,17 +1,17 @@
-(function ($) {
-	$.extend($.viewmodel, {
+(function ($, UIK) {
+	$.extend(UIK.viewmodel, {
 		searcherCollapsed: false,
 		filter: {'name' : ''},
 		isFilterValidated: true
 	});
-	$.extend($.view, {
+	$.extend(UIK.view, {
 		$searchContainer: null,
 		$filterName: null,
 		$searchButton: null,
 		$searchResults: null
 	});
-	$.sm.searcher = {};
-	$.extend($.sm.searcher, {
+	UIK.searcher = {};
+	$.extend(UIK.searcher, {
 		min_characters_name: 3,
 
 		init: function () {
@@ -21,22 +21,22 @@
 
 		bindEvents: function () {
 			var context = this,
-				v = $.view;
+				v = UIK.view;
 			v.$searchContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
-				$.viewmodel.searcherCollapsed = !$.viewmodel.searcherCollapsed;
-				$.view.$body.toggleClass('searcher-collapsed', context.searcherCollapsed);
+				UIK.viewmodel.searcherCollapsed = !UIK.viewmodel.searcherCollapsed;
+				UIK.view.$body.toggleClass('searcher-collapsed', context.searcherCollapsed);
 			});
 			v.$filterName.off('keyup').on('keyup', function (e) {
 				context.keyUpHandler(e);
 			});
 			$('#filter_name').off('focus').on('focus', function () {
-				$.view.$searchResults.prop('class', 'description');
+				UIK.view.$searchResults.prop('class', 'description');
 			});
 			$('#searchResults p.description').off('click').on('click', function () {
-				$.view.$searchResults.prop('class', 'active');
+				UIK.view.$searchResults.prop('class', 'active');
 			});
 			v.$searchButton.off('click').on('click', function () {
-				if ($.viewmodel.isFilterValidated) {
+				if (UIK.viewmodel.isFilterValidated) {
 					context.applyFilter();
 				}
 			});
@@ -44,19 +44,19 @@
 				context.updateSearch();
 			});
 			v.$document.on('/sm/stops/startUpdate', function () {
-				var v = $.view;
+				var v = UIK.view;
 				v.$searchResults.prop('class', 'update');
 				v.$filterName.prop('disabled', true);
 			});
 			v.$document.on('/sm/stops/endUpdate', function () {
-				var v = $.view;
+				var v = UIK.view;
 				v.$searchResults.prop('class', 'active');
 				v.$filterName.prop('disabled', false);
 			});
 		},
 
 		setDomOptions: function () {
-			var v = $.view;
+			var v = UIK.view;
 			v.$searchContainer = $('#searchContainer');
 			v.$filterName = $('#filter_name');
 			v.$searchButton = $('#search');
@@ -72,8 +72,8 @@
 
 		validateSearch: function () {
 			var min_characters_name = this.min_characters_name,
-				v = $.view,
-				vm = $.viewmodel,
+				v = UIK.view,
+				vm = UIK.viewmodel,
 				name = v.$filterName.val();
 
 			if (name.length <= min_characters_name && name !== '') {
@@ -88,29 +88,29 @@
 				vm.isFilterValidated = false;
 			}
 
-			$.view.$searchButton.toggleClass('active', $.viewmodel.isFilterValidated);
+			UIK.view.$searchButton.toggleClass('active', UIK.viewmodel.isFilterValidated);
 		},
 
 		applyFilter: function () {
-			if ($.viewmodel.isFilterValidated) {
+			if (UIK.viewmodel.isFilterValidated) {
 				this.updateFilter();
 				this.search();
 			}
 		},
 
 		updateFilter: function () {
-			var $v = $.view,
-				vm = $.viewmodel;
+			var $v = UIK.view,
+				vm = UIK.viewmodel;
 			vm.filter.name = $v.$filterName.val();
 		},
 
 		search: function () {
-			$.view.$document.trigger('/sm/stops/updateStops');
+			UIK.view.$document.trigger('/sm/stops/updateStops');
 		},
 
 		updateSearch: function () {
-			var stops = $.viewmodel.stops,
-				$divSearchResults = $.view.$searchResults.find('div'),
+			var stops = UIK.viewmodel.stops,
+				$divSearchResults = UIK.view.$searchResults.find('div'),
 				html;
 			html = this.getHtmlForSearchResults('non_check', stops.non_block.non_check.elements)
 			html += this.getHtmlForSearchResults('check', stops.non_block.check.elements)
@@ -118,19 +118,19 @@
 			$divSearchResults.empty().append(html);
 			$divSearchResults.find('a').on('click', function () {
 				var $li = $(this).parent();
-				$.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
+				UIK.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
 				$('#target').show().delay(1000).fadeOut(1000);
 			});
-			$.view.$searchResults.prop('class', 'active');
-//			$.view.$searchResults.addClass('active');
+			UIK.view.$searchResults.prop('class', 'active');
+//			UIK.view.$searchResults.addClass('active');
 		},
 
 		getHtmlForSearchResults: function (cssClass, stops) {
-			return $.templates.searchResultsTemplate({
+			return UIK.templates.searchResultsTemplate({
 				cssClass: cssClass,
 				stops: stops
 			});
 		}
 	});
-})(jQuery);
+})(jQuery, UIK);
 
