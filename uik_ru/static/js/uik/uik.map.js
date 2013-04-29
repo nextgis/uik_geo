@@ -25,7 +25,6 @@
 			});
 			UIK.view.$document.on('/sm/map/updateAllLayers', function () {
 				UIK.view.$document.trigger('/sm/stops/updateStops');
-				UIK.view.$document.trigger('/sm/osm/updateOsmLayer');
 			});
 			UIK.view.$document.on('/sm/map/openPopup', function (e, latlng, html) {
 				var vm = UIK.viewmodel,

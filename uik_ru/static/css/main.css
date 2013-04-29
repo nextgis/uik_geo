@@ -23,10 +23,6 @@ body.loading div.loading {
 	text-align: center;
 }
 
-body.loading div.loading img {
-	margin-top: 70px;
-}
-
 body.loading div.loading span {
 	width: 200px;
 	height: 300px;
@@ -280,17 +276,17 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 	margin: 5px;
 }
 
-#searchContainer input.input-name {
+#searchContainer input.input-address {
 	width: 117px;
 	margin-left: 4px;
 }
 
-#searchContainer input.input-id {
+#searchContainer input.input-name {
 	width: 95px;
 }
 
 #filter_name.invalid,
-#filter_id.invalid {
+#filter_address.invalid {
 	border: 1px solid red;
 }
 
@@ -336,7 +332,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 	margin: 5px;
 	border: 1px solid #AFAFAF;
 	position: absolute;
-	top: 95px;
+	top: 72px;
 	bottom: 5px;
 	left: 5px;
 	right: 5px;

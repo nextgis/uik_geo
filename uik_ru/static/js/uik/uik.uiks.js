@@ -28,7 +28,7 @@
         },
 
         buildStopsLayers: function () {
-            var uiksGroup = new L.layerGroup(),
+            var uiksGroup = new L.MarkerClusterGroup(),
                 editGroup = new L.layerGroup();
             UIK.viewmodel.map.addLayer(uiksGroup);
             UIK.viewmodel.mapLayers['uiks'] = uiksGroup;
@@ -109,6 +109,15 @@
 //            }
 
 
+//            var markers = new L.MarkerClusterGroup({
+//                maxClusterRadius: 120,
+//                iconCreateFunction: function (cluster) {
+//                    return new L.DivIcon({ html: cluster.getChildCount(), className: 'mycluster', iconSize: new L.Point(40, 40) });
+//                },
+//                //Disable all of the defaults:
+//                spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
+//            });
+
             uiksIterable = data.uiks.elements;
             uiksIterableLength = data.uiks.count;
             for (i = 0; i < uiksIterableLength; i += 1) {
@@ -116,7 +125,7 @@
                 marker = L.marker([uik.lat, uik.lon], {icon: iconUik}).on('click', function (e) {
                     var marker = e.target;
                     UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                    context.buildStopPopup(marker.uik_id);
+                    context.buildUikPopup(marker.uik_id);
                 });
                 marker['uik_id'] = uik.id;
                 uiksLayer.addLayer(marker);
@@ -129,44 +138,45 @@
                     UIK.viewmodel.uikSelected = data.uik;
                 }
                 var helper = UIK.helpers,
-                    html = UIK.templates.stopPopupInfoTemplate({
-                        id: data.stop.id,
-                        name: data.stop.name,
-                        is_shelter: helper.boolToString(data.stop.is_shelter),
-                        is_bench: helper.boolToString(data.stop.is_bench),
-                        stop_type_id: helper.valueNullToString(data.stop.stop_type_id),
-                        routes: data.stop.routes,
-                        types: data.stop.types,
-                        check_status: helper.valueCheckToString(data.stop.check_status_type_id),
-                        comment: helper.valueNullToString(data.stop.comment),
-                        isUserEditor: UIK.viewmodel.isAuth,
-                        editDenied: UIK.viewmodel.editable || data.stop.is_block,
-                        isBlock: data.stop.is_block,
-                        userBlock: data.stop.user_block,
-                        isUnBlock: data.stop.is_unblock
+                    html = UIK.templates.uikPopupInfoTemplate({
+                        id: data.uik.id,
+                        name: data.uik.name,
+//                        is_shelter: helper.boolToString(data.stop.is_shelter),
+                        district: data.uik.district,
+                        area: data.uik.area,
+                        sub_area: data.uik.sub_area,
+                        locality: data.uik.locality,
+                        street: data.uik.street,
+                        is_standalone: helper.boolToString(data.uik.is_standalone),
+                        size: data.uik.size
+//                        isUserEditor: UIK.viewmodel.isAuth,
+//                        editDenied: UIK.viewmodel.editable || data.stop.is_block,
+//                        isBlock: data.stop.is_block,
+//                        userBlock: data.stop.user_block,
+//                        isUnBlock: data.stop.is_unblock
                     });
                 $('#stop-popup').removeClass('loader').empty().append(html);
                 $('button#edit').off('click').on('click', function (e) {
                     UIK.view.$document.trigger('/sm/editor/startEdit');
                 });
-                if (data.stop.is_unblock) {
-                    $('#unblock').off('click').on('click', function (e) {
-                        $.ajax({
-                            type: 'GET',
-                            url: document['url_root'] + 'stop/unblock/' + UIK.viewmodel.stopSelected.id
-                        }).done(function () {
-                                UIK.viewmodel.map.closePopup();
-                                UIK.view.$document.trigger('/sm/map/updateAllLayers');
-                            });
-                    });
-                }
+//                if (data.uik.is_unblock) {
+//                    $('#unblock').off('click').on('click', function (e) {
+//                        $.ajax({
+//                            type: 'GET',
+//                            url: document['url_root'] + 'stop/unblock/' + UIK.viewmodel.stopSelected.id
+//                        }).done(function () {
+//                                UIK.viewmodel.map.closePopup();
+//                                UIK.view.$document.trigger('/sm/map/updateAllLayers');
+//                            });
+//                    });
+//                }
             }).error(function () {
                     $('#stop-popup').removeClass('loader').empty().append('Error connection');
                 });
         },
 
         validateZoom: function () {
-            if (UIK.viewmodel.map.getZoom() < 14) {
+            if (UIK.viewmodel.map.getZoom() < 13) {
                 return false;
             }
             return true;

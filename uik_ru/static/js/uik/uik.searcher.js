@@ -1,12 +1,13 @@
 (function ($, UIK) {
 	$.extend(UIK.viewmodel, {
 		searcherCollapsed: false,
-		filter: {'name' : ''},
+		filter: {'name' : '', 'addr' : ''},
 		isFilterValidated: true
 	});
 	$.extend(UIK.view, {
 		$searchContainer: null,
 		$filterName: null,
+        $$filterAddr: null,
 		$searchButton: null,
 		$searchResults: null
 	});
@@ -19,6 +20,15 @@
 			this.bindEvents();
 		},
 
+        setDomOptions: function () {
+            var v = UIK.view;
+            v.$searchContainer = $('#searchContainer');
+            v.$filterName = $('#filter_name');
+            v.$filterAddr = $('#filter_address');
+            v.$searchButton = $('#search');
+            v.$searchResults = $('#searchResults');
+        },
+
 		bindEvents: function () {
 			var context = this,
 				v = UIK.view;
@@ -29,6 +39,9 @@
 			v.$filterName.off('keyup').on('keyup', function (e) {
 				context.keyUpHandler(e);
 			});
+            v.$filterAddr.off('keyup').on('keyup', function (e) {
+                context.keyUpHandler(e);
+            });
 			$('#filter_name').off('focus').on('focus', function () {
 				UIK.view.$searchResults.prop('class', 'description');
 			});
@@ -47,20 +60,15 @@
 				var v = UIK.view;
 				v.$searchResults.prop('class', 'update');
 				v.$filterName.prop('disabled', true);
+                v.$filterAddr.prop('disabled', true);
+                context.validateSearch();
 			});
 			v.$document.on('/sm/stops/endUpdate', function () {
 				var v = UIK.view;
 				v.$searchResults.prop('class', 'active');
 				v.$filterName.prop('disabled', false);
+                v.$filterAddr.prop('disabled', false);
 			});
-		},
-
-		setDomOptions: function () {
-			var v = UIK.view;
-			v.$searchContainer = $('#searchContainer');
-			v.$filterName = $('#filter_name');
-			v.$searchButton = $('#search');
-			v.$searchResults = $('#searchResults');
 		},
 
 		keyUpHandler: function (e) {
@@ -74,24 +82,22 @@
 			var min_characters_name = this.min_characters_name,
 				v = UIK.view,
 				vm = UIK.viewmodel,
-				name = v.$filterName.val();
+                name = $.trim(v.$filterName.val()),
+				addr = $.trim(v.$filterAddr.val()),
+                isAddrValided = false;
 
-			if (name.length <= min_characters_name && name !== '') {
-				v.$filterName.addClass('invalid');
-			} else {
-				v.$filterName.removeClass('invalid');
-			}
+            isAddrValided = addr.length > min_characters_name || addr === '';
+            v.$filterAddr.toggleClass('invalid', !isAddrValided);
 
-			if (name.length > min_characters_name) {
-				vm.isFilterValidated = true;
-			} else {
-				vm.isFilterValidated = false;
-			}
+            if (!isAddrValided) {
+                vm.filter.addr = '';
+            }
 
+            UIK.viewmodel.isFilterValidated = isAddrValided;
 			UIK.view.$searchButton.toggleClass('active', UIK.viewmodel.isFilterValidated);
 		},
 
-		applyFilter: function () {
+        applyFilter: function () {
 			if (UIK.viewmodel.isFilterValidated) {
 				this.updateFilter();
 				this.search();
@@ -102,6 +108,7 @@
 			var $v = UIK.view,
 				vm = UIK.viewmodel;
 			vm.filter.name = $v.$filterName.val();
+            vm.filter.addr = $v.$filterAddr.val();
 		},
 
 		search: function () {

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
-    <title>Найди свой УИК</title>
+    <title>Отметь свой УИК</title>
     <meta name="description" content="участковая избирательная комиссия выборы адрес">
     <meta name="viewport" content="width=device-width">
 
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css"/>
     <![endif]-->
 
-    ##	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
+    	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
 
     	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.css')}" />
     	<!--[if lte IE 8]><!--<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.ie.css')}" />--><![endif]-->
@@ -47,8 +47,8 @@
 </head>
 <body class="editor-collapsed loading">
 <div class="loading">
-    <img src="${request.static_url('uik_ru:static/img/sm-loading.png')}"/>
-    <span>Инициализация</br>редактора...</span>
+    <img style="margin-top: 70px;" src="${request.static_url('uik_ru:static/img/loader-global.gif')}"/>
+    <span>Запуск...</span>
 </div>
 <div class="popup-background"></div>
 <div id="popup">
@@ -91,7 +91,8 @@
     <div class="title"><span>Поиск</span></div>
     <form class="form-search">
         <fieldset>
-            <input id="filter_name" type="text" class="input-name" placeholder="Адрес">
+            <input id="filter_name" type="text" class="input-name" placeholder="Номер" />
+            <input id="filter_address" type="text" class="input-address" placeholder="Адрес" />
             <div id="search" class="active" title="Поиск">
                 <span></span>
             </div>
