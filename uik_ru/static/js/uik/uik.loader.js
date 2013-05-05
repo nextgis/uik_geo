@@ -26,7 +26,7 @@ UIK.templates = {};
 				UIK.common.init();
 				UIK.map.init();
 				UIK.searcher.init();
-//				UIK.editor.init();
+				UIK.editor.init();
 //				UIK.osm.init();
 				UIK.user.init();
 				UIK.uiks.init();

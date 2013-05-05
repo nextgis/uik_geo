@@ -54,6 +54,7 @@
                 url: url,
                 data: {
                     'bbox' : JSON.stringify(UIK.viewmodel.map.getBounds()),
+                    'center' : JSON.stringify(UIK.viewmodel.map.getCenter()),
                     'filter' : JSON.stringify(filter)
                 },
                 dataType: 'json',
@@ -148,35 +149,35 @@
                         locality: data.uik.locality,
                         street: data.uik.street,
                         is_standalone: helper.boolToString(data.uik.is_standalone),
-                        size: data.uik.size
-//                        isUserEditor: UIK.viewmodel.isAuth,
-//                        editDenied: UIK.viewmodel.editable || data.stop.is_block,
-//                        isBlock: data.stop.is_block,
-//                        userBlock: data.stop.user_block,
-//                        isUnBlock: data.stop.is_unblock
+                        size: data.uik.size,
+                        isUserEditor: UIK.viewmodel.isAuth,
+                        editDenied: UIK.viewmodel.editable || data.uik.is_block,
+                        isBlock: data.uik.is_block,
+                        userBlock: data.uik.user_block,
+                        isUnBlock: data.uik.is_unblock
                     });
                 $('#stop-popup').removeClass('loader').empty().append(html);
                 $('button#edit').off('click').on('click', function (e) {
                     UIK.view.$document.trigger('/sm/editor/startEdit');
                 });
-//                if (data.uik.is_unblock) {
-//                    $('#unblock').off('click').on('click', function (e) {
-//                        $.ajax({
-//                            type: 'GET',
-//                            url: document['url_root'] + 'stop/unblock/' + UIK.viewmodel.stopSelected.id
-//                        }).done(function () {
-//                                UIK.viewmodel.map.closePopup();
-//                                UIK.view.$document.trigger('/sm/map/updateAllLayers');
-//                            });
-//                    });
-//                }
+                if (data.uik.is_unblock) {
+                    $('#unblock').off('click').on('click', function (e) {
+                        $.ajax({
+                            type: 'GET',
+                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.stopSelected.id
+                        }).done(function () {
+                                UIK.viewmodel.map.closePopup();
+                                UIK.view.$document.trigger('/sm/map/updateAllLayers');
+                            });
+                    });
+                }
             }).error(function () {
                     $('#stop-popup').removeClass('loader').empty().append('Error connection');
                 });
         },
 
         validateZoom: function () {
-            if (UIK.viewmodel.map.getZoom() < 13) {
+            if (UIK.viewmodel.map.getZoom() < 14) {
                 return false;
             }
             return true;

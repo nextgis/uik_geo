@@ -6,7 +6,9 @@ from sqlalchemy import (
     Integer,
     Text,
     Sequence,
-    Boolean
+    Boolean,
+    DateTime,
+    Unicode
 )
 
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
@@ -119,7 +121,7 @@ class Location(Base):
     street_id = Column(Integer, ForeignKey('street.id'))
 
 
-class UikVotingStation(Base):
+class VotingStation(Base):
     __tablename__ = 'voting_station'
 
     id = Column(Integer, Sequence('voting_station_id_seq'), primary_key=True)
@@ -129,3 +131,38 @@ class UikVotingStation(Base):
     size = Column(Text, nullable=True)
     location = relationship('Location')
     location_id = Column('location_id', Integer, ForeignKey('location.id'))
+    is_checked = Column(Boolean)
+    is_committee_here = Column(Boolean, index=True, nullable=False)
+    is_blocked = Column(Boolean, nullable=True)
+    user_block = relationship('User')
+    user_block_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+    committee_location = relationship('Location')
+    committee_location_id = Column('location_id', Integer, ForeignKey('location.id'))
+
+
+class LogSavings(Base):
+    __tablename__ = 'log_saving'
+
+    voting_station = relationship('VotingStation')
+    voting_station_id = Column(Integer, ForeignKey('voting_station.id'), nullable=False, primary_key=True)
+    user = relationship('User')
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, primary_key=True)
+    time = Column(DateTime, nullable=False, primary_key=True)
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, Sequence('users_id_seq'), primary_key=True)
+    email = Column(Text, nullable=True)
+    password = Column(Text, nullable=True)
+    display_name = Column(Text, nullable=True)
+
+
+    @classmethod
+    def password_hash(cls, password, salt):
+        import hashlib
+        return hashlib.sha1(password + salt).hexdigest()
+
+    def as_dict(self, **addon):
+        return dict(id=self.id, email=self.email, display_name=self.display_name, **addon)

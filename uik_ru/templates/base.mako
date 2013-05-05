@@ -40,7 +40,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.helpers.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.manager.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.js')}"></script>
-##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.osm.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
@@ -72,6 +72,7 @@
         <input id="em" type="email" class="input-small" name="mail" placeholder="E-mail">
         <input id="p" type="password" class="input-small" name="pass" placeholder="Пароль">
         <button type="submit" class="btn btn-primary">Войти</button>
+        <div>или <a href="${request.application_url}/register">зарегистрироваться</a></div>
     </form>
     <form id="signOutForm" class="form-inline" method="post">
         <div class="log"><span></span></div>
@@ -119,6 +120,59 @@
 <div id="editorContainer">
     <span class="icon-collapse"></span>
     <div class="title"><span>Редактор</span></div>
+    <div class="form-wrap">
+        <form class="form-inline disabled" id="editorForm">
+            <div class="group">
+                <label class="control-label middle" for="name">Номер</label>
+                <input type="text" id="name" name="name" class="stand" disabled="disabled"/>
+            </div>
+            <div class="group">
+                <label class="control-label middle" for="district">Федераль-</br>ный округ</label>
+                <select id="district" name="district" class="route-type-sel" disabled="disabled">
+                </select>
+            </div>
+            <div class="group">
+                <label class="control-label middle" for="area">Регион</label>
+                <select id="area" name="area" class="route-type-sel" disabled="disabled">
+                </select>
+            </div>
+            <div class="group">
+                <label class="control-label middle" for="sub_area">Район</label>
+                <select id="sub_area" name="sub_area" class="route-type-sel" disabled="disabled">
+                </select>
+            </div>
+            <div class="group">
+                <label class="control-label middle" for="locality">Населенный пункт</label>
+                <select id="locality" name="locality" class="route-type-sel" disabled="disabled">
+                </select>
+            </div>
+            <div class="group">
+                <label class="control-label middle" for="street">Улица</label>
+                <select id="street" name="street" class="route-type-sel" disabled="disabled">
+                </select>
+            </div>
+            <div class="group-checkboxes">
+                <input id="is_committee_here" type="hidden" value="0">
+                <input id="chb_is_committee_here" name="is_committee_here" type="checkbox" class="stand"
+                       disabled="disabled" data-id="is_committee_here"/>
+                <label class="control-label top" for="is_committee_here">Также расположение комиссии</label>
+            </div>
+            <div class="group">
+                <label class="control-label top" for="comment">Коммента-</br>рий</label>
+                <textarea id="comment" name="comment" disabled="disabled"></textarea>
+            </div>
+            <div class="group-checkboxes">
+                <input id="is_checked" type="hidden" value="0">
+                <input id="chb_is_checked" name="is_checked" type="checkbox" class="stand"
+                       disabled="disabled" data-id="is_checked"/>
+                <label class="control-label top" for="is_checked">Проверена</label>
+            </div>
+            <div class="group-submit">
+                <button id="discard" type="button" class="btn btn-warning" disabled="disabled">Отменить</button>
+                <button id="save" type="button" class="btn btn-success" disabled="disabled">Сохранить</button>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>

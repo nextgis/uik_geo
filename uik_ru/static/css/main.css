@@ -132,7 +132,7 @@ body.popup #popup {
 	top: 5px;
 	right: 5px;
 	width: 310px;
-	height: 40px;
+	height: 55px;
 	text-align: center;
 	background-color: #ffffff;
 	border: 1px solid #AFAFAF;
@@ -143,8 +143,16 @@ body.popup #popup {
 	margin: 5px;
 }
 
+#userContainer.inner {
+    height: 40px;
+}
+
 #userContainer.inner #signInForm {
 	display: none;
+}
+
+#signInForm div {
+    text-align: right;
 }
 
 #userContainer.inner #signOutForm {
@@ -273,7 +281,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchContainer .form-search {
-	margin: 5px;
+	margin: 5px 5px 5px 10px;
 }
 
 #searchContainer input.input-address {
@@ -282,7 +290,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchContainer input.input-name {
-	width: 95px;
+	width: 90px;
 }
 
 #filter_name.invalid,
@@ -365,8 +373,19 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchResults.active ul li {
-	margin-left: 5px;
+	margin: 2px;
 	color: #676767;
+    font-size: 13px;
+    border-top: solid 1px;
+    padding: 2px;
+}
+
+#searchResults.active ul li:first-child {
+    border-top: none;
+}
+
+#searchResults.active ul li span {
+    font-weight: bold;
 }
 
 #searchResults.active ul li:hover a {
@@ -452,7 +471,7 @@ body.bing #manager div.icon.bing {
 
 #editorContainer {
 	right: 5px;position: absolute;
-	top: 50px;
+	top: 66px;
 	bottom: 5px;
 	width: 310px;
 	background-color: #ffffff;
