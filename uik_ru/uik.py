@@ -132,6 +132,14 @@ def update_uik(context, request):
         'wkt': 'POINT(%s %s)' % (uik['geom']['lon'], uik['geom']['lat']),
         'location_id': uik['geom']['id']
     })
+
+    log = LogSavings()
+    log.voting_station_id = uik['id']
+    log.user_id = request.session['u_id']
+    from datetime import datetime
+    log.time = datetime.now()
+    session.add(log)
+
     transaction.commit()
     return Response()
 
