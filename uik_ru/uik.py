@@ -7,6 +7,7 @@ from pyramid.view import view_config
 from pyramid.response import Response
 from sqlalchemy import func
 from geoalchemy import WKTSpatialElement, functions
+import transaction
 
 import json
 
@@ -74,7 +75,8 @@ def get_all(context, request):
 def get_uik(context, request):
     id = request.matchdict.get('id', None)
     session = DBSession()
-    uik = session.query(VotingStation, Location, District, Area, SubArea, Locality, Street) \
+    uik = session.query(VotingStation, Location, Location.point.x, Location.point.y, \
+                        District, Area, SubArea, Locality, Street) \
         .join(VotingStation.location) \
         .outerjoin((District, Location.district_id == District.id)) \
         .outerjoin((Area, Location.area_id == Area.id)) \
@@ -88,15 +90,19 @@ def get_uik(context, request):
         'uik': {
             'id': uik[0].id,
             'name': uik[0].name if uik[0].name else'',
-            'district': uik[1].district.name if uik[1].district else '',
-            'area': uik[1].area.name if uik[1].area else '',
-            'sub_area': uik[1].sub_area.name if uik[1].sub_area else '',
-            'locality': uik[1].locality.name if uik[1].locality else '',
-            'street': uik[1].street.name if uik[1].street else '',
-            'is_standalone': uik[0].is_standalone,
-            'size': uik[0].size
+            # 'district': uik[1].district.name if uik[1].district else '',
+            # 'area': uik[1].area.name if uik[1].area else '',
+            # 'sub_area': uik[1].sub_area.name if uik[1].sub_area else '',
+            # 'locality': uik[1].locality.name if uik[1].locality else '',
+            # 'street': uik[1].street.name if uik[1].street else '',
+            # 'is_standalone': uik[0].is_standalone,
+            # 'size': uik[0].size
+            'is_checked': uik[0].is_checked if uik[0].is_checked else False,
+            'address': uik[0].address if uik[0].address else ''
         }
     }
+
+    uik_res['uik']['geom'] = {'id': uik[1].id, 'lon': uik[2], 'lat': uik[3]}
 
     uik_res['uik']['user_block'] = ''
     if uik[0].is_blocked:
@@ -110,15 +116,35 @@ def get_uik(context, request):
     return Response(json.dumps(uik_res))
 
 
+@view_config(route_name='uik', request_method='POST')
+@authorized()
+def update_uik(context, request):
+    uik = json.loads(request.POST['uik'])
+    session = DBSession()
+    from helpers import str_to_boolean
+    session.query(VotingStation).filter(VotingStation.id == uik['id']).update({
+        VotingStation.name: uik['name'],
+        VotingStation.address: uik['address'],
+        VotingStation.is_checked: str_to_boolean(uik['is_checked'])
+    }, synchronize_session=False)
+    sql = 'UPDATE location SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :location_id'
+    session.execute(sql, {
+        'wkt': 'POINT(%s %s)' % (uik['geom']['lon'], uik['geom']['lat']),
+        'location_id': uik['geom']['id']
+    })
+    transaction.commit()
+    return Response()
+
 @view_config(route_name='uik_block', request_method='GET')
 @authorized()
 def uik_block(context, request):
     id = request.matchdict.get('id', None)
     session = DBSession()
     session.query(VotingStation).filter(VotingStation.id == id).update({
-        VotingStation.is_block: True,
+        VotingStation.is_blocked: True,
         VotingStation.user_block_id: request.session['u_id']
     })
+    transaction.commit()
     return Response()
 
 
@@ -128,9 +154,10 @@ def uik_unblock(context, request):
     id = request.matchdict.get('id', None)
     session = DBSession()
     session.query(VotingStation).filter(VotingStation.id == id).update({
-        VotingStation.is_block: False,
+        VotingStation.is_blocked: False,
         VotingStation.user_block_id: None
     })
+    transaction.commit()
     return Response()
 
 @view_config(route_name='logs', request_method='GET')

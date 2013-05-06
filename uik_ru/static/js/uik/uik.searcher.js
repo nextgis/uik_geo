@@ -115,21 +115,34 @@
 			UIK.view.$document.trigger('/sm/stops/updateStops');
 		},
 
-		updateSearch: function () {
-			var uiks = UIK.viewmodel.uiks,
-				$divSearchResults = UIK.view.$searchResults.find('div'),
-				html;
-			html = this.getHtmlForSearchResults('non_check', uiks.elements);
-			$divSearchResults.empty().append(html);
-			$divSearchResults.find('a').on('click', function () {
-				var $li = $(this).parent();
-				UIK.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
-				$('#target').show().delay(1000).fadeOut(1000);
-			});
-			UIK.view.$searchResults.prop('class', 'active');
-		},
+        updateSearch: function () {
+            var uiks = UIK.viewmodel.uiks,
+                $divSearchResults = UIK.view.$searchResults.find('div'),
+                html;
+            html = this.getHtmlForSearchResults('non_check', uiks.elements);
+            $divSearchResults.empty().append(html);
+            $divSearchResults.find('a.target').on('click', function () {
+                var $li = $(this).parent();
+                UIK.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
+                $('#target').show().delay(1000).fadeOut(1000);
+            });
 
-		getHtmlForSearchResults: function (cssClass, uiks) {
+            $divSearchResults.find('a.edit').on('click', function () {
+                var $li = $(this).parent(), uikId;
+                UIK.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
+                $('#target').show().delay(1000).fadeOut(1000);
+                uikId = $li.data('id');
+                $.getJSON(document['url_root'] + 'uik/' + uikId, function (data) {
+                    if (!UIK.viewmodel.editable) {
+                        UIK.viewmodel.uikSelected = data.uik;
+                        UIK.view.$document.trigger('/sm/editor/startEdit');
+                    }
+                });
+            });
+            UIK.view.$searchResults.prop('class', 'active');
+        },
+
+        getHtmlForSearchResults: function (cssClass, uiks) {
 			return UIK.templates.searchResultsTemplate({
 				cssClass: cssClass,
                 uiks: uiks

@@ -28,7 +28,7 @@
 
         <form class="form" method="post">
             <fieldset>
-                <label class="control-label middle" for="name">Ваше имя</label>
+                <label class="control-label middle" for="name">Ваше имя, фамилия (например, Иван Иванов)</label>
                 <input type="text" id="name" name="name" class="stand"/>
                 <label class="control-label middle" for="email">Ваша электронная почта (будет логином)</label>
                 <input type="email" id="email" name="email" class="stand"/>

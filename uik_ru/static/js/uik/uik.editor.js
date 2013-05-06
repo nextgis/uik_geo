@@ -62,28 +62,17 @@
                 data_serialized = frm.serializeArray(),
                 i = 0,
                 ds_length = data_serialized.length,
-                stop_selected = UIK.viewmodel.stopSelected,
-                url = document['url_root'] + 'uik/' + stop_selected.id,
-                stop = { 'id': stop_selected.id },
-                name;
+                uik_selected = UIK.viewmodel.uikSelected,
+                url = document['url_root'] + 'uik/' + uik_selected.id,
+                saved_uik = { 'id': uik_selected.id };
             for (i; i < ds_length; i += 1) {
-                name = data_serialized[i].name;
-                switch (name) {
-                    case name === 'lon':
-                        stop['geom']['lon'] = data_serialized[i].value;
-                        break;
-                    case name === 'lat':
-                        stop['geom']['lat'] = data_serialized[i].value;
-                        break;
-                    default:
-                        stop[data_serialized[i].name] = data_serialized[i].value;
-                        break;
-                }
+                saved_uik[data_serialized[i].name] = data_serialized[i].value;
             }
+            saved_uik['geom'] = uik_selected.geom;
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: { 'stop': JSON.stringify(stop)}
+                data: { 'uik': JSON.stringify(saved_uik)}
             }).done(function () {
                 context.finishAjaxEdition();
             });
@@ -93,7 +82,7 @@
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.stopSelected.id
+                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.uikSelected.id
             }).done(function () {
                     context.startEdit();
                 });
@@ -108,40 +97,46 @@
             v.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
             v.$editorContainer.find('form').removeClass('disabled');
             vm.editable = true;
-            marker = L.marker([vm.stopSelected.geom.lat, vm.stopSelected.geom.lon], {icon: icon, draggable: true});
+            marker = L.marker([vm.uikSelected.geom.lat, vm.uikSelected.geom.lon], {icon: icon, draggable: true});
             marker.on('dragend', function (e) {
                 var latLon = e.target.getLatLng();
-                $('#lat').val(latLon.lat);
-                $('#lon').val(latLon.lng);
+                UIK.viewmodel.uikSelected.geom.lat = latLon.lat;
+                UIK.viewmodel.uikSelected.geom.lat = latLon.lng;
             });
             vm.mapLayers['edit'].addLayer(marker);
-            this.fillEditor(vm.stopSelected);
+            this.fillEditor(vm.uikSelected);
             vm.map.closePopup();
         },
 
-        fillEditor: function (stop) {
+        fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#name').val(stop.name);
-            $('#id').val(stop.id).attr('disabled', 'disabled');
-            $('#lat').val(stop.geom.lat);
-            $('#lon').val(stop.geom.lon);
-            $('#comment').val(helpers.valueNullToString(stop.comment));
-            $('#is_check').val(stop.check_status_type_id);
+            $('#name').val(uik.name);
+            $('#id').val(uik.id).attr('disabled', 'disabled');
+            $('#lat').val(uik.geom.lat);
+            $('#lon').val(uik.geom.lon);
+            $('#address').val(helpers.valueNullToString(uik.address));
+            $('#comment').val(helpers.valueNullToString(uik.comment));
+            if (uik.is_checked) {
+                $('#is_checked').val(1);
+                $('#chb_is_checked').prop('checked', true);
+            } else {
+                $('#is_checked').val(0);
+                $('#chb_is_checked').prop('checked', false);
+            }
         },
 
         finishAjaxEdition: function () {
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.stopSelected.id
+                url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.id
             }).done(function () {
-                    context.finishEditing();
-                });
+                context.finishEditing();
+            });
         },
 
         finishEditing: function () {
-            var vd = UIK.view.$document,
-                vm = UIK.viewmodel,
+            var vm = UIK.viewmodel,
                 v = UIK.view;
             vm.map.closePopup();
             vm.mapLayers['edit'].clearLayers();

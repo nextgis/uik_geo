@@ -388,13 +388,22 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     font-weight: bold;
 }
 
-#searchResults.active ul li:hover a {
+#searchResults.active ul li:hover a.target {
 	background: url("../img/sm-icons.png") repeat scroll -25px -20px transparent;
 	display: inline-block;
 	height: 14px;
 	margin-bottom: -4px;
 	width: 14px;
 	cursor: pointer;
+}
+
+#searchResults.active ul li:hover a.edit {
+    background: url("../img/sm-icons.png") repeat scroll -25px -20px transparent;
+    display: inline-block;
+    height: 14px;
+    margin-bottom: -4px;
+    width: 14px;
+    cursor: pointer;
 }
 
 #searchResults.active ul.block li {
