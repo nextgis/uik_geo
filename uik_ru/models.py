@@ -127,6 +127,7 @@ class VotingStation(Base):
     id = Column(Integer, Sequence('voting_station_id_seq'), primary_key=True)
     name = Column(Text, nullable=True)
     address = Column(Text, index=True, nullable=True)
+    comment = Column(Text, nullable=True)
     is_standalone = Column(Boolean)
     size = Column(Text, nullable=True)
     location = relationship('Location')

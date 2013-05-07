@@ -125,7 +125,9 @@ def update_uik(context, request):
     session.query(VotingStation).filter(VotingStation.id == uik['id']).update({
         VotingStation.name: uik['name'],
         VotingStation.address: uik['address'],
-        VotingStation.is_checked: str_to_boolean(uik['is_checked'])
+        VotingStation.is_checked: str_to_boolean(uik['is_checked']),
+        VotingStation.is_blocked: False,
+        VotingStation.user_block_id: None
     }, synchronize_session=False)
     sql = 'UPDATE location SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :location_id'
     session.execute(sql, {

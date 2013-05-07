@@ -74,7 +74,7 @@
                 url: url,
                 data: { 'uik': JSON.stringify(saved_uik)}
             }).done(function () {
-                context.finishAjaxEdition();
+                context.finishEditing();
             });
         },
 
