@@ -398,7 +398,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchResults.active ul li:hover a.edit {
-    background: url("../img/sm-icons.png") repeat scroll -25px -20px transparent;
+    background: url("../img/sm-icons.png") repeat scroll -40px -21px transparent;
     display: inline-block;
     height: 14px;
     margin-bottom: -4px;
@@ -584,17 +584,21 @@ body.bing #manager div.icon.bing {
 	resize: none;
 }
 
-#editorContainer form div.group-checkboxes {
-	display: table;
-	height: 20px;
+#editorContainer form div.group-checkboxes label {
+    display: block;
+    padding-left: 35px;
+    text-indent: -15px;
 }
-
-#editorContainer form div.group-checkboxes label,
-#editorContainer form div.group-checkboxes input
-{
-	display: table-cell;
-	vertical-align: middle;
-	width: auto;
+#editorContainer form div.group-checkboxes input {
+    width: 13px;
+    height: 13px;
+    float: left;
+    padding: 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
 }
 
 #pan_link {

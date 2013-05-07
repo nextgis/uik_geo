@@ -101,7 +101,9 @@
             marker.on('dragend', function (e) {
                 var latLon = e.target.getLatLng();
                 UIK.viewmodel.uikSelected.geom.lat = latLon.lat;
-                UIK.viewmodel.uikSelected.geom.lat = latLon.lng;
+                $('#lat').val(latLon.lat);
+                UIK.viewmodel.uikSelected.geom.lon = latLon.lng;
+                $('#lon').val(latLon.lng);
             });
             vm.mapLayers['edit'].addLayer(marker);
             this.fillEditor(vm.uikSelected);
