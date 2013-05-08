@@ -14,7 +14,7 @@ UIK.templates = {};
 
 	UIK.loader = {};
 	$.extend(UIK.loader, {
-		templates: ['uikPopupTemplate', 'uikPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate'],
+		templates: ['uikPopupTemplate', 'uikPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate', 'alertsTemplate'],
 
 		init: function () {
 			this.setDomOptions();
@@ -24,10 +24,10 @@ UIK.templates = {};
 		initModules: function () {
 //			try {
 				UIK.common.init();
+                UIK.alerts.init();
 				UIK.map.init();
 				UIK.searcher.init();
 				UIK.editor.init();
-//				UIK.osm.init();
 				UIK.user.init();
 				UIK.uiks.init();
 //			} catch (e) {

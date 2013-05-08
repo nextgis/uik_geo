@@ -142,34 +142,27 @@
                     html = UIK.templates.uikPopupInfoTemplate({
                         id: data.uik.id,
                         name: data.uik.name,
-//                        district: data.uik.district,
-//                        area: data.uik.area,
-//                        sub_area: data.uik.sub_area,
-//                        locality: data.uik.locality,
-//                        street: data.uik.street,
-//                        is_standalone: helper.boolToString(data.uik.is_standalone),
-//                        size: data.uik.size,
                         address: data.uik.address,
                         comment: data.uik.comment,
                         isUserEditor: UIK.viewmodel.isAuth,
-                        editDenied: UIK.viewmodel.editable || data.uik.is_block,
-                        isBlock: data.uik.is_block,
-                        userBlock: data.uik.user_block,
-                        isUnBlock: data.uik.is_unblock
+                        editDenied: UIK.viewmodel.editable || data.uik.is_blocked,
+                        isBlocked: data.uik.is_blocked,
+                        userBlocked: data.uik.user_blocked,
+                        isUnBlocked: data.uik.is_unblocked
                     });
                 $('#stop-popup').removeClass('loader').empty().append(html);
-                $('button#edit').off('click').on('click', function (e) {
+                $('button#edit').off('click').on('click', function () {
                     UIK.view.$document.trigger('/sm/editor/startEdit');
                 });
-                if (data.uik.is_unblock) {
-                    $('#unblock').off('click').on('click', function (e) {
+                if (data.uik.is_unblocked) {
+                    $('#unblock').off('click').on('click', function () {
                         $.ajax({
                             type: 'GET',
-                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.stopSelected.id
+                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.id
                         }).done(function () {
                                 UIK.viewmodel.map.closePopup();
                                 UIK.view.$document.trigger('/sm/map/updateAllLayers');
-                            });
+                        });
                     });
                 }
             }).error(function () {
@@ -179,6 +172,7 @@
 
         validateZoom: function () {
             if (UIK.viewmodel.map.getZoom() < 14) {
+                UIK.alerts.showAlert('zoom');
                 return false;
             }
             return true;

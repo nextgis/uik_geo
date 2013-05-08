@@ -127,6 +127,14 @@ body.popup #popup {
 	z-index: 901;
 }
 
+#alerts {
+    position: absolute;
+    top: 6px;
+    left: 360px;
+    right: 367px;
+    z-index: 1000;
+}
+
 #userContainer {
 	position: absolute;
 	top: 5px;

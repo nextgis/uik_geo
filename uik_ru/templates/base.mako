@@ -43,6 +43,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.osm.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
 </head>
 <body class="editor-collapsed loading">
@@ -63,6 +64,8 @@
 <![endif]-->
 <div id="target"></div>
 <div id="map"></div>
+<div id="alerts">
+</div>
 <div id="userContainer"
     % if u_name:
         class="inner"

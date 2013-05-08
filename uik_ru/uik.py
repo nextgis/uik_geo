@@ -90,28 +90,24 @@ def get_uik(context, request):
         'uik': {
             'id': uik[0].id,
             'name': uik[0].name if uik[0].name else'',
-            # 'district': uik[1].district.name if uik[1].district else '',
-            # 'area': uik[1].area.name if uik[1].area else '',
-            # 'sub_area': uik[1].sub_area.name if uik[1].sub_area else '',
-            # 'locality': uik[1].locality.name if uik[1].locality else '',
-            # 'street': uik[1].street.name if uik[1].street else '',
-            # 'is_standalone': uik[0].is_standalone,
-            # 'size': uik[0].size
             'is_checked': uik[0].is_checked if uik[0].is_checked else False,
+            'comment': uik[0].comment if uik[0].comment else '',
             'address': uik[0].address if uik[0].address else ''
         }
     }
 
     uik_res['uik']['geom'] = {'id': uik[1].id, 'lon': uik[2], 'lat': uik[3]}
 
-    uik_res['uik']['user_block'] = ''
+    uik_res['uik']['user_blocked'] = ''
+    uik_res['uik']['is_blocked'] = False
     if uik[0].is_blocked:
-        uik_res['uik']['user_block'] = uik[0].user_block.display_name
+        uik_res['uik']['is_blocked'] = True
+        uik_res['uik']['user_blocked'] = uik[0].user_block.display_name
 
-    uik_res['uik']['is_unblock'] = ''
+    uik_res['uik']['is_unblocked'] = ''
     if 'u_id' in request.session and uik[0].is_blocked and \
         request.session['u_id'] == uik[0].user_block.id:
-        uik_res['uik']['is_unblock'] = True
+        uik_res['uik']['is_unblocked'] = True
 
     return Response(json.dumps(uik_res))
 
@@ -124,6 +120,7 @@ def update_uik(context, request):
     from helpers import str_to_boolean
     session.query(VotingStation).filter(VotingStation.id == uik['id']).update({
         VotingStation.name: uik['name'],
+        VotingStation.comment: uik['comment'],
         VotingStation.address: uik['address'],
         VotingStation.is_checked: str_to_boolean(uik['is_checked']),
         VotingStation.is_blocked: False,
