@@ -9,7 +9,8 @@
 		$filterName: null,
         $$filterAddr: null,
 		$searchButton: null,
-		$searchResults: null
+		$searchResults: null,
+        $clearSearch: null
 	});
 	UIK.searcher = {};
 	$.extend(UIK.searcher, {
@@ -21,12 +22,13 @@
 		},
 
         setDomOptions: function () {
-            var v = UIK.view;
-            v.$searchContainer = $('#searchContainer');
-            v.$filterName = $('#filter_name');
-            v.$filterAddr = $('#filter_address');
-            v.$searchButton = $('#search');
-            v.$searchResults = $('#searchResults');
+            var view = UIK.view;
+            view.$searchContainer = $('#searchContainer');
+            view.$filterName = $('#filter_name');
+            view.$filterAddr = $('#filter_address');
+            view.$searchButton = $('#search');
+            view.$searchResults = $('#searchResults');
+            view.$clearSearch = view.$searchContainer.find('a.clear-search');
         },
 
 		bindEvents: function () {
@@ -36,6 +38,12 @@
 				UIK.viewmodel.searcherCollapsed = !UIK.viewmodel.searcherCollapsed;
 				UIK.view.$body.toggleClass('searcher-collapsed', context.searcherCollapsed);
 			});
+            UIK.view.$clearSearch.off('click').on('click', function () {
+                if (!$(this).hasClass('disabled')) {
+                    UIK.view.$searchContainer.find('input').val('');
+                    context.applyFilter();
+                }
+            });
 			v.$filterName.off('keyup').on('keyup', function (e) {
 				context.keyUpHandler(e);
 			});
@@ -80,21 +88,21 @@
 
 		validateSearch: function () {
 			var min_characters_name = this.min_characters_name,
-				v = UIK.view,
-				vm = UIK.viewmodel,
-                name = $.trim(v.$filterName.val()),
-				addr = $.trim(v.$filterAddr.val()),
-                isAddrValided = false;
+				view = UIK.view,
+				viewmodel = UIK.viewmodel,
+                name = $.trim(view.$filterName.val()),
+				addr = $.trim(view.$filterAddr.val()),
+                isAddrValided = addr.length > min_characters_name || addr === '';
 
-            isAddrValided = addr.length > min_characters_name || addr === '';
-            v.$filterAddr.toggleClass('invalid', !isAddrValided);
+            view.$filterAddr.toggleClass('invalid', !isAddrValided);
 
             if (!isAddrValided) {
-                vm.filter.addr = '';
+                viewmodel.filter.addr = '';
             }
 
-            UIK.viewmodel.isFilterValidated = isAddrValided;
-			UIK.view.$searchButton.toggleClass('active', UIK.viewmodel.isFilterValidated);
+            viewmodel.isFilterValidated = isAddrValided;
+            view.$searchButton.toggleClass('active', UIK.viewmodel.isFilterValidated);
+            view.$clearSearch.toggleClass('disabled', name === '' && addr === '');
 		},
 
         applyFilter: function () {
@@ -116,11 +124,24 @@
 		},
 
         updateSearch: function () {
-            var uiks = UIK.viewmodel.uiks,
+            var pointLayers = UIK.viewmodel.pointLayers,
+                pointsConfig = UIK.config.data.points,
+                pointsType,
                 $divSearchResults = UIK.view.$searchResults.find('div'),
                 html;
-            html = this.getHtmlForSearchResults('non_check', uiks.elements);
-            $divSearchResults.empty().append(html);
+
+            $divSearchResults.empty();
+            for (pointsType in pointLayers) {
+                if (pointLayers.hasOwnProperty(pointsType)) {
+                    html = this.getHtmlForSearchResults(pointsConfig[pointsType].searchCssClass,
+                        pointLayers[pointsType].elements);
+                    $divSearchResults.append(html);
+                }
+            }
+//
+//            html = this.getHtmlForSearchResults('non_check', uiks);
+//            $divSearchResults.empty().append(html);
+
             $divSearchResults.find('a.target').on('click', function () {
                 var $li = $(this).parent();
                 UIK.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
@@ -145,7 +166,8 @@
         getHtmlForSearchResults: function (cssClass, uiks) {
 			return UIK.templates.searchResultsTemplate({
 				cssClass: cssClass,
-                uiks: uiks
+                uiks: uiks,
+                isAuth: UIK.viewmodel.isAuth
 			});
 		}
 	});

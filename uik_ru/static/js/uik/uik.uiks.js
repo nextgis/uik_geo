@@ -2,7 +2,7 @@
     $.extend(UIK.viewmodel, {
         uikSelected: null,
         uikSelectedId: null,
-        uiks: null
+        pointLayers: null
     });
     $.extend(UIK.view, {
 
@@ -11,15 +11,15 @@
     $.extend(UIK.uiks, {
         init: function () {
             this.setDomOptions();
-            this.buildStopsLayers();
-            this.updateStops();
+            this.buildLayers();
+            this.updatePoints();
             this.bindEvents();
         },
 
         bindEvents: function () {
             var context = this;
             UIK.view.$document.on('/sm/stops/updateStops', function () {
-                context.updateStops();
+                context.updatePoints();
             });
         },
 
@@ -27,22 +27,43 @@
 
         },
 
-        buildStopsLayers: function () {
-            var uiksGroup = new L.MarkerClusterGroup(),
-                editGroup = new L.layerGroup();
-            UIK.viewmodel.map.addLayer(uiksGroup);
-            UIK.viewmodel.mapLayers['uiks'] = uiksGroup;
+        buildLayers: function () {
+            var configPoints = UIK.config.data.points,
+                pointType,
+                pointLayer,
+                editGroup;
+            UIK.viewmodel.mapLayers.points = {};
 
+            for (pointType in configPoints) {
+                if (configPoints.hasOwnProperty(pointType)) {
+                    pointLayer = configPoints[pointType].createLayer();
+                    UIK.viewmodel.map.addLayer(pointLayer);
+                    UIK.viewmodel.mapLayers.points[pointType] = pointLayer;
+                }
+            }
+
+            editGroup = new L.layerGroup();
             UIK.viewmodel.map.addLayer(editGroup);
             UIK.viewmodel.mapLayers['edit'] = editGroup;
         },
 
-        updateStops: function () {
+        updatePoints: function () {
             var validateZoom = this.validateZoom();
-            UIK.viewmodel.mapLayers.uiks.clearLayers();
+            this.clearLayers();
             if (!validateZoom) { return; }
             UIK.view.$document.trigger('/sm/stops/startUpdate');
             this.updateUiksByAjax();
+        },
+
+        clearLayers: function () {
+            var configPoints = UIK.config.data.points,
+                mapLayers = UIK.viewmodel.mapLayers.points,
+                pointType;
+            for (pointType in configPoints) {
+                if (configPoints.hasOwnProperty(pointType)) {
+                    mapLayers[pointType].clearLayers();
+                }
+            }
         },
 
         updateUiksByAjax: function () {
@@ -58,7 +79,7 @@
                     'filter' : JSON.stringify(filter)
                 },
                 dataType: 'json',
-                success: function(data) {
+                success: function (data) {
                     context.renderUiks(data);
                     UIK.view.$document.trigger('/sm/searcher/update');
                     UIK.view.$document.trigger('/sm/stops/endUpdate');
@@ -68,68 +89,38 @@
         },
 
         renderUiks: function (data) {
-            var mp = UIK.map,
-                vm = UIK.viewmodel,
-                uiksLayer = vm.mapLayers.uiks,
-                iconBlock = mp.getIcon('stop-block', 20),
-                iconEdit = mp.getIcon('stop-edit', 20),
-                iconUik = mp.getIcon('stop-check', 20),
-                uiksIterable, uiksIterableLength, i,
-                uik, marker, popupHtml,
+            var viewmodel = UIK.viewmodel,
+                pointsLayers = viewmodel.mapLayers.points,
+                pointsConfig = UIK.config.data.points,
+                dataPointsLayers = data.data.points.layers,
+                dataPointType,
+                dataPointsIterable,
+                dataPointsCount,
+                dataPoint,
+                icon,
+                marker,
+                i,
                 htmlPopup = UIK.templates.uikPopupTemplate({ css: 'edit' }),
                 context = this;
 
-            vm.uiks = data.uiks;
+            viewmodel.pointLayers = data.data.points.layers;
 
-//            stopsIterable = data.stops.block.elements;
-//            stopsIterableLength = data.stops.block.count;
-//            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
-//                stop = stopsIterable[indexStop];
-//                marker = L.marker([stop.lat, stop.lon], {icon: iconBlock})
-//                    .on('click', function (e) {
-//                        var marker = e.target;
-//                        UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-//                        context.buildStopPopup(marker.stop_id);
-//                    });
-//                marker['stop_id'] = stop.id;
-//                stopsLayer.addLayer(marker);
-//            }
-//
-//            stopsIterable = data.stops.non_block.non_check.elements;
-//            stopsIterableLength = data.stops.non_block.non_check.count;
-//            for (indexStop = 0; indexStop < stopsIterableLength; indexStop += 1) {
-//                stop = stopsIterable[indexStop];
-//                marker = L.marker([stop.lat, stop.lon], {icon: iconEdit})
-//                    .on('click', function (e) {
-//                        var marker = e.target;
-//                        UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-//                        context.buildStopPopup(marker.stop_id);
-//                    });
-//                marker['stop_id'] = stop.id;
-//                stopsLayer.addLayer(marker);
-//            }
-
-
-//            var markers = new L.MarkerClusterGroup({
-//                maxClusterRadius: 120,
-//                iconCreateFunction: function (cluster) {
-//                    return new L.DivIcon({ html: cluster.getChildCount(), className: 'mycluster', iconSize: new L.Point(40, 40) });
-//                },
-//                //Disable all of the defaults:
-//                spiderfyOnMaxZoom: false, showCoverageOnHover: false, zoomToBoundsOnClick: false
-//            });
-
-            uiksIterable = data.uiks.elements;
-            uiksIterableLength = data.uiks.count;
-            for (i = 0; i < uiksIterableLength; i += 1) {
-                uik = uiksIterable[i];
-                marker = L.marker([uik.lat, uik.lon], {icon: iconUik}).on('click', function (e) {
-                    var marker = e.target;
-                    UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                    context.buildUikPopup(marker.uik_id);
-                });
-                marker['uik_id'] = uik.id;
-                uiksLayer.addLayer(marker);
+            for (dataPointType in dataPointsLayers) {
+                if (dataPointsLayers.hasOwnProperty(dataPointType)) {
+                    dataPointsIterable = dataPointsLayers[dataPointType].elements;
+                    dataPointsCount = dataPointsLayers[dataPointType].count;
+                    if (dataPointsCount > 0) { icon = pointsConfig[dataPointType].createIcon(); }
+                    for (i = 0; i < dataPointsCount; i += 1) {
+                        dataPoint = dataPointsIterable[i];
+                        marker = L.marker([dataPoint.lat, dataPoint.lon], {icon: icon}).on('click', function (e) {
+                            var marker = e.target;
+                            UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
+                            context.buildUikPopup(marker.uik_id);
+                        });
+                        marker.id = dataPoint.id;
+                        pointsLayers[dataPointType].addLayer(marker);
+                    }
+                }
             }
         },
 
@@ -138,8 +129,7 @@
                 if (!UIK.viewmodel.editable) {
                     UIK.viewmodel.uikSelected = data.uik;
                 }
-                var helper = UIK.helpers,
-                    html = UIK.templates.uikPopupInfoTemplate({
+                var html = UIK.templates.uikPopupInfoTemplate({
                         id: data.uik.id,
                         name: data.uik.name,
                         address: data.uik.address,

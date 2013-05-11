@@ -1,9 +1,3 @@
-var UIK = {};
-UIK.viewmodel = {};
-UIK.view = {};
-UIK.templates = {};
-
-
 (function ($, UIK) {
 	$.extend(UIK.viewmodel, {
 		version : null

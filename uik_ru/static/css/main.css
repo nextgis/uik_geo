@@ -289,7 +289,17 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchContainer .form-search {
-	margin: 5px 5px 5px 10px;
+    text-align: right;
+	margin: 5px 10px;
+}
+
+#searchContainer .form-search a.clear-search {
+    text-decoration: none;
+}
+
+#searchContainer .form-search a.clear-search.disabled {
+    color: #808080;
+    cursor: default;
 }
 
 #searchContainer input.input-address {
@@ -348,7 +358,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 	margin: 5px;
 	border: 1px solid #AFAFAF;
 	position: absolute;
-	top: 72px;
+	top: 86px;
 	bottom: 5px;
 	left: 5px;
 	right: 5px;
@@ -414,15 +424,15 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     cursor: pointer;
 }
 
-#searchResults.active ul.block li {
+#searchResults.active ul.blocked li {
 	color: #ff0000;
 }
 
-#searchResults.active ul.check li {
+#searchResults.active ul.checked li {
 	color: #15c700;
 }
 
-#searchResults.active ul.non_check li {
+#searchResults.active ul.non-checked li {
 	color: #BD9C19;
 }
 
@@ -790,21 +800,21 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
 	z-index: 300 !important;
 }
 
-#map .stop-edit {
+#map .uik-unchecked {
 	background: url('../img/sm-icons.png') -0px -145px;
 	z-index: 310 !important;
 }
 
-#map .stop-edit:hover {
+#map .uik-unchecked:hover {
 	background: url('../img/sm-icons.png') -20px -145px;
 }
 
-#map .stop-check {
+#map .uik-checked {
 	background: url('../img/sm-icons.png') -40px -145px;
 	z-index: 305 !important;
 }
 
-#map .stop-check:hover {
+#map .uik-checked:hover {
 	background: url('../img/sm-icons.png') -60px -145px;
 }
 
@@ -813,12 +823,12 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
 	z-index: 320 !important;
 }
 
-#map .stop-block {
+#map .uik-blocked {
 	background: url('../img/sm-icons.png') -80px -145px;
 	z-index: 315 !important;
 }
 
-#map .stop-block:hover {
+#map .uik-blocked:hover {
 	background: url('../img/sm-icons.png') -100px -145px;
 }
 

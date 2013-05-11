@@ -4,7 +4,7 @@
         <span>{{name}}</span>
         {{addr}}
         <a class="target" title="Перейти к УИКу"></a>
-        <a class="edit" title="Редактировать УИК"></a>
+        {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}}
     </li>
 	{{/uiks}}
 </ul>

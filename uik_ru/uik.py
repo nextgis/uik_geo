@@ -14,7 +14,7 @@ import json
 
 @view_config(route_name='uiks', request_method='GET')
 def get_all(context, request):
-    page_size = 50
+    page_size = 100
     is_filter_applied = False
     filter = json.loads(request.GET['filter'])
     clauses = []
@@ -30,46 +30,68 @@ def get_all(context, request):
                 name = filter['name']
                 clauses.append(VotingStation.name == name)
 
+    bbox = json.loads(request.params.getall('bbox')[0])
+    box_geom = 'POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))' % \
+               (bbox['_southWest']['lng'], bbox['_southWest']['lat'], \
+                bbox['_southWest']['lng'], bbox['_northEast']['lat'], \
+                bbox['_northEast']['lng'], bbox['_northEast']['lat'], \
+                bbox['_northEast']['lng'], bbox['_southWest']['lat'], \
+                bbox['_southWest']['lng'], bbox['_southWest']['lat'])
+
+    uiks_for_json = {'points': {
+        'count': 0,
+        'layers': {
+            'checked': {'elements': [], 'count': 0},
+            'unchecked': {'elements': [], 'count': 0},
+            'blocked': {'elements': [], 'count': 0}
+        }}}
+
     session = DBSession()
     if is_filter_applied:
-        screen_center_param = json.loads(request.params.getall('center')[0])
-        screen_center = 'POINT(%s %s)' % (screen_center_param['lng'], screen_center_param['lat'])
-        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
+        contains = functions.gcontains(box_geom, Location.point).label('contains')
+        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y, contains) \
             .join(VotingStation.location) \
             .filter(*clauses) \
-            .order_by(functions.distance(Location.point, WKTSpatialElement(screen_center))) \
+            .order_by(contains) \
             .limit(page_size) \
             .all()
-        if len(uiks_from_db) > page_size:
-            count = len(uiks_from_db)
+        if len(uiks_from_db) < page_size:
+            uiks_for_json['points']['count'] = len(uiks_from_db)
         else:
-            count = session.query(VotingStation.id) \
+            uiks_for_json['points']['count'] = session.query(VotingStation.id) \
                 .filter(*clauses) \
                 .count()
     else:
-        bbox = json.loads(request.params.getall('bbox')[0])
-        box_geom = 'POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))' % \
-                    (bbox['_southWest']['lng'], bbox['_southWest']['lat'],\
-                    bbox['_southWest']['lng'], bbox['_northEast']['lat'],\
-                    bbox['_northEast']['lng'], bbox['_northEast']['lat'],\
-                    bbox['_northEast']['lng'], bbox['_southWest']['lat'],\
-                    bbox['_southWest']['lng'], bbox['_southWest']['lat'])
         uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
             .join(VotingStation.location) \
             .filter(Location.point.within(box_geom)) \
             .all()
-        count = len(uiks_from_db)
+        uiks_for_json['points']['count'] = len(uiks_from_db)
 
-    uiks_for_json = [{'id': uik[0].id,
-                      'name': uik[0].name,
-                      'addr': uik[0].address,
-                      'lon': uik[1],
-                      'lat': uik[2]} for uik in uiks_from_db]
+    for uik in uiks_from_db:
+        if uik[0].is_blocked:
+            uiks_for_json['points']['layers']['blocked']['elements'].append(_get_uik_from_uik_db(uik))
+            continue
+        if uik[0].is_checked:
+            uiks_for_json['points']['layers']['checked']['elements'].append(_get_uik_from_uik_db(uik))
+            continue
+        uiks_for_json['points']['layers']['unchecked']['elements'].append(_get_uik_from_uik_db(uik))
 
-    uiks_result = {'uiks': {'count_all': count, 'count': len(uiks_for_json), 'elements': uiks_for_json}}
+    uiks_for_json['points']['layers']['blocked']['count'] = len(uiks_for_json['points']['layers']['blocked']['elements'])
+    uiks_for_json['points']['layers']['checked']['count'] = len(uiks_for_json['points']['layers']['checked']['elements'])
+    uiks_for_json['points']['layers']['unchecked']['count'] = len(uiks_for_json['points']['layers']['unchecked']['elements'])
+
+    uiks_result = {'data': uiks_for_json}
 
     return Response(json.dumps(uiks_result))
 
+
+def _get_uik_from_uik_db(uik_from_db):
+    return {'id': uik_from_db[0].id,
+            'name': uik_from_db[0].name,
+            'addr': uik_from_db[0].address,
+            'lon': uik_from_db[1],
+            'lat': uik_from_db[2]}
 
 @view_config(route_name='uik', request_method='GET')
 def get_uik(context, request):

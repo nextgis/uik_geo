@@ -33,6 +33,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/leaflet/bing.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/mustache.js')}"></script>
 ##	<script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.templates.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.config.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.loader.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.helpers.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.common.js')}"></script>
@@ -101,6 +102,7 @@
                 <span></span>
             </div>
         </fieldset>
+        <a href="javascript:void(0)" class="clear-search">Очистить поля поиска</a>
     </form>
     <div id="searchResults" class="active">
         <p class="update">Запрос данных...</p>
