@@ -115,7 +115,7 @@
                         marker = L.marker([dataPoint.lat, dataPoint.lon], {icon: icon}).on('click', function (e) {
                             var marker = e.target;
                             UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                            context.buildUikPopup(marker.uik_id);
+                            context.buildUikPopup(marker.id);
                         });
                         marker.id = dataPoint.id;
                         pointsLayers[dataPointType].addLayer(marker);
