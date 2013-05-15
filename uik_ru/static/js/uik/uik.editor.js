@@ -22,20 +22,23 @@
         bindEvents: function () {
             var context = this;
             UIK.view.$editorContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
-                UIK.viewmodel.editorCollapsed = !UIK.viewmodel.editorCollapsed;
-                UIK.view.$body.toggleClass('editor-collapsed', context.editorCollapsed);
+                context.toggleEditor();
             });
+
             UIK.view.$document.on('/sm/editor/startEdit', function (e) {
                 context.startAjaxEdition();
             });
+
             $('#save').off('click').on('click', function (e) {
                 e.stopPropagation();
                 context.save();
             });
+
             $('#discard').off('click').on('click', function (e) {
                 e.stopPropagation();
                 context.finishAjaxEdition();
             });
+
             $('#editorForm').find(':checkbox').off('click').on('click', function () {
                 var checkbox = $(this),
                     hidden = $('#' + checkbox.data('id'));
@@ -45,6 +48,12 @@
                     hidden.val(0);
                 }
             });
+        },
+
+        toggleEditor: function () {
+            var editorCollapsed = !UIK.viewmodel.editorCollapsed;
+            UIK.viewmodel.editorCollapsed = editorCollapsed;
+            UIK.view.$body.toggleClass('editor-collapsed', editorCollapsed);
         },
 
         setDomOptions: function () {
@@ -93,14 +102,15 @@
 
         startEdit: function () {
             var icon = UIK.helpers.getIcon('stop-editable', 25),
-                vm = UIK.viewmodel,
-                v = UIK.view,
+                viewmodel = UIK.viewmodel,
+                view = UIK.view,
                 marker;
-            v.$body.addClass('editable');
-            v.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
-            v.$editorContainer.find('form').removeClass('disabled');
-            vm.editable = true;
-            marker = L.marker([vm.uikSelected.geom.lat, vm.uikSelected.geom.lon], {icon: icon, draggable: true});
+            view.$body.addClass('editable');
+            if (viewmodel.editorCollapsed) { this.toggleEditor(); }
+            view.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
+            view.$editorContainer.find('form').removeClass('disabled');
+            viewmodel.editable = true;
+            marker = L.marker([viewmodel.uikSelected.geom.lat, viewmodel.uikSelected.geom.lon], {icon: icon, draggable: true});
             marker.on('dragend', function (e) {
                 var latLon = e.target.getLatLng();
                 UIK.viewmodel.uikSelected.geom.lat = latLon.lat;
@@ -108,9 +118,9 @@
                 UIK.viewmodel.uikSelected.geom.lon = latLon.lng;
                 $('#lon').val(latLon.lng);
             });
-            vm.mapLayers['edit'].addLayer(marker);
-            this.fillEditor(vm.uikSelected);
-            vm.map.closePopup();
+            viewmodel.mapLayers['edit'].addLayer(marker);
+            this.fillEditor(viewmodel.uikSelected);
+            viewmodel.map.closePopup();
         },
 
         fillEditor: function (uik) {

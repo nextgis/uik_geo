@@ -33,45 +33,55 @@
 
 		bindEvents: function () {
 			var context = this,
-				v = UIK.view;
-			v.$searchContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
+				view = UIK.view;
+
+			view.$searchContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
 				UIK.viewmodel.searcherCollapsed = !UIK.viewmodel.searcherCollapsed;
 				UIK.view.$body.toggleClass('searcher-collapsed', context.searcherCollapsed);
 			});
+
             UIK.view.$clearSearch.off('click').on('click', function () {
                 if (!$(this).hasClass('disabled')) {
                     UIK.view.$searchContainer.find('input').val('');
                     context.applyFilter();
                 }
             });
-			v.$filterName.off('keyup').on('keyup', function (e) {
+
+			view.$filterName.off('keyup').on('keyup', function (e) {
 				context.keyUpHandler(e);
 			});
-            v.$filterAddr.off('keyup').on('keyup', function (e) {
+
+            view.$filterAddr.off('keyup').on('keyup', function (e) {
                 context.keyUpHandler(e);
             });
+
 			$('#filter_name').off('focus').on('focus', function () {
 				UIK.view.$searchResults.prop('class', 'description');
 			});
+
 			$('#searchResults p.description').off('click').on('click', function () {
 				UIK.view.$searchResults.prop('class', 'active');
 			});
-			v.$searchButton.off('click').on('click', function () {
+
+			view.$searchButton.off('click').on('click', function () {
 				if (UIK.viewmodel.isFilterValidated) {
 					context.applyFilter();
 				}
 			});
-			v.$document.on('/sm/searcher/update', function () {
+
+			view.$document.on('/sm/searcher/update', function () {
 				context.updateSearch();
 			});
-			v.$document.on('/sm/stops/startUpdate', function () {
+
+			view.$document.on('/sm/stops/startUpdate', function () {
 				var v = UIK.view;
 				v.$searchResults.prop('class', 'update');
 				v.$filterName.prop('disabled', true);
                 v.$filterAddr.prop('disabled', true);
                 context.validateSearch();
 			});
-			v.$document.on('/sm/stops/endUpdate', function () {
+
+			view.$document.on('/sm/stops/endUpdate', function () {
 				var v = UIK.view;
 				v.$searchResults.prop('class', 'active');
 				v.$filterName.prop('disabled', false);
@@ -92,15 +102,15 @@
 				viewmodel = UIK.viewmodel,
                 name = $.trim(view.$filterName.val()),
 				addr = $.trim(view.$filterAddr.val()),
-                isAddrValided = addr.length > min_characters_name || addr === '';
+                isAddrValidated = addr.length > min_characters_name || addr === '';
 
-            view.$filterAddr.toggleClass('invalid', !isAddrValided);
+            view.$filterAddr.toggleClass('invalid', !isAddrValidated);
 
-            if (!isAddrValided) {
+            if (!isAddrValidated) {
                 viewmodel.filter.addr = '';
             }
 
-            viewmodel.isFilterValidated = isAddrValided;
+            viewmodel.isFilterValidated = isAddrValidated;
             view.$searchButton.toggleClass('active', UIK.viewmodel.isFilterValidated);
             view.$clearSearch.toggleClass('disabled', name === '' && addr === '');
 		},
@@ -113,10 +123,10 @@
 		},
 
 		updateFilter: function () {
-			var $v = UIK.view,
-				vm = UIK.viewmodel;
-			vm.filter.name = $v.$filterName.val();
-            vm.filter.addr = $v.$filterAddr.val();
+			var view = UIK.view,
+				viewmodel = UIK.viewmodel;
+			viewmodel.filter.name = view.$filterName.val();
+            viewmodel.filter.addr = view.$filterAddr.val();
 		},
 
 		search: function () {
@@ -138,9 +148,6 @@
                     $divSearchResults.append(html);
                 }
             }
-//
-//            html = this.getHtmlForSearchResults('non_check', uiks);
-//            $divSearchResults.empty().append(html);
 
             $divSearchResults.find('a.target').on('click', function () {
                 var $li = $(this).parent();
