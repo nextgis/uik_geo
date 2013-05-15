@@ -19,6 +19,16 @@
             this.bindEvents();
         },
 
+        setDomOptions: function () {
+            UIK.view.$editorContainer = $('#editorContainer');
+            UIK.viewmodel.editorCollapsed = UIK.view.$body.hasClass('editor-collapsed');
+        },
+
+        buildEditLayer: function () {
+            var editedLayer = L.layerGroup();
+            UIK.viewmodel.mapLayers['edit'] = UIK.viewmodel.map.addLayer(editedLayer);
+        },
+
         bindEvents: function () {
             var context = this;
             UIK.view.$editorContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
@@ -54,15 +64,6 @@
             var editorCollapsed = !UIK.viewmodel.editorCollapsed;
             UIK.viewmodel.editorCollapsed = editorCollapsed;
             UIK.view.$body.toggleClass('editor-collapsed', editorCollapsed);
-        },
-
-        setDomOptions: function () {
-            UIK.view.$editorContainer = $('#editorContainer');
-        },
-
-        buildEditLayer: function () {
-            var editedLayer = L.layerGroup();
-            UIK.viewmodel.mapLayers['edit'] = UIK.viewmodel.map.addLayer(editedLayer);
         },
 
         save: function () {
