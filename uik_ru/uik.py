@@ -52,7 +52,7 @@ def get_all(context, request):
         uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y, contains) \
             .join(VotingStation.location) \
             .filter(*clauses) \
-            .order_by(contains) \
+            .order_by(contains.desc()) \
             .limit(page_size) \
             .all()
         if len(uiks_from_db) < page_size:
