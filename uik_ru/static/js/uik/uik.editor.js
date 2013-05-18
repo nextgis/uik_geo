@@ -129,6 +129,7 @@
             UIK.viewmodel.uikSelected.geom.lng = latlng.lng;
             UIK.viewmodel.map.setView(latlng, 18);
             $('#target').show().delay(1000).fadeOut(1000);
+            $('#lat, #lng').removeClass('need-apply');
         },
 
         updateCoordinates: function (latLng) {
