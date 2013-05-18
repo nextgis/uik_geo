@@ -29,6 +29,24 @@
                 type: 'error',
                 text: 'УИК не был обновлен - произошла ошибка.',
                 statusText: 'Ошибка!'
+            },
+            changeCoordinates: {
+                id: 'coodrinateChanged',
+                type: 'info',
+                text: 'После изменения координаты должны быть применены.',
+                statusText: 'Внимание! '
+            },
+            notAppliedCoordinates: {
+                id: 'notAppliedCoordinates',
+                type: 'error',
+                text: 'Вы не применили координаты к редактируемому УИКу. ',
+                statusText: 'Ошибка сохранения:'
+            },
+            validateCoordinatesError: {
+                id: 'valCoordError',
+                type: 'error',
+                text: 'Десятичные градусы должны быть введены как 58.00000',
+                statusText: 'Неправильный формат ввода координат:'
             }
         },
 

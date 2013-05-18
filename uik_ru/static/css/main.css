@@ -135,6 +135,14 @@ body.popup #popup {
     z-index: 1000;
 }
 
+input.invalid {
+    border: 1px solid red;
+}
+
+input.need-apply {
+    border: 1px solid blue;
+}
+
 #userContainer {
 	position: absolute;
 	top: 5px;
@@ -309,11 +317,6 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 
 #searchContainer input.input-name {
 	width: 90px;
-}
-
-#filter_name.invalid,
-#filter_address.invalid {
-	border: 1px solid red;
 }
 
 #searchContainer div.is_help {
@@ -573,31 +576,6 @@ body.bing #manager div.icon.bing {
 	width: 197px;
 }
 
-#editorContainer form select.route-type-sel {
-	margin-bottom: 5px;
-	width: 65px;
-	max-width: 65px;
-}
-
-#editorContainer form select.route {
-	margin: 0px 0px 5px 5px;
-	width: 97px;
-	max-width: 97px;
-}
-
-#add-route {
-	float: right;
-	width: 25px;
-	height: 26px;
-	margin: 3px 0px 0px 0px;
-	background: url('../img/sm-icons.png') -29px -100px;
-}
-
-#add-route:hover {
-	background: url('../img/sm-icons.png') -54px -100px;
-	cursor: pointer;
-}
-
 #editorContainer form textarea {
 	resize: none;
 }
@@ -619,34 +597,6 @@ body.bing #manager div.icon.bing {
     *overflow: hidden;
 }
 
-#pan_link {
-	width: 159px !important;
-}
-
-#editorContainer form div.link {
-	display: table-cell;
-	vertical-align: middle;
-}
-
-#pan_link_a {
-	display: block;
-	width: 17px;
-	height: 17px;
-	background: url('../img/sm-icons.png') -17px -125px;
-	margin-left: 5px;
-	cursor: auto;
-}
-
-#pan_link_a.active {
-	background: url('../img/sm-icons.png') 0 -125px;
-	cursor: pointer;
-}
-
-#editorContainer form div.auto-link {
-	margin: -5px 0 5px 90px;
-	font-size: 12px;
-}
-
 #editorContainer form .group-submit {
 	width: auto;
 	text-align: center;
@@ -656,73 +606,6 @@ body.bing #manager div.icon.bing {
 #editorContainer form #discard {
 	margin-right: 10px;
 }
-
-#routes_tagsinput {
-	border: 1px solid #CCCCCC;
-	border-radius: 4px 4px 4px 4px;
-}
-
-#routes_tagsinput #routes_tag:focus {
-	border-color: rgba(82, 168, 236, 0.8);
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
-	outline: 0 none;
-}
-
-#routes_addTag input {
-	text-align: center;
-	border: 1px solid #b7d08c;
-	font-size: 20px;
-	font-weight: bold;
-	height: 21px;
-	width: 29px;
-	color: #7B9A3C !important;
-	background-color: #f4ffcb;
-}
-
-#routes_addTag input:hover {
-	color: #587330 !important;
-	background-color: #e6ffb1;
-	border-color: #9db378;
-	cursor: pointer;
-}
-
-#routes_tagsinput span.tag {
-	font-size: 12px;
-	margin-bottom: 3px;
-	margin-right: 3px;
-	padding: 1px;
-}
-
-#routes_tagsinput span.tag.type-id-0 {
-	background-color: #ffc9c1;
-	border-color: #ef7b71;
-}
-
-#routes_tagsinput span.tag.type-id-0,
-#routes_tagsinput span.tag.type-id-0 a {
-	color: #e54541;
-}
-
-#routes_tagsinput span.tag.type-id-1 {
-	background-color: #d5efff;
-	border-color: #596fb3;
-}
-
-#routes_tagsinput span.tag.type-id-1,
-#routes_tagsinput span.tag.type-id-1 a {
-	color: #6766df;
-}
-
-#routes_tagsinput span.tag.type-id-2 {
-	background-color: #fff9ae;
-	border-color: #b3ac5f;
-}
-
-#routes_tagsinput span.tag.type-id-2,
-#routes_tagsinput span.tag.type-id-2 a {
-	color: #9a4d00;
-}
-
 
 #editorContainer .parameters {
 	display: table-cell;
@@ -745,6 +628,15 @@ body.bing #manager div.icon.bing {
 #editorContainer .parameters .parameter input,
 #editorContainer .parameters .parameter label {
 	display: inline;
+}
+
+#editorContainer .geographic {
+    margin: 15px 0;
+}
+
+#editorContainer .wrapper-coordinates {
+    text-align: right;
+    margin-right: 10px;
 }
 
 body.editor-collapsed #editorContainer {

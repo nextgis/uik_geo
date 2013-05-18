@@ -174,13 +174,18 @@
                 <label class="control-label top" for="comment">Коммента-</br>рий</label>
                 <textarea id="comment" name="comment" disabled="disabled"></textarea>
             </div>
-            <div class="group">
-                <label class="control-label" for="lat">Широта</label>
-                <input type="text" id="lat" name="lat" class="stand" disabled="disabled"/>
-            </div>
-            <div class="group">
-                <label class="control-label" for="lon">Долгота</label>
-                <input type="text" id="lon" name="lon" class="stand" disabled="disabled"/>
+            <div class="geographic">
+                <div class="group">
+                    <label class="control-label" for="lat">Широта</label>
+                    <input type="text" id="lat" name="lat" class="stand" disabled="disabled"/>
+                </div>
+                <div class="group">
+                    <label class="control-label" for="lng">Долгота</label>
+                    <input type="text" id="lng" name="lng" class="stand" disabled="disabled"/>
+                </div>
+                <div class="wrapper-coordinates">
+                    <button id="applyCoordinates" class="btn btn-small" disabled="disabled" type="button">Применить координаты</button>
+                </div>
             </div>
             <div class="group-checkboxes">
                 <input id="is_checked" type="hidden" name="is_checked" value="0"/>

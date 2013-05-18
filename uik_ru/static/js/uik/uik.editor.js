@@ -2,7 +2,12 @@
     $.extend(UIK.viewmodel, {
         editorCollapsed: false,
         editable: false,
-        routeTypeSelected: null
+        latlngEditable: {
+            lat: {validated: null, marker: null, editor: null},
+            lng: {validated: null, marker: null, editor: null},
+            isNeedApplied: false
+        },
+        markerEditable: null
     });
 
     $.extend(UIK.view, {
@@ -12,6 +17,7 @@
     UIK.editor = {};
     $.extend(UIK.editor, {
         regex: { url: new RegExp("(https?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]") },
+        precisionDegree: 6,
 
         init: function () {
             this.setDomOptions();
@@ -58,6 +64,14 @@
                     hidden.val(0);
                 }
             });
+
+            $('#lat, #lng').off('keyup').on('keyup', function (e) {
+                context.coordinatesInputHandler(e, $(this));
+            });
+
+            $('#applyCoordinates').off('click').on('click', function () {
+                context.applyCoordinates(UIK.viewmodel.latlngEditable);
+            });
         },
 
         toggleEditor: function () {
@@ -66,29 +80,75 @@
             UIK.view.$body.toggleClass('editor-collapsed', editorCollapsed);
         },
 
-        save: function () {
-            var context = this,
-                frm = $('#editorContainer form'),
-                data_serialized = frm.serializeArray(),
-                i = 0,
-                ds_length = data_serialized.length,
-                uik_selected = UIK.viewmodel.uikSelected,
-                url = document['url_root'] + 'uik/' + uik_selected.id,
-                saved_uik = { 'id': uik_selected.id };
-            for (i; i < ds_length; i += 1) {
-                saved_uik[data_serialized[i].name] = data_serialized[i].value;
+        coordinatesInputHandler: function (e, $this) {
+            var id = $this.attr('id'),
+                value = $this.val(),
+                latlngEditable = UIK.viewmodel.latlngEditable,
+                currentCoordinateState = latlngEditable[id],
+                preValidated = currentCoordinateState.validated,
+                preDiffCoordinateState = currentCoordinateState.editor !== currentCoordinateState.marker,
+                preIsCanApplied = latlngEditable.isNeedApplied;
+            if (e.keyCode === 13) {
+                if (latlngEditable.isNeedApplied) { this.applyCoordinates(latlngEditable); }
+            } else {
+                currentCoordinateState.validated = this.verifyDecimalDegree(value);
+                if (currentCoordinateState.validated) {
+                    value = parseFloat(value.replace(",", ".")).toFixed(this.precisionDegree);
+                    currentCoordinateState.editor = value;
+                } else {
+                    UIK.alerts.showAlert('validateCoordinatesError');
+                }
+                latlngEditable.isNeedApplied = this.getIsCanApplied(latlngEditable);
+                if (preIsCanApplied !== latlngEditable.isNeedApplied) {
+                    $('#applyCoordinates').prop('disabled', !latlngEditable.isNeedApplied);
+                }
+                if (latlngEditable.isNeedApplied) {
+                    UIK.alerts.showAlert('changeCoordinates');
+                }
+                if (preValidated !== currentCoordinateState.validated) {
+                    $this.toggleClass('invalid', !currentCoordinateState.validated);
+                } else if (preDiffCoordinateState !== (currentCoordinateState.editor !== currentCoordinateState.marker)) {
+                    $this.toggleClass('need-apply', currentCoordinateState.editor !== currentCoordinateState.marker);
+                }
             }
-            saved_uik['geom'] = uik_selected.geom;
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: { 'uik': JSON.stringify(saved_uik)}
-            }).done(function () {
-                UIK.alerts.showAlert('saveSuccessful');
-                context.finishEditing();
-            }).error(function () {
-                UIK.alerts.showAlert('saveError');
-            });
+        },
+
+        getIsCanApplied: function (latLngEditable) {
+            return (latLngEditable.lat.editor !== latLngEditable.lat.marker && latLngEditable.lat.validated) ||
+                (latLngEditable.lng.editor !== latLngEditable.lng.marker && latLngEditable.lng.validated);
+        },
+
+        verifyDecimalDegree: function (value) {
+            return !/^\s*$/.test(value) && !isNaN(value);
+        },
+
+        applyCoordinates: function (latLngEditable) {
+            var latlng = new L.LatLng(parseFloat(latLngEditable.lat.editor), parseFloat(latLngEditable.lng.editor));
+            UIK.viewmodel.markerEditable.setLatLng(latlng);
+            UIK.viewmodel.uikSelected.geom.lat = latlng.lat;
+            UIK.viewmodel.uikSelected.geom.lng = latlng.lng;
+            UIK.viewmodel.map.setView(latlng, 18);
+            $('#target').show().delay(1000).fadeOut(1000);
+        },
+
+        updateCoordinates: function (latLng) {
+            var lat = latLng.lat.toFixed(this.precisionDegree),
+                lng = latLng.lng.toFixed(this.precisionDegree),
+                isNeedApplied = UIK.viewmodel.latlngEditable.isNeedApplied;
+
+            UIK.viewmodel.uikSelected.geom.lat = latLng.lat;
+            UIK.viewmodel.uikSelected.geom.lng = latLng.lng;
+
+            if (isNeedApplied) { $('#applyCoordinates').prop('disabled', true); }
+
+            UIK.viewmodel.latlngEditable = {
+                lat: {validated: true, marker: lat, editor: lat},
+                lng: {validated: true, marker: lng, editor: lng},
+                isNeedApplied: false
+            };
+
+            $('#lat').val(lat);
+            $('#lng').val(lng);
         },
 
         startAjaxEdition: function () {
@@ -102,34 +162,48 @@
         },
 
         startEdit: function () {
-            var icon = UIK.helpers.getIcon('stop-editable', 25),
-                viewmodel = UIK.viewmodel,
-                view = UIK.view,
-                marker;
+            var viewmodel = UIK.viewmodel,
+                view = UIK.view;
             view.$body.addClass('editable');
             if (viewmodel.editorCollapsed) { this.toggleEditor(); }
             view.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
             view.$editorContainer.find('form').removeClass('disabled');
             viewmodel.editable = true;
-            marker = L.marker([viewmodel.uikSelected.geom.lat, viewmodel.uikSelected.geom.lon], {icon: icon, draggable: true});
-            marker.on('dragend', function (e) {
-                var latLon = e.target.getLatLng();
-                UIK.viewmodel.uikSelected.geom.lat = latLon.lat;
-                $('#lat').val(latLon.lat);
-                UIK.viewmodel.uikSelected.geom.lon = latLon.lng;
-                $('#lon').val(latLon.lng);
-            });
-            viewmodel.mapLayers['edit'].addLayer(marker);
+            this.startEditingGeometry(viewmodel.uikSelected.geom.lat, viewmodel.uikSelected.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.map.closePopup();
+        },
+
+        startEditingGeometry: function (lat, lng) {
+            var context = this,
+                marker = L.marker([lat, lng], {
+                    icon: UIK.helpers.getIcon('stop-editable', 25),
+                    draggable: true
+                }),
+                stringLat = lat.toFixed(this.precisionDegree),
+                stringLng = lng.toFixed(this.precisionDegree);
+
+            marker.on('dragend', function (e) {
+                context.updateCoordinates(e.target.getLatLng());
+            });
+            UIK.viewmodel.mapLayers['edit'].addLayer(marker);
+
+            $('#applyCoordinates').prop('disabled', true);
+
+            UIK.viewmodel.latlngEditable = {
+                lat: {validated: true, marker: stringLat, editor: stringLat},
+                lng: {validated: true, marker: stringLng, editor: stringLng},
+                isNeedApplied: false
+            };
+            UIK.viewmodel.markerEditable = marker;
         },
 
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
             $('#name').val(uik.name);
             $('#id').val(uik.id).attr('disabled', 'disabled');
-            $('#lat').val(uik.geom.lat);
-            $('#lon').val(uik.geom.lon);
+            $('#lat').val(uik.geom.lat.toFixed(this.precisionDegree));
+            $('#lng').val(uik.geom.lng.toFixed(this.precisionDegree));
             $('#address').val(helpers.valueNullToString(uik.address));
             $('#comment').val(helpers.valueNullToString(uik.comment));
             if (uik.is_checked) {
@@ -139,6 +213,43 @@
                 $('#is_checked').val(0);
                 $('#chb_is_checked').prop('checked', false);
             }
+        },
+
+        save: function () {
+            if (!this.verifyEditor()) {
+                return;
+            }
+            var context = this,
+                frm = $('#editorContainer form'),
+                data_serialized = frm.serializeArray(),
+                i = 0,
+                ds_length = data_serialized.length,
+                uik_selected = UIK.viewmodel.uikSelected,
+                url = document['url_root'] + 'uik/' + uik_selected.id,
+                saved_uik = { 'id': uik_selected.id };
+            for (i; i < ds_length; i += 1) {
+                saved_uik[data_serialized[i].name] = data_serialized[i].value;
+            }
+            saved_uik.geom = uik_selected.geom;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: { 'uik': JSON.stringify(saved_uik)}
+            }).done(function () {
+                    UIK.alerts.showAlert('saveSuccessful');
+                    context.finishEditing();
+                }).error(function () {
+                    UIK.alerts.showAlert('saveError');
+                });
+        },
+
+        verifyEditor: function () {
+            var verificated = true;
+            if (UIK.viewmodel.latlngEditable.isNeedApplied) {
+                verificated = false;
+                UIK.alerts.showAlert('notAppliedCoordinates');
+            }
+            return verificated;
         },
 
         finishAjaxEdition: function () {
@@ -160,7 +271,7 @@
             v.$body.addClass('editable');
             v.$editorContainer.find('input, textarea').val('');
             v.$editorContainer.find('input:checkbox').prop('checked', false);
-            v.$editorContainer.find('input, select, textarea, button').attr('disabled', 'disabled');
+            v.$editorContainer.find('input, select, textarea, button').attr('disabled', 'disabled').removeClass('invalid');
             v.$editorContainer.find('form').addClass('disabled');
             UIK.view.$document.trigger('/sm/map/updateAllLayers');
         }

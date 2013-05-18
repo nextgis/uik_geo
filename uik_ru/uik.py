@@ -49,7 +49,7 @@ def get_all(context, request):
     session = DBSession()
     if is_filter_applied:
         contains = functions.gcontains(box_geom, Location.point).label('contains')
-        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y, contains) \
+        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
             .join(VotingStation.location) \
             .filter(*clauses) \
             .order_by(contains.desc()) \
@@ -118,7 +118,7 @@ def get_uik(context, request):
         }
     }
 
-    uik_res['uik']['geom'] = {'id': uik[1].id, 'lon': uik[2], 'lat': uik[3]}
+    uik_res['uik']['geom'] = {'id': uik[1].id, 'lng': uik[2], 'lat': uik[3]}
 
     uik_res['uik']['user_blocked'] = ''
     uik_res['uik']['is_blocked'] = False
@@ -150,7 +150,7 @@ def update_uik(context, request):
     }, synchronize_session=False)
     sql = 'UPDATE location SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :location_id'
     session.execute(sql, {
-        'wkt': 'POINT(%s %s)' % (uik['geom']['lon'], uik['geom']['lat']),
+        'wkt': 'POINT(%s %s)' % (uik['geom']['lng'], uik['geom']['lat']),
         'location_id': uik['geom']['id']
     })
 
