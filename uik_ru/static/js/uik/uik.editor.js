@@ -130,26 +130,8 @@
             UIK.viewmodel.map.setView(latlng, 18);
             $('#target').show().delay(1000).fadeOut(1000);
             $('#lat, #lng').removeClass('need-apply');
-        },
-
-        updateCoordinates: function (latLng) {
-            var lat = latLng.lat.toFixed(this.precisionDegree),
-                lng = latLng.lng.toFixed(this.precisionDegree),
-                isNeedApplied = UIK.viewmodel.latlngEditable.isNeedApplied;
-
-            UIK.viewmodel.uikSelected.geom.lat = latLng.lat;
-            UIK.viewmodel.uikSelected.geom.lng = latLng.lng;
-
-            if (isNeedApplied) { $('#applyCoordinates').prop('disabled', true); }
-
-            UIK.viewmodel.latlngEditable = {
-                lat: {validated: true, marker: lat, editor: lat},
-                lng: {validated: true, marker: lng, editor: lng},
-                isNeedApplied: false
-            };
-
-            $('#lat').val(lat);
-            $('#lng').val(lng);
+            $('#applyCoordinates').prop('disabled', true);
+            latlngEditable.isNeedApplied = false;
         },
 
         startAjaxEdition: function () {
@@ -197,6 +179,26 @@
                 isNeedApplied: false
             };
             UIK.viewmodel.markerEditable = marker;
+        },
+
+        updateCoordinates: function (latLng) {
+            var lat = latLng.lat.toFixed(this.precisionDegree),
+                lng = latLng.lng.toFixed(this.precisionDegree),
+                isNeedApplied = UIK.viewmodel.latlngEditable.isNeedApplied;
+
+            UIK.viewmodel.uikSelected.geom.lat = latLng.lat;
+            UIK.viewmodel.uikSelected.geom.lng = latLng.lng;
+
+            if (isNeedApplied) { $('#applyCoordinates').prop('disabled', true); }
+
+            UIK.viewmodel.latlngEditable = {
+                lat: {validated: true, marker: lat, editor: lat},
+                lng: {validated: true, marker: lng, editor: lng},
+                isNeedApplied: false
+            };
+
+            $('#lat').val(lat);
+            $('#lng').val(lng);
         },
 
         fillEditor: function (uik) {
