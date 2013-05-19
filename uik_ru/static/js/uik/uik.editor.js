@@ -5,7 +5,8 @@
         latlngEditable: {
             lat: {validated: null, marker: null, editor: null},
             lng: {validated: null, marker: null, editor: null},
-            isNeedApplied: false
+            isNeedApplied: false,
+            sourceCoordinates: null
         },
         markerEditable: null
     });
@@ -51,7 +52,12 @@
             });
 
             $('#discard').off('click').on('click', function (e) {
+                var viewmodel = UIK.viewmodel;
                 e.stopPropagation();
+                if (!viewmodel.latlngEditable.sourceCoordinates.equals(viewmodel.markerEditable.getLatLng())) {
+                    viewmodel.map.setView(viewmodel.latlngEditable.sourceCoordinates, 18);
+                    $('#target').show().delay(1000).fadeOut(1000);
+                }
                 context.finishAjaxEdition();
             });
 
@@ -126,10 +132,12 @@
         },
 
         applyCoordinates: function (latLngEditable) {
-            var latlng = new L.LatLng(parseFloat(latLngEditable.lat.editor), parseFloat(latLngEditable.lng.editor));
+            var viewmodel = UIK.viewmodel,
+                latlng = new L.LatLng(parseFloat(latLngEditable.lat.editor), parseFloat(latLngEditable.lng.editor));
+
             this.updateCoordinates(latlng);
-            UIK.viewmodel.markerEditable.setLatLng(latlng);
-            UIK.viewmodel.map.setView(latlng, 18);
+            viewmodel.markerEditable.setLatLng(latlng);
+            viewmodel.map.setView(latlng, 18);
             $('#target').show().delay(1000).fadeOut(1000);
             $('#lat, #lng').removeClass('need-apply');
         },
@@ -176,7 +184,8 @@
             UIK.viewmodel.latlngEditable = {
                 lat: {validated: true, marker: stringLat, editor: stringLat},
                 lng: {validated: true, marker: stringLng, editor: stringLng},
-                isNeedApplied: false
+                isNeedApplied: false,
+                sourceCoordinates: new L.LatLng(lat, lng)
             };
             UIK.viewmodel.markerEditable = marker;
         },
@@ -184,17 +193,20 @@
         updateCoordinates: function (latLng) {
             var lat = latLng.lat.toFixed(this.precisionDegree),
                 lng = latLng.lng.toFixed(this.precisionDegree),
-                isNeedApplied = UIK.viewmodel.latlngEditable.isNeedApplied;
+                viewmodel = UIK.viewmodel,
+                isNeedApplied = viewmodel.latlngEditable.isNeedApplied,
+                sourceCoordinates = viewmodel.latlngEditable.sourceCoordinates;
 
-            UIK.viewmodel.uikSelected.geom.lat = latLng.lat;
-            UIK.viewmodel.uikSelected.geom.lng = latLng.lng;
+            viewmodel.uikSelected.geom.lat = latLng.lat;
+            viewmodel.uikSelected.geom.lng = latLng.lng;
 
             if (isNeedApplied) { $('#applyCoordinates').prop('disabled', true); }
 
-            UIK.viewmodel.latlngEditable = {
+            viewmodel.latlngEditable = {
                 lat: {validated: true, marker: lat, editor: lat},
                 lng: {validated: true, marker: lng, editor: lng},
-                isNeedApplied: false
+                isNeedApplied: false,
+                sourceCoordinates: sourceCoordinates
             };
 
             $('#lat').val(lat);
