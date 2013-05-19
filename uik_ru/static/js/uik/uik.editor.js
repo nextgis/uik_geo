@@ -114,8 +114,11 @@
         },
 
         getIsCanApplied: function (latLngEditable) {
-            return (latLngEditable.lat.editor !== latLngEditable.lat.marker && latLngEditable.lat.validated) ||
-                (latLngEditable.lng.editor !== latLngEditable.lng.marker && latLngEditable.lng.validated);
+            if (!latLngEditable.lat.validated || !latLngEditable.lng.validated) {
+                return false;
+            }
+            return latLngEditable.lat.editor !== latLngEditable.lat.marker ||
+                latLngEditable.lng.editor !== latLngEditable.lng.marker;
         },
 
         verifyDecimalDegree: function (value) {
@@ -124,14 +127,11 @@
 
         applyCoordinates: function (latLngEditable) {
             var latlng = new L.LatLng(parseFloat(latLngEditable.lat.editor), parseFloat(latLngEditable.lng.editor));
+            this.updateCoordinates(latlng);
             UIK.viewmodel.markerEditable.setLatLng(latlng);
-            UIK.viewmodel.uikSelected.geom.lat = latlng.lat;
-            UIK.viewmodel.uikSelected.geom.lng = latlng.lng;
             UIK.viewmodel.map.setView(latlng, 18);
             $('#target').show().delay(1000).fadeOut(1000);
             $('#lat, #lng').removeClass('need-apply');
-            $('#applyCoordinates').prop('disabled', true);
-            latlngEditable.isNeedApplied = false;
         },
 
         startAjaxEdition: function () {
@@ -247,10 +247,15 @@
         },
 
         verifyEditor: function () {
-            var verificated = true;
-            if (UIK.viewmodel.latlngEditable.isNeedApplied) {
+            var verificated = true,
+                latLngEditable = UIK.viewmodel.latlngEditable;
+            if (latLngEditable.isNeedApplied) {
                 verificated = false;
                 UIK.alerts.showAlert('notAppliedCoordinates');
+            }
+            if (!latLngEditable.lat.validated || !latLngEditable.lng.validated) {
+                verificated = false;
+                UIK.alerts.showAlert('validateCoordinatesError');
             }
             return verificated;
         },
