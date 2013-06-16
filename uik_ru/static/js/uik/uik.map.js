@@ -102,8 +102,8 @@
 
         getExtentFromUrl: function () {
             var lat = parseFloat(this.getURLParameter('lat')),
-                lng = parseFloat(this.getURLParameter('lng')),
-                zoom = parseFloat(this.getURLParameter('z'));
+                lng = parseFloat(this.getURLParameter('lon')),
+                zoom = parseFloat(this.getURLParameter('zoom'));
 
             if (lat && lng && zoom) {
                 return {'latlng': new L.LatLng(lat, lng), 'zoom': zoom};

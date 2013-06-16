@@ -22,7 +22,7 @@
         bindEvents: function () {
             UIK.view.$document.on('/uik/permalink/update', function (event, latlng, zoom) {
                 var view = UIK.view,
-                    url = document['url_root'] + '?lat=' + latlng.lat + '&lng=' + latlng.lng + '&z=' + zoom;
+                    url = document['url_root'] + '?lat=' + latlng.lat + '&lon=' + latlng.lng + '&zoom=' + zoom;
                 view.$permalink.prop('href', url);
                 view.$fb_link.prop('href', 'https://www.facebook.com/sharer/sharer.php?u=' + url);
             });
