@@ -251,11 +251,11 @@
                 url: url,
                 data: { 'uik': JSON.stringify(saved_uik)}
             }).done(function () {
-                    UIK.alerts.showAlert('saveSuccessful');
-                    context.finishEditing();
-                }).error(function () {
-                    UIK.alerts.showAlert('saveError');
-                });
+                UIK.alerts.showAlert('saveSuccessful');
+                context.finishEditing();
+            }).error(function () {
+                UIK.alerts.showAlert('saveError');
+            });
         },
 
         verifyEditor: function () {

@@ -42,26 +42,6 @@
 			return val;
 		},
 
-		valueCheckToString: function (val) {
-			switch (val) {
-				case 0:
-					return 'Не нужна';
-					break;
-				case 1:
-					return 'Нужна';
-					break;
-				case 2:
-					return 'Проверена';
-					break;
-				case 3:
-					return 'Проверена по Бингу';
-					break;
-				default:
-					return 'Не нужна';
-					break;
-			}
-		},
-
 		sortByFields: function () {
 			var props = arguments,
 				context = this;

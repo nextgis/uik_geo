@@ -6,9 +6,9 @@
     <meta name="description" content="участковая избирательная комиссия выборы адрес">
     <meta name="viewport" content="width=device-width">
 
-    	<link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
-    	<link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
-##    	<link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik.min.css')}" />
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
+
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css"/>
     <!--[if lte IE 8]>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css"/>
@@ -26,13 +26,10 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
     <script src="${request.static_url('uik_ru:static/js/Leaflet.markercluster/leaflet.markercluster-src.js')}"></script>
-
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery/jquery.cookie.js')}"></script>
-##    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/sm.min.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery.imagesloaded.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/leaflet/bing.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/mustache.js')}"></script>
-##	<script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.templates.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.config.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.loader.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.helpers.js')}"></script>
@@ -42,10 +39,11 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.manager.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
-##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.osm.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
 </head>
 <body class="editor-collapsed loading">
 <div class="loading">
@@ -199,6 +197,9 @@
             </div>
         </form>
     </div>
+</div>
+<div class="permalink">
+    <a id="permalink" name="Ссылка на текущую область">Ссылка на карту</a>
 </div>
 </body>
 </html>

@@ -799,3 +799,12 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
 	height: 28px;
 	background: url('../img/sm-icons.png') 0 -98px;
 }
+
+div.permalink {
+    position: absolute;
+    right: 5px;
+    bottom: 25px;
+    background-color: rgba(255, 255, 255, 0.698);
+    box-shadow: 0 0 5px #BBBBBB;
+    margin: 0;
+}
