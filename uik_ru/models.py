@@ -8,7 +8,7 @@ from sqlalchemy import (
     Sequence,
     Boolean,
     DateTime,
-    Unicode
+    LargeBinary
 )
 
 from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
@@ -141,23 +141,70 @@ class VotingStation(Base):
     committee_location_id = Column('location_id', Integer, ForeignKey('location.id'))
 
 
-class LogSavings(Base):
-    __tablename__ = 'log_saving'
+class UikVersions(Base):
+    __tablename__ = 'uik_versions'
 
-    voting_station = relationship('VotingStation')
+    uik = relationship('')
     voting_station_id = Column(Integer, ForeignKey('voting_station.id'), nullable=False, primary_key=True)
     user = relationship('User')
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, primary_key=True)
     time = Column(DateTime, nullable=False, primary_key=True)
 
 
+class Uik(Base):
+    __tablename__ = 'uiks'
+
+    id = Column(Integer, Sequence('uik_id_seq'))
+    number_official = Column(Text, nullable=False, index=True)
+    number_composite = Column(Text, nullable=False, index=True)
+    address_voting = Column(Text, nullable=False, index=True)
+    place_voting = Column(Text, index=True)
+    address_office = Column(Text, index=True)
+    place_office = Column(Text, index=True)
+    comment = Column(Text)
+    point = GeometryColumn(Geometry(2, 4326, spatial_index=True))
+    is_applied = Column(Boolean, nullable=False)
+    geocoding_precision = relationship('geocoding_precisions')
+    geocoding_precision_id = Column(Integer, ForeignKey('geocoding_precisions.id'), nullable=False, index=True)
+    tik = relationship('Tik')
+    tik_id = Column(Integer, ForeignKey('tiks.id'), nullable=False, primary_key=True)
+    region = relationship('Region')
+    region_id = Column(Integer, ForeignKey('regions.id'), nullable=False)
+
+
+class Tik(Base):
+    __tablename__ = 'tiks'
+
+    id = Column(Integer, Sequence('tik_id_seq'), primary_key=True)
+    name = Column(Text)
+    link_orig = Column(Text)
+    link_save = Column(Text)
+    region = relationship('Region')
+    region_id = Column(Integer, ForeignKey('regions.id'), nullable=False)
+
+
+class Region(Base):
+    __tablename__ = 'regions'
+
+    # Id of region matches to region code
+    id = Column(Integer, primary_key=True)
+    name = Column(Text, nullable=False)
+
+
+class GeocodingPrecision(Base):
+    __tablename__ = 'geocoding_precisions'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(Text, nullable=False)
+
+
 class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, Sequence('users_id_seq'), primary_key=True)
-    email = Column(Text, nullable=True)
-    password = Column(Text, nullable=True)
-    display_name = Column(Text, nullable=True)
+    email = Column(Text)
+    password = Column(Text)
+    display_name = Column(Text)
 
 
     @classmethod
