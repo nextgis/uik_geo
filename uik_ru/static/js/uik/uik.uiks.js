@@ -114,6 +114,7 @@
                         dataPoint = dataPointsIterable[i];
                         marker = L.marker([dataPoint.lat, dataPoint.lon], {icon: icon}).on('click', function (e) {
                             var marker = e.target;
+                            console.log(marker.id);
                             UIK.view.$document.trigger('/sm/map/openPopup', [marker.getLatLng(), htmlPopup]);
                             context.buildUikPopup(marker.id);
                         });
@@ -125,7 +126,7 @@
         },
 
         buildUikPopup: function (uikId) {
-            return $.getJSON(document['url_root'] + 'uik/' + uikId,function (data) {
+            return $.getJSON(document['url_root'] + 'uik/' + uikId, function (data) {
                 if (!UIK.viewmodel.editable) {
                     UIK.viewmodel.uikSelected = data.uik;
                 }

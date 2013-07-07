@@ -144,8 +144,8 @@ class VotingStation(Base):
 class UikVersions(Base):
     __tablename__ = 'uik_versions'
 
-    uik = relationship('')
-    voting_station_id = Column(Integer, ForeignKey('voting_station.id'), nullable=False, primary_key=True)
+    uik = relationship('Uik')
+    uik_id = Column(Integer, ForeignKey('uiks.id'), nullable=False, primary_key=True)
     user = relationship('User')
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, primary_key=True)
     time = Column(DateTime, nullable=False, primary_key=True)
@@ -154,7 +154,7 @@ class UikVersions(Base):
 class Uik(Base):
     __tablename__ = 'uiks'
 
-    id = Column(Integer, Sequence('uik_id_seq'))
+    id = Column(Integer, Sequence('uik_id_seq'), primary_key=True)
     number_official = Column(Text, nullable=False, index=True)
     number_composite = Column(Text, nullable=False, index=True)
     address_voting = Column(Text, nullable=False, index=True)
@@ -164,10 +164,10 @@ class Uik(Base):
     comment = Column(Text)
     point = GeometryColumn(Geometry(2, 4326, spatial_index=True))
     is_applied = Column(Boolean, nullable=False)
-    geocoding_precision = relationship('geocoding_precisions')
+    geocoding_precision = relationship('GeocodingPrecision')
     geocoding_precision_id = Column(Integer, ForeignKey('geocoding_precisions.id'), nullable=False, index=True)
     tik = relationship('Tik')
-    tik_id = Column(Integer, ForeignKey('tiks.id'), nullable=False, primary_key=True)
+    tik_id = Column(Integer, ForeignKey('tiks.id'), nullable=False)
     region = relationship('Region')
     region_id = Column(Integer, ForeignKey('regions.id'), nullable=False)
 
