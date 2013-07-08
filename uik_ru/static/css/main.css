@@ -1,130 +1,130 @@
 html, body, #map {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 body {
-	padding: 0;
-	margin: 0;
-	overflow:hidden;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
 }
 
 body div.loading {
-	display: none;
+    display: none;
 }
 
 body.loading div.loading {
-	display: block;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	background-color: #e9e9e9;
-	z-index: 2000;
-	text-align: center;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #e9e9e9;
+    z-index: 2000;
+    text-align: center;
 }
 
 body.loading div.loading span {
-	width: 200px;
-	height: 300px;
-	display: block;
-	margin: 0 auto;
-	font-size: 15px;
+    width: 200px;
+    height: 300px;
+    display: block;
+    margin: 0 auto;
+    font-size: 15px;
 }
 
 body.popup div.popup-background {
-	position: fixed;
-	left: 0px;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	display: block;
-	z-index: 1100;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(255, 255, 255, 0.7);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: block;
+    z-index: 1100;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .loader {
-	background: url('../img/loader.gif') center no-repeat;
+    background: url('../img/loader.gif') center no-repeat;
 }
 
 body.loader div.main-loader {
-	position: absolute;
-	display: block;
-	width: 100%;
-	height: 100%;
-	background: url('../img/loader.gif') center no-repeat transparent;
-	z-index: 3000;
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url('../img/loader.gif') center no-repeat transparent;
+    z-index: 3000;
 }
 
 body #popup {
-	display: none;
+    display: none;
 }
 
 body.popup #popup {
-	display: block;
-	position: fixed;
-	top: 50%;
-	left: 50%;
-	border: 1px solid #c3c3c3;
-	border-radius: 4px 4px 4px 4px;
-	background-color: #ffffff;
-	z-index: 1101;
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    border: 1px solid #c3c3c3;
+    border-radius: 4px 4px 4px 4px;
+    background-color: #ffffff;
+    z-index: 1101;
 }
 
 #popup div.header {
-	background-color: #F5F0F7;
-	color: #756a73;
-	font-size: 15px;
-	height: 24px;
-	line-height: 26px;
-	text-indent: 20px;
+    background-color: #F5F0F7;
+    color: #756a73;
+    font-size: 15px;
+    height: 24px;
+    line-height: 26px;
+    text-indent: 20px;
 }
 
 #popup a.close {
-	position: absolute;
-	right: 0px;
-	top: 0px;
-	width: 22px;
-	height: 22px;
-	background: url('../img/sm-icons.png') -35px -123px;
-	opacity: 0.5;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 22px;
+    height: 22px;
+    background: url('../img/sm-icons.png') -35px -123px;
+    opacity: 0.5;
 }
 
 #popup a.close:hover {
-	opacity: 1;
+    opacity: 1;
 }
 
 #popup div.content table.logs {
-	width: 350px;
-	margin: 15px;
+    width: 350px;
+    margin: 15px;
 }
 
 #popup div.content table.logs caption {
-	color: #444444;
-	font-size: 15px;
-	font-weight: bold;
+    color: #444444;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 #popup div.content table.logs td {
-	line-height: 8px;
+    line-height: 8px;
 }
 
 #popup div.content table.logs td.stop {
-	text-align: right;
+    text-align: right;
 }
 
 #target {
-	display: none;
-	background: url('../img/sm-icons.png') -0px -190px;
-	width: 30px;
-	height: 30px;
-	position: absolute;
-	left: 50%;
-	margin-left: -15px;
-	margin-top: -15px;
-	top: 50%;
-	z-index: 901;
+    display: none;
+    background: url('../img/sm-icons.png') -0px -190px;
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    top: 50%;
+    z-index: 901;
 }
 
 #alerts {
@@ -144,19 +144,19 @@ input.need-apply {
 }
 
 #userContainer {
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	width: 310px;
-	height: 55px;
-	text-align: center;
-	background-color: #ffffff;
-	border: 1px solid #AFAFAF;
-	z-index: 900;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 310px;
+    height: 55px;
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #AFAFAF;
+    z-index: 900;
 }
 
 #userContainer form {
-	margin: 5px;
+    margin: 5px;
 }
 
 #userContainer.inner {
@@ -164,7 +164,7 @@ input.need-apply {
 }
 
 #userContainer.inner #signInForm {
-	display: none;
+    display: none;
 }
 
 #signInForm div {
@@ -172,133 +172,142 @@ input.need-apply {
 }
 
 #userContainer.inner #signOutForm {
-	display: block;
+    display: block;
 }
 
 #userContainer #signOutForm {
-	display: none;
+    display: none;
 }
 
 #signOutForm {
-	text-align: left;
+    text-align: left;
 }
 
 #signOutForm label {
-	padding-top: 5px;
+    padding-top: 5px;
 }
 
 #signOutForm button {
-	float: right;
+    float: right;
 }
 
 #signOutForm div.log {
-	width: 39px;
-	height: 39px;
-	position: absolute;
-	top: 0px;
-	left: -46px;
-	background-color: #ffffff;
-	border: 1px solid #afafaf;
-	cursor: pointer;
+    width: 39px;
+    height: 39px;
+    position: absolute;
+    top: 0px;
+    left: -46px;
+    background-color: #ffffff;
+    border: 1px solid #afafaf;
+    cursor: pointer;
 }
 
 #signOutForm div.log span {
-	display: inline-block;
-	margin: 4px 0 0 5px;
-	width: 29px;
-	height: 31px;
-	background: url('../img/sm-icons.png') -30px -190px;
+    display: inline-block;
+    margin: 4px 0 0 5px;
+    width: 29px;
+    height: 31px;
+    background: url('../img/sm-icons.png') -30px -190px;
 }
 
 #signOutForm div.log:hover span {
-	background: url('../img/sm-icons.png') -58px -190px;
+    background: url('../img/sm-icons.png') -58px -190px;
 }
 
 #searchContainer .title,
 #editorContainer .title {
-	height: 32px;
-	background-color: #f5f5f5;
-	line-height: 32px;
-	cursor: pointer;
+    height: 32px;
+    background-color: #f5f5f5;
+    line-height: 32px;
+    cursor: pointer;
 }
 
 #searchContainer .title span,
 #editorContainer .title span {
-	margin-left: 10px;
-	font-weight: bold;
-	color: #7f7f7f;
+    margin-left: 10px;
+    font-weight: bold;
+    color: #7f7f7f;
 }
 
 #searchContainer {
-	position: absolute;
-	top: 5px;
-	bottom: 5px;
-	left: 5px;
-	width: 300px;
-	background-color: #ffffff;
-	border: 1px solid #AFAFAF;
-	z-index: 900;
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    width: 300px;
+    background-color: #ffffff;
+    border: 1px solid #AFAFAF;
+    z-index: 900;
 }
 
 #searchContainer span.icon-collapse {
-	display: block;
-	width: 6px;
-	height: 15px;
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	cursor: pointer;
+    display: block;
+    width: 6px;
+    height: 15px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+}
+
+#searchContainer ul.nav {
+    margin: 5px 6px;
+}
+
+#searchContainer ul.nav li a {
+    line-height: 14px;
 }
 
 #searchContainer span.icon-collapse:hover {
-	background: url('../img/sm-icons.png') -12px -20px;
+    background: url('../img/sm-icons.png') -12px -20px;
 }
 
 #searchContainer span.icon-collapse {
-	background: url('../img/sm-icons.png') 0 -20px;
+    background: url('../img/sm-icons.png') 0 -20px;
 }
 
 body.searcher-collapsed #searchContainer {
-	width: 32px;
-	height: 32px;
-	background-color: #f5f5f5;
-	border-radius: 4px 4px 4px 4px;
-	top: 60px;
+    width: 32px;
+    height: 32px;
+    background-color: #f5f5f5;
+    border-radius: 4px 4px 4px 4px;
+    top: 60px;
 }
 
+body.searcher-collapsed #searchContainer ul.nav,
 body.searcher-collapsed #searchContainer div.title,
 body.searcher-collapsed #searchContainer form.form-search,
 body.searcher-collapsed #searchContainer #searchResults {
-	display: none;
+    display: none;
 }
 
 body.searcher-collapsed #searchContainer span.icon-collapse {
-	width: 25px;
-	height: 25px;
-	right: auto;
-	top: 3px;
-	left: 4px;
+    width: 25px;
+    height: 25px;
+    right: auto;
+    top: 3px;
+    left: 4px;
 }
 
 body.searcher-collapsed #searchContainer span.icon-collapse {
-	background: url('../img/sm-icons.png') -0px -35px;
+    background: url('../img/sm-icons.png') -0px -35px;
 }
 
 body.searcher-collapsed #searchContainer span.icon-collapse:hover {
-	background: url('../img/sm-icons.png') -25px -35px;
+    background: url('../img/sm-icons.png') -25px -35px;
 }
 
 body.searcher-collapsed #map .leaflet-control-container .leaflet-top {
-	top: -7px;
+    top: -7px;
 }
 
 body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
-	left: -3px;
+    left: -3px;
 }
 
 #searchContainer .form-search {
     text-align: right;
-	margin: 5px 10px;
+    margin: 5px 10px;
 }
 
 #searchContainer .form-search a.clear-search {
@@ -311,63 +320,63 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchContainer input.input-address {
-	width: 117px;
-	margin-left: 4px;
+    width: 117px;
+    margin-left: 4px;
 }
 
 #searchContainer input.input-name {
-	width: 90px;
+    width: 90px;
 }
 
 #searchContainer div.is_help {
-	margin: 5px;
+    margin: 5px;
 }
 
 #filter_is_help {
-	display: inline-block;
-	margin-top: -3px;
+    display: inline-block;
+    margin-top: -3px;
 }
 
 #search {
-	display: inline-block;
-	border-radius: 4px 4px 4px 4px;
-	background-color: #ebebeb;
-	border: 1px solid #ebebeb;
-	vertical-align: middle;
-	width: 29px;
-	height: 29px;
-	padding: 1px;
+    display: inline-block;
+    border-radius: 4px 4px 4px 4px;
+    background-color: #ebebeb;
+    border: 1px solid #ebebeb;
+    vertical-align: middle;
+    width: 29px;
+    height: 29px;
+    padding: 1px;
 }
 
 #search span {
-	display: block;
-	width: 26px;
-	height: 26px;
-	margin: 2px auto;
-	background: url("../img/sm-icons.png") repeat scroll 0 -35px transparent;
+    display: block;
+    width: 26px;
+    height: 26px;
+    margin: 2px auto;
+    background: url("../img/sm-icons.png") repeat scroll 0 -35px transparent;
 }
 
 #search.active:hover span {
-	background: url('../img/sm-icons.png') -25px -35px;
+    background: url('../img/sm-icons.png') -25px -35px;
 }
 
 #search.active {
-	background-color: transparent;
-	border: 1px solid #bebcb8;
-	cursor: pointer;
+    background-color: transparent;
+    border: 1px solid #bebcb8;
+    cursor: pointer;
 }
 
 #searchResults {
-	margin: 5px;
-	border: 1px solid #AFAFAF;
-	position: absolute;
-	top: 86px;
-	bottom: 5px;
-	left: 5px;
-	right: 5px;
-	overflow-x: hidden;
-	overflow-y: auto;
-	text-align: center;
+    margin: 5px;
+    border: 1px solid #AFAFAF;
+    position: absolute;
+    top: 125px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
 }
 
 #searchResults.description p.update,
@@ -376,26 +385,26 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 #searchResults.update p.description,
 #searchResults.active p.description,
 #searchResults.active p.update {
-	display: none;
+    display: none;
 }
 
 #searchResults.description p.description,
 #searchResults.update p.update {
-	display: inline;
-	color: #b2b1a6;
-	text-align: center;
+    display: inline;
+    color: #b2b1a6;
+    text-align: center;
 }
 
 #searchResults.active ul {
-	display: block;
-	text-align: left;
-	list-style-type: none;
-	margin: 0;
+    display: block;
+    text-align: left;
+    list-style-type: none;
+    margin: 0;
 }
 
 #searchResults.active ul li {
-	margin: 2px;
-	color: #676767;
+    margin: 2px;
+    color: #676767;
     font-size: 13px;
     border-top: solid 1px;
     padding: 2px;
@@ -410,12 +419,12 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchResults.active ul li:hover a.target {
-	background: url("../img/sm-icons.png") repeat scroll -25px -20px transparent;
-	display: inline-block;
-	height: 14px;
-	margin-bottom: -4px;
-	width: 14px;
-	cursor: pointer;
+    background: url("../img/sm-icons.png") repeat scroll -25px -20px transparent;
+    display: inline-block;
+    height: 14px;
+    margin-bottom: -4px;
+    width: 14px;
+    cursor: pointer;
 }
 
 #searchResults.active ul li:hover a.edit {
@@ -428,156 +437,157 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
 }
 
 #searchResults.active ul.blocked li {
-	color: #ff0000;
+    color: #ff0000;
 }
 
 #searchResults.active ul.checked li {
-	color: #15c700;
+    color: #15c700;
 }
 
 #searchResults.active ul.non-checked li {
-	color: #BD9C19;
+    color: #BD9C19;
 }
 
 body #manager {
-	position: absolute;
-	left: 310px;
-	top: 61px;
-	width: 32px;
+    position: absolute;
+    left: 310px;
+    top: 61px;
+    width: 32px;
 }
 
 body.searcher-collapsed #manager {
-	top: 105px;
-	left: 3px;
+    top: 105px;
+    left: 3px;
 }
 
 #manager div.group {
-	width: 37px;
-	height: 70px;
-	border: 1px solid #AFAFAF;
-	border-radius: 4px 4px 4px 4px;
-	background-color: #F5F5F5;
+    width: 37px;
+    height: 70px;
+    border: 1px solid #AFAFAF;
+    border-radius: 4px 4px 4px 4px;
+    background-color: #F5F5F5;
 }
 
 #manager div.group div.icon {
-	width: 30px;
-	height: 30px;
-	margin: 2px 2px;
-	border: 1px solid #cccccc;
-	border-radius: 4px 4px 4px 4px;
-	cursor: pointer;
+    width: 30px;
+    height: 30px;
+    margin: 2px 2px;
+    border: 1px solid #cccccc;
+    border-radius: 4px 4px 4px 4px;
+    cursor: pointer;
 }
 
 #manager div.icon button {
-	display: block;
-	width: 28px;
-	height: 28px;
-	margin: 2px 0 0 2px;
-	border: none;
+    display: block;
+    width: 28px;
+    height: 28px;
+    margin: 2px 0 0 2px;
+    border: none;
 }
 
 #manager div.icon.osm button {
-	background: url('../img/sm-icons.png') -50px -35px;
+    background: url('../img/sm-icons.png') -50px -35px;
 }
 
 #manager div.icon.bing button {
-	background: url('../img/sm-icons.png') -105px -35px;
+    background: url('../img/sm-icons.png') -105px -35px;
 }
 
 body.osm #manager div.icon.osm button,
 #manager div.icon.osm:hover button {
-	background: url('../img/sm-icons.png') -77px -35px;
+    background: url('../img/sm-icons.png') -77px -35px;
 }
 
 body.bing #manager div.icon.bing button,
 #manager div.icon.bing:hover button {
-	background: url('../img/sm-icons.png') -133px -35px;
+    background: url('../img/sm-icons.png') -133px -35px;
 }
 
 body.osm #manager div.icon.osm,
 body.bing #manager div.icon.bing {
-	border: 1px solid #838383;
+    border: 1px solid #838383;
 }
 
 #editorContainer {
-	right: 5px;position: absolute;
-	top: 66px;
-	bottom: 5px;
-	width: 310px;
-	background-color: #ffffff;
-	border: 1px solid #AFAFAF;
-	z-index: 900;
+    right: 5px;
+    position: absolute;
+    top: 66px;
+    bottom: 5px;
+    width: 310px;
+    background-color: #ffffff;
+    border: 1px solid #AFAFAF;
+    z-index: 900;
 }
 
 #editorContainer span.icon-collapse {
-	background: url('../img/sm-icons.png') 0 0;
+    background: url('../img/sm-icons.png') 0 0;
 }
 
 #editorContainer span.icon-collapse:hover {
-	background: url('../img/sm-icons.png') -20px 0;
+    background: url('../img/sm-icons.png') -20px 0;
 }
 
 #editorContainer span.icon-collapse {
-	display: block;
-	width: 20px;
-	height: 20px;
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	cursor: pointer;
+    display: block;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
 }
 
 #editorContainer div.form-wrap {
-	bottom: 5px;
-	overflow-x: hidden;
-	overflow-y: auto;
-	position: absolute;
-	top: 34px;
-	right: 3px;
-	left: 0px;
+    bottom: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: absolute;
+    top: 34px;
+    right: 3px;
+    left: 0px;
 }
 
 #editorContainer form {
-	margin: 5px 3px 5px 5px;
+    margin: 5px 3px 5px 5px;
 }
 
 #editorContainer form div.group {
-	display: table;
-	margin: 0 0 5px 0;
+    display: table;
+    margin: 0 0 5px 0;
 }
 
 #editorContainer form.disabled * {
-	color: #808080;
+    color: #808080;
 }
 
 #editorContainer form label,
 #editorContainer form input,
 #editorContainer form select,
 #editorContainer form textarea {
-	display: table-cell;
-	vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 #editorContainer form label.top {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 #editorContainer form label {
-	width: 90px;
-	line-height: 14px;
+    width: 90px;
+    line-height: 14px;
 }
 
 #editorContainer form input.stand,
 #editorContainer form textarea {
-	width: 185px;
+    width: 185px;
 }
 
 #editorContainer form select.stand {
-	width: 197px;
+    width: 197px;
 }
 
 #editorContainer form textarea {
-	resize: none;
+    resize: none;
 }
 
 #editorContainer form div.group-checkboxes label {
@@ -585,12 +595,13 @@ body.bing #manager div.icon.bing {
     padding-left: 35px;
     text-indent: -15px;
 }
+
 #editorContainer form div.group-checkboxes input {
     width: 13px;
     height: 13px;
     float: left;
     padding: 0;
-    margin:0;
+    margin: 0;
     vertical-align: bottom;
     position: relative;
     top: -1px;
@@ -598,36 +609,36 @@ body.bing #manager div.icon.bing {
 }
 
 #editorContainer form .group-submit {
-	width: auto;
-	text-align: center;
-	margin-top: 8px;
+    width: auto;
+    text-align: center;
+    margin-top: 8px;
 }
 
 #editorContainer form #discard {
-	margin-right: 10px;
+    margin-right: 10px;
 }
 
 #editorContainer .parameters {
-	display: table-cell;
-	width: 197px;
+    display: table-cell;
+    width: 197px;
 }
 
 #editorContainer .parameter label.disabled {
-	color: #808080;
+    color: #808080;
 }
 
 #editorContainer .parameter.default {
-	border-bottom: 1px solid #a9a9a9;
-	padding-bottom: 5px;
+    border-bottom: 1px solid #a9a9a9;
+    padding-bottom: 5px;
 }
 
 #editorContainer .parameter.sub {
-	margin-left: 10px;
+    margin-left: 10px;
 }
 
 #editorContainer .parameters .parameter input,
 #editorContainer .parameters .parameter label {
-	display: inline;
+    display: inline;
 }
 
 #editorContainer .geographic {
@@ -640,164 +651,165 @@ body.bing #manager div.icon.bing {
 }
 
 body.editor-collapsed #editorContainer {
-	bottom: auto;
+    bottom: auto;
 }
 
 body.editor-collapsed #editorContainer span.icon-collapse {
-	background: url('../img/sm-icons.png') -40px 0;
+    background: url('../img/sm-icons.png') -40px 0;
 }
 
 body.editor-collapsed #editorContainer span.icon-collapse:hover {
-	background: url('../img/sm-icons.png') -60px 0;
+    background: url('../img/sm-icons.png') -60px 0;
 }
 
 body.editor-collapsed #editorContainer form {
-	display: none;
+    display: none;
 }
 
 body.editor-collapsed #map .leaflet-control-container .leaflet-right {
-	right: 6px;
+    right: 6px;
 }
 
 #map .leaflet-control-container .leaflet-top {
-	top: -6px;
+    top: -6px;
 }
 
 #map .leaflet-control-container .leaflet-left {
-	left: 305px;
+    left: 305px;
 }
 
 #map .leaflet-control-container .leaflet-bottom {
-	bottom: 6px;
+    bottom: 6px;
 }
 
 #map .leaflet-control-container .leaflet-right {
-	right: 322px;
+    right: 322px;
 }
 
 #map .leaflet-bottom .leaflet-control-scale {
-	margin-bottom: 1px;
+    margin-bottom: 1px;
 }
 
 #map .leaflet-left .leaflet-control-scale {
-	margin-left: 15px;
+    margin-left: 15px;
 }
 
 #map .osm-popup {
-	min-width: 120px;
+    min-width: 120px;
 }
 
 #map .osm-bus-stop {
-	background: url('../img/sm-icons.png') -80px 0;
-	z-index: 300 !important;
+    background: url('../img/sm-icons.png') -80px 0;
+    z-index: 300 !important;
 }
 
 #map .uik-unchecked {
-	background: url('../img/sm-icons.png') -0px -145px;
-	z-index: 310 !important;
+    background: url('../img/sm-icons.png') -0px -145px;
+    z-index: 310 !important;
 }
 
 #map .uik-unchecked:hover {
-	background: url('../img/sm-icons.png') -20px -145px;
+    background: url('../img/sm-icons.png') -20px -145px;
 }
 
 #map .uik-checked {
-	background: url('../img/sm-icons.png') -40px -145px;
-	z-index: 305 !important;
+    background: url('../img/sm-icons.png') -40px -145px;
+    z-index: 305 !important;
 }
 
 #map .uik-checked:hover {
-	background: url('../img/sm-icons.png') -60px -145px;
+    background: url('../img/sm-icons.png') -60px -145px;
 }
 
 #map .stop-editable {
-	background: url('../img/sm-icons.png') -25px -165px;
-	z-index: 320 !important;
+    background: url('../img/sm-icons.png') -25px -165px;
+    z-index: 320 !important;
 }
 
 #map .uik-blocked {
-	background: url('../img/sm-icons.png') -80px -145px;
-	z-index: 315 !important;
+    background: url('../img/sm-icons.png') -80px -145px;
+    z-index: 315 !important;
 }
 
 #map .uik-blocked:hover {
-	background: url('../img/sm-icons.png') -100px -145px;
+    background: url('../img/sm-icons.png') -100px -145px;
 }
 
 #stop-popup.loader {
-	width: 250px;
-	height: 100px;
+    width: 250px;
+    height: 100px;
 }
-#map .leaflet-popup-content{
-	min-width: 250px;
+
+#map .leaflet-popup-content {
+    min-width: 250px;
 }
 
 #stop-popup .table {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 #stop-popup .table th, #stop-popup .table td {
-	line-height:normal;
-	padding: 4px;
+    line-height: normal;
+    padding: 4px;
 }
 
 #stop-popup div.edit {
-	text-align: right;
+    text-align: right;
 }
 
 #stop-popup div.edit a {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #stop-popup #edit {
-	padding: 5px;
+    padding: 5px;
 }
 
 #stop-popup tr.block {
-	color: red;
-	font-weight: bold;
+    color: red;
+    font-weight: bold;
 }
 
 #unblock {
-	float: right;
+    float: right;
 }
 
 #stop-popup div.edit button.block {
-	color: #ffdbd6;
-	background-color: #cc8774;
-	background-image: none;
+    color: #ffdbd6;
+    background-color: #cc8774;
+    background-image: none;
 }
 
 #map .osm-popup table {
-	border-bottom: solid 1px #a9a9a9;
-	border-top: solid 1px #a9a9a9;
+    border-bottom: solid 1px #a9a9a9;
+    border-top: solid 1px #a9a9a9;
 }
 
 #map .osm-popup .table th,
 #map .osm-popup .table td {
-	padding: 2px;
+    padding: 2px;
 }
 
 #map div.osm-popup div.caption {
-	margin-bottom: 5px;
+    margin-bottom: 5px;
 }
 
 #map div.osm-popup div.caption a,
 #map div.osm-popup div.caption span {
-	display: table-cell;
-	vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 #map div.osm-popup div.caption span {
-	font-size: 14px;
-	text-align: left;
-	padding-right: 5px;
+    font-size: 14px;
+    text-align: left;
+    padding-right: 5px;
 }
 
 #map .osm-popup a.osm {
-	width: 27px;
-	height: 28px;
-	background: url('../img/sm-icons.png') 0 -98px;
+    width: 27px;
+    height: 28px;
+    background: url('../img/sm-icons.png') 0 -98px;
 }
 
 div.permalink {

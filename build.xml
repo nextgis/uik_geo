@@ -25,6 +25,7 @@
 			<file file="${rootProjectDirName}/static/js/uik/uik.map.helpers.js"/>
 			<file file="${rootProjectDirName}/static/js/uik/uik.map.manager.js"/>
 			<file file="${rootProjectDirName}/static/js/uik/uik.searcher.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.searcher.tab.js"/>
 			<file file="${rootProjectDirName}/static/js/uik/uik.editor.js"/>
 			<file file="${rootProjectDirName}/static/js/uik/uik.user.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.permalink.js"/>

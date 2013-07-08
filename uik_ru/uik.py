@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'karavanjo'
 
-from models import DBSession, VotingStation, Location, District, Area, SubArea, Locality, Street, User, LogSavings
+from models import *
+from helpers import *
 from decorators import authorized
 from pyramid.view import view_config
 from pyramid.response import Response
@@ -25,18 +26,13 @@ def get_all(context, request):
             is_filter_applied = True
             if filter['addr'].__len__() > 3:
                 address = '%' + filter['addr'] + '%'
-                clauses.append(VotingStation.address.ilike(address))
+                clauses.append(Uik.address_voting.ilike(address))
             if filter['name']:
                 name = filter['name']
-                clauses.append(VotingStation.name == name)
+                clauses.append(Uik.number_composite == name)
 
     bbox = json.loads(request.params.getall('bbox')[0])
-    box_geom = 'POLYGON((%s %s, %s %s, %s %s, %s %s, %s %s))' % \
-               (bbox['_southWest']['lng'], bbox['_southWest']['lat'], \
-                bbox['_southWest']['lng'], bbox['_northEast']['lat'], \
-                bbox['_northEast']['lng'], bbox['_northEast']['lat'], \
-                bbox['_northEast']['lng'], bbox['_southWest']['lat'], \
-                bbox['_southWest']['lng'], bbox['_southWest']['lat'])
+    box_geom = leaflet_bbox_to_polygon(bbox)
 
     uiks_for_json = {'points': {
         'count': 0,
@@ -48,9 +44,8 @@ def get_all(context, request):
 
     session = DBSession()
     if is_filter_applied:
-        contains = functions.gcontains(box_geom, Location.point).label('contains')
-        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
-            .join(VotingStation.location) \
+        contains = functions.gcontains(box_geom, Uik.point).label('contains')
+        uiks_from_db = session.query(Uik, Uik.point.x, Uik.point.y) \
             .filter(*clauses) \
             .order_by(contains.desc()) \
             .limit(page_size) \
@@ -58,13 +53,12 @@ def get_all(context, request):
         if len(uiks_from_db) < page_size:
             uiks_for_json['points']['count'] = len(uiks_from_db)
         else:
-            uiks_for_json['points']['count'] = session.query(VotingStation.id) \
+            uiks_for_json['points']['count'] = session.query(Uik.id) \
                 .filter(*clauses) \
                 .count()
     else:
-        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
-            .join(VotingStation.location) \
-            .filter(Location.point.within(box_geom)) \
+        uiks_from_db = session.query(Uik, Uik.point.x, Uik.point.y) \
+            .filter(Uik.point.within(box_geom)) \
             .all()
         uiks_for_json['points']['count'] = len(uiks_from_db)
 
@@ -72,7 +66,7 @@ def get_all(context, request):
         if uik[0].is_blocked:
             uiks_for_json['points']['layers']['blocked']['elements'].append(_get_uik_from_uik_db(uik))
             continue
-        if uik[0].is_checked:
+        if uik[0].is_applied:
             uiks_for_json['points']['layers']['checked']['elements'].append(_get_uik_from_uik_db(uik))
             continue
         uiks_for_json['points']['layers']['unchecked']['elements'].append(_get_uik_from_uik_db(uik))
@@ -88,8 +82,8 @@ def get_all(context, request):
 
 def _get_uik_from_uik_db(uik_from_db):
     return {'id': uik_from_db[0].id,
-            'name': uik_from_db[0].name,
-            'addr': uik_from_db[0].address,
+            'name': uik_from_db[0].number_composite,
+            'addr': uik_from_db[0].address_voting,
             'lon': uik_from_db[1],
             'lat': uik_from_db[2]}
 
@@ -97,28 +91,24 @@ def _get_uik_from_uik_db(uik_from_db):
 def get_uik(context, request):
     id = request.matchdict.get('id', None)
     session = DBSession()
-    uik = session.query(VotingStation, Location, Location.point.x, Location.point.y, \
-                        District, Area, SubArea, Locality, Street) \
-        .join(VotingStation.location) \
-        .outerjoin((District, Location.district_id == District.id)) \
-        .outerjoin((Area, Location.area_id == Area.id)) \
-        .outerjoin((SubArea, Location.sub_area_id == SubArea.id)) \
-        .outerjoin((Locality, Location.locality_id == Locality.id)) \
-        .outerjoin((Street, Location.street_id == Street.id)) \
-        .outerjoin((User, VotingStation.user_block_id == User.id)) \
-        .filter(VotingStation.id == id).one()
+    uik = session.query(Uik, Uik.point.x, Uik.point.y, GeocodingPrecision, Region, Tik, User) \
+        .outerjoin((GeocodingPrecision, Uik.geocoding_precision_id == GeocodingPrecision.id)) \
+        .outerjoin((Region, Uik.region_id == Region.id)) \
+        .outerjoin((Tik, Uik.tik_id == Tik.id)) \
+        .outerjoin((User, Uik.user_block_id == User.id)) \
+        .filter(Uik.id == id).one()
 
     uik_res = {
         'uik': {
             'id': uik[0].id,
-            'name': uik[0].name if uik[0].name else'',
-            'is_checked': uik[0].is_checked if uik[0].is_checked else False,
+            'name': uik[0].number_composite if uik[0].number_composite else'',
+            'is_applied': uik[0].is_applied if uik[0].is_applied else False,
             'comment': uik[0].comment if uik[0].comment else '',
-            'address': uik[0].address if uik[0].address else ''
+            'address': uik[0].address_voting if uik[0].address_voting else ''
         }
     }
 
-    uik_res['uik']['geom'] = {'id': uik[1].id, 'lng': uik[2], 'lat': uik[3]}
+    uik_res['uik']['geom'] = {'id': uik[0].id, 'lng': uik[1], 'lat': uik[2]}
 
     uik_res['uik']['user_blocked'] = ''
     uik_res['uik']['is_blocked'] = False
@@ -154,7 +144,7 @@ def update_uik(context, request):
         'location_id': uik['geom']['id']
     })
 
-    log = LogSavings()
+    log = UikVersions()
     log.voting_station_id = uik['id']
     log.user_id = request.session['u_id']
     from datetime import datetime

@@ -787,8 +787,16 @@ $.fn.imagesLoaded = function( callback ) {
 		templates: ['uikPopupTemplate', 'uikPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate', 'alertsTemplate'],
 
 		init: function () {
-			this.setDomOptions();
-			this.compileTemplates();
+			var context = this;
+
+            this.setDomOptions();
+
+            window.setTimeout(function () {
+                context.initModules();
+                $('img').imagesLoaded(function () {
+                    UIK.view.$body.removeClass('loading');
+                });
+            }, 1000);
 		},
 
 		initModules: function () {
@@ -808,31 +816,6 @@ $.fn.imagesLoaded = function( callback ) {
 
 		setDomOptions: function () {
 			UIK.view.$document = $(document);
-		},
-
-		compileTemplates: function () {
-			var context = this, deferreds = [], templates = [], htmlTemplates = [], templateIndex,
-				templatesCount = this.templates.length;
-			for (templateIndex = 0; templateIndex < templatesCount; templateIndex++) {
-				deferreds.push($.get(document['url_root'] + 'static/js/templates/' + this.templates[templateIndex] + '.htm', function (doc, state, response) {
-					htmlTemplates.push({
-						'name' : this.url.substr((this.url.lastIndexOf("/") + 1)).replace('.htm', ''),
-						'html' : response.responseText
-                    });
-				}));
-			}
-			$.when.apply(null, deferreds).done(function () {
-				for (templateIndex = 0; templateIndex < templatesCount; templateIndex++) {
-					var name = htmlTemplates[templateIndex].name;
-					UIK.templates[name] = Mustache.compile(htmlTemplates[templateIndex].html);
-				}
-				window.setTimeout(function () {
-					context.initModules();
-					$('img').imagesLoaded(function () {
-						UIK.view.$body.removeClass('loading');
-					});
-				}, 1000);
-			});
 		}
 	});
 
@@ -1068,8 +1051,8 @@ $.fn.imagesLoaded = function( callback ) {
 
         getExtentFromUrl: function () {
             var lat = parseFloat(this.getURLParameter('lat')),
-                lng = parseFloat(this.getURLParameter('lng')),
-                zoom = parseFloat(this.getURLParameter('z'));
+                lng = parseFloat(this.getURLParameter('lon')),
+                zoom = parseFloat(this.getURLParameter('zoom'));
 
             if (lat && lng && zoom) {
                 return {'latlng': new L.LatLng(lat, lng), 'zoom': zoom};
@@ -1698,6 +1681,37 @@ $.fn.imagesLoaded = function( callback ) {
 	});
 })(jQuery, UIK);
 
+(function ($, UIK) {
+
+    $.extend(UIK.view, {
+        $permalink: null,
+        $fb_link: null
+    });
+
+    UIK.permalink = {};
+    $.extend(UIK.permalink, {
+        init: function () {
+            this.setDomOptions();
+            this.bindEvents();
+        },
+
+
+        setDomOptions: function () {
+            UIK.view.$permalink = $('#permalink');
+            UIK.view.$fb_link = $('#rightPanel a.facebook');
+        },
+
+
+        bindEvents: function () {
+            UIK.view.$document.on('/uik/permalink/update', function (event, latlng, zoom) {
+                var view = UIK.view,
+                    url = document['url_root'] + '?lat=' + latlng.lat + '&lon=' + latlng.lng + '&zoom=' + zoom;
+                view.$permalink.prop('href', url);
+                view.$fb_link.prop('href', 'https://www.facebook.com/sharer/sharer.php?u=' + url);
+            });
+        }
+    });
+})(jQuery, UIK);
 UIK.templates = {};
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="stop-popup" class="{{css}} loader"></div>');
 UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_stops}}</td> </tr> {{/user_logs}} </table>');

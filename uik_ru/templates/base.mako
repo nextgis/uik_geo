@@ -38,12 +38,20 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.helpers.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.manager.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.tab.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
+
+    ## Temporary styles
+    <style>
+        #userContainer * {
+            display: none;
+        }
+    </style>
 </head>
 <body class="editor-collapsed loading">
 <div class="loading">
@@ -81,7 +89,7 @@
         <fieldset>
             <label id="display-name" class="control-label">
                     % if u_name:
-						${u_name}
+                        ${u_name}
                     % endif
             </label>
             <input type="hidden" name="sign_out" value="true" />
@@ -92,22 +100,32 @@
 <div id="searchContainer">
     <span class="icon-collapse"></span>
     <div class="title"><span>Поиск</span></div>
-    <form class="form-search">
-        <fieldset>
-            <input id="filter_name" type="text" class="input-name" placeholder="Номер" />
-            <input id="filter_address" type="text" class="input-address" placeholder="Адрес" />
-            <div id="search" class="active" title="Поиск">
-                <span></span>
-            </div>
-        </fieldset>
-        <a href="javascript:void(0)" class="clear-search">Очистить поля поиска</a>
-    </form>
-    <div id="searchResults" class="active">
-        <p class="update">Запрос данных...</p>
-        <p class="description">Для поиска введите</br>часть адреса (более 3 символов)</br>и нажмите на кнопку</br></br>
-            Для отображения списка УИКов кликните на эту область
-        </p>
-        <div></div>
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="searchUIK">УИК</a>
+        </li>
+        <li><a href="searchUIKp">УИК 2012</a></li>
+        <li><a href="searchAddress">Адреса</a></li>
+    </ul>
+    <div id="searchUIK">
+        <form class="form-search">
+            <fieldset>
+                <input id="filter_name" type="text" class="input-name" placeholder="Номер" />
+                <input id="filter_address" type="text" class="input-address" placeholder="Адрес" />
+                <div id="search" class="active" title="Поиск">
+                    <span></span>
+                </div>
+            </fieldset>
+            <a href="javascript:void(0)" class="clear-search">Очистить поля поиска</a>
+        </form>
+
+        <div id="searchResults" class="active">
+            <p class="update">Запрос данных...</p>
+            <p class="description">Для поиска введите</br>часть адреса (более 3 символов)</br>и нажмите на кнопку</br></br>
+                Для отображения списка УИКов кликните на эту область
+            </p>
+            <div></div>
+        </div>
     </div>
 </div>
 <div id="manager">

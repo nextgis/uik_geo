@@ -249,6 +249,14 @@ input.need-apply {
 	z-index: 900;
 }
 
+#searchContainer ul.nav {
+    margin: 5px 6px;
+}
+
+#searchContainer ul.nav-tabs li a {
+    line-height: 14px;
+}
+
 #searchContainer span.icon-collapse {
 	display: block;
 	width: 6px;

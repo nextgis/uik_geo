@@ -141,16 +141,6 @@ class VotingStation(Base):
     committee_location_id = Column('location_id', Integer, ForeignKey('location.id'))
 
 
-class UikVersions(Base):
-    __tablename__ = 'uik_versions'
-
-    uik = relationship('Uik')
-    uik_id = Column(Integer, ForeignKey('uiks.id'), nullable=False, primary_key=True)
-    user = relationship('User')
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, primary_key=True)
-    time = Column(DateTime, nullable=False, primary_key=True)
-
-
 class Uik(Base):
     __tablename__ = 'uiks'
 
@@ -170,6 +160,9 @@ class Uik(Base):
     tik_id = Column(Integer, ForeignKey('tiks.id'), nullable=False)
     region = relationship('Region')
     region_id = Column(Integer, ForeignKey('regions.id'), nullable=False)
+    is_blocked = Column(Boolean, nullable=True)
+    user_block = relationship('User')
+    user_block_id = Column(Integer, ForeignKey('users.id'), nullable=True)
 
 
 class Tik(Base):
@@ -214,3 +207,13 @@ class User(Base):
 
     def as_dict(self, **addon):
         return dict(id=self.id, email=self.email, display_name=self.display_name, **addon)
+
+
+class UikVersions(Base):
+    __tablename__ = 'uik_versions'
+
+    uik = relationship('Uik')
+    uik_id = Column(Integer, ForeignKey('uiks.id'), primary_key=True)
+    user = relationship('User')
+    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+    time = Column(DateTime, nullable=False, primary_key=True)
