@@ -51,7 +51,7 @@
             var validateZoom = this.validateZoom();
             this.clearLayers();
             if (!validateZoom) { return; }
-            UIK.view.$document.trigger('/sm/stops/startUpdate');
+            UIK.view.$document.trigger('/uik/uiks/startUpdate');
             this.updateUiksByAjax();
         },
 
@@ -131,16 +131,16 @@
                     UIK.viewmodel.uikSelected = data.uik;
                 }
                 var html = UIK.templates.uikPopupInfoTemplate({
-                        id: data.uik.id,
-                        name: data.uik.name,
-                        address: data.uik.address,
-                        comment: data.uik.comment,
-                        isUserEditor: UIK.viewmodel.isAuth,
-                        editDenied: UIK.viewmodel.editable || data.uik.is_blocked,
-                        isBlocked: data.uik.is_blocked,
-                        userBlocked: data.uik.user_blocked,
-                        isUnBlocked: data.uik.is_unblocked
-                    });
+                    uik: data.uik,
+                    tik: data.tik,
+                    region: data.region,
+                    geo_precision: data.geo_precision,
+                    isUserEditor: UIK.viewmodel.isAuth,
+                    editDenied: UIK.viewmodel.editable || data.uik.is_blocked,
+                    isBlocked: data.uik.is_blocked,
+                    userBlocked: data.uik.user_blocked,
+                    isUnBlocked: data.uik.is_unblocked
+                });
                 $('#stop-popup').removeClass('loader').empty().append(html);
                 $('button#edit').off('click').on('click', function () {
                     UIK.view.$document.trigger('/sm/editor/startEdit');

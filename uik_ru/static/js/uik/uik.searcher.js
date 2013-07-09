@@ -73,7 +73,7 @@
                 context.updateSearch();
             });
 
-            view.$document.on('/sm/stops/startUpdate', function () {
+            view.$document.on('/uik/uiks/startUpdate', function () {
                 var v = UIK.view;
                 v.$searchResults.prop('class', 'update');
                 v.$filterName.prop('disabled', true);

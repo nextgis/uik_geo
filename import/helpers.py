@@ -3,4 +3,4 @@ def get_values(args):
 
 
 def check_null(arg):
-    return "'" + str(arg) + "'" if arg is not (None or '') else 'NULL'
+    return 'NULL' if arg is None or arg is '' else "'" + str(arg) + "'"

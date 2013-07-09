@@ -164,6 +164,19 @@ class Uik(Base):
     user_block = relationship('User')
     user_block_id = Column(Integer, ForeignKey('users.id'), nullable=True)
 
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            number_official=self.number_official if self.number_official else '',
+            number_composite=self.number_composite if self.number_composite else '',
+            address_voting=self.address_voting if self.address_voting else '',
+            place_voting=self.place_voting if self.place_voting else '',
+            address_office=self.address_office if self.address_office else '',
+            place_office=self.place_office if self.place_office else '',
+            comment=self.comment if self.comment else '',
+            is_applied=self.is_applied
+        )
+
 
 class Tik(Base):
     __tablename__ = 'tiks'
@@ -175,6 +188,14 @@ class Tik(Base):
     region = relationship('Region')
     region_id = Column(Integer, ForeignKey('regions.id'), nullable=False)
 
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name if self.name else '',
+            link_orig=self.link_orig if self.link_orig else '',
+            link_save=self.link_save if self.link_save else ''
+        )
+
 
 class Region(Base):
     __tablename__ = 'regions'
@@ -183,12 +204,24 @@ class Region(Base):
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
 
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name if self.name else ''
+        )
+
 
 class GeocodingPrecision(Base):
     __tablename__ = 'geocoding_precisions'
 
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
+
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name if self.name else ''
+        )
 
 
 class User(Base):
@@ -217,3 +250,10 @@ class UikVersions(Base):
     user = relationship('User')
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     time = Column(DateTime, nullable=False, primary_key=True)
+
+    def to_dict(self):
+        return dict(
+            uik_id=self.uik_id,
+            user_id=self.user_id,
+            time=self.time.isoformat()
+        )

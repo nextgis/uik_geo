@@ -99,16 +99,13 @@ def get_uik(context, request):
         .filter(Uik.id == id).one()
 
     uik_res = {
-        'uik': {
-            'id': uik[0].id,
-            'name': uik[0].number_composite if uik[0].number_composite else'',
-            'is_applied': uik[0].is_applied if uik[0].is_applied else False,
-            'comment': uik[0].comment if uik[0].comment else '',
-            'address': uik[0].address_voting if uik[0].address_voting else ''
-        }
+        'uik': uik[0].to_dict(),
+        'geo_precision': uik[3].to_dict(),
+        'region': uik[4].to_dict(),
+        'tik': uik[5].to_dict()
     }
 
-    uik_res['uik']['geom'] = {'id': uik[0].id, 'lng': uik[1], 'lat': uik[2]}
+    uik_res['uik']['geom'] = {'lng': uik[1], 'lat': uik[2]}
 
     uik_res['uik']['user_blocked'] = ''
     uik_res['uik']['is_blocked'] = False

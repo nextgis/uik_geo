@@ -775,19 +775,19 @@ $.fn.imagesLoaded = function( callback ) {
 
 }())));
 (function ($, UIK) {
-	$.extend(UIK.viewmodel, {
-		version : null
-	});
-	$.extend(UIK.view, {
-		$document: null
-	});
+    $.extend(UIK.viewmodel, {
+        version: null
+    });
+    $.extend(UIK.view, {
+        $document: null
+    });
 
-	UIK.loader = {};
-	$.extend(UIK.loader, {
-		templates: ['uikPopupTemplate', 'uikPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate', 'alertsTemplate'],
+    UIK.loader = {};
+    $.extend(UIK.loader, {
+        templates: ['uikPopupTemplate', 'uikPopupInfoTemplate', 'searchResultsTemplate', 'userLogsTemplate', 'alertsTemplate'],
 
-		init: function () {
-			var context = this;
+        init: function () {
+            var context = this;
 
             this.setDomOptions();
 
@@ -797,31 +797,32 @@ $.fn.imagesLoaded = function( callback ) {
                     UIK.view.$body.removeClass('loading');
                 });
             }, 1000);
-		},
+        },
 
-		initModules: function () {
-//			try {
-				UIK.common.init();
+        initModules: function () {
+            try {
+                UIK.common.init();
                 UIK.alerts.init();
                 UIK.permalink.init();
-				UIK.map.init();
-				UIK.searcher.init();
-				UIK.editor.init();
-				UIK.user.init();
-				UIK.uiks.init();
-//			} catch (e) {
-//				alert(e);
-//			}
-		},
+                UIK.map.init();
+                UIK.searcher.init();
+                UIK.searcher.tab.init();
+                UIK.editor.init();
+                UIK.user.init();
+                UIK.uiks.init();
+            } catch (e) {
+                alert(e);
+            }
+        },
 
-		setDomOptions: function () {
-			UIK.view.$document = $(document);
-		}
-	});
+        setDomOptions: function () {
+            UIK.view.$document = $(document);
+        }
+    });
 
-	$(document).ready(function () {
-		UIK.loader.init();
-	});
+    $(document).ready(function () {
+        UIK.loader.init();
+    });
 
 })(jQuery, UIK);
 (function ($, UIK) {
@@ -1148,27 +1149,27 @@ $.fn.imagesLoaded = function( callback ) {
 
 	});
 })(jQuery, UIK);(function ($, UIK) {
-	$.extend(UIK.viewmodel, {
-		searcherCollapsed: false,
-		filter: {'name' : '', 'addr' : ''},
-		isFilterValidated: true
-	});
-	$.extend(UIK.view, {
-		$searchContainer: null,
-		$filterName: null,
+    $.extend(UIK.viewmodel, {
+        searcherCollapsed: false,
+        filter: {'name': '', 'addr': ''},
+        isFilterValidated: true
+    });
+    $.extend(UIK.view, {
+        $searchContainer: null,
+        $filterName: null,
         $$filterAddr: null,
-		$searchButton: null,
-		$searchResults: null,
+        $searchButton: null,
+        $searchResults: null,
         $clearSearch: null
-	});
-	UIK.searcher = {};
-	$.extend(UIK.searcher, {
-		min_characters_name: 3,
+    });
+    UIK.searcher = {};
+    $.extend(UIK.searcher, {
+        min_characters_name: 3,
 
-		init: function () {
-			this.setDomOptions();
-			this.bindEvents();
-		},
+        init: function () {
+            this.setDomOptions();
+            this.bindEvents();
+        },
 
         setDomOptions: function () {
             var view = UIK.view;
@@ -1180,14 +1181,14 @@ $.fn.imagesLoaded = function( callback ) {
             view.$clearSearch = view.$searchContainer.find('a.clear-search');
         },
 
-		bindEvents: function () {
-			var context = this,
-				view = UIK.view;
+        bindEvents: function () {
+            var context = this,
+                view = UIK.view;
 
-			view.$searchContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
-				UIK.viewmodel.searcherCollapsed = !UIK.viewmodel.searcherCollapsed;
-				UIK.view.$body.toggleClass('searcher-collapsed', context.searcherCollapsed);
-			});
+            view.$searchContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
+                UIK.viewmodel.searcherCollapsed = !UIK.viewmodel.searcherCollapsed;
+                UIK.view.$body.toggleClass('searcher-collapsed', context.searcherCollapsed);
+            });
 
             UIK.view.$clearSearch.off('click').on('click', function () {
                 if (!$(this).hasClass('disabled')) {
@@ -1196,61 +1197,61 @@ $.fn.imagesLoaded = function( callback ) {
                 }
             });
 
-			view.$filterName.off('keyup').on('keyup', function (e) {
-				context.keyUpHandler(e);
-			});
+            view.$filterName.off('keyup').on('keyup', function (e) {
+                context.keyUpHandler(e);
+            });
 
             view.$filterAddr.off('keyup').on('keyup', function (e) {
                 context.keyUpHandler(e);
             });
 
-			$('#filter_name').off('focus').on('focus', function () {
-				UIK.view.$searchResults.prop('class', 'description');
-			});
+            $('#filter_name').off('focus').on('focus', function () {
+                UIK.view.$searchResults.prop('class', 'description');
+            });
 
-			$('#searchResults p.description').off('click').on('click', function () {
-				UIK.view.$searchResults.prop('class', 'active');
-			});
+            $('#searchResults p.description').off('click').on('click', function () {
+                UIK.view.$searchResults.prop('class', 'active');
+            });
 
-			view.$searchButton.off('click').on('click', function () {
-				if (UIK.viewmodel.isFilterValidated) {
-					context.applyFilter();
-				}
-			});
+            view.$searchButton.off('click').on('click', function () {
+                if (UIK.viewmodel.isFilterValidated) {
+                    context.applyFilter();
+                }
+            });
 
-			view.$document.on('/sm/searcher/update', function () {
-				context.updateSearch();
-			});
+            view.$document.on('/sm/searcher/update', function () {
+                context.updateSearch();
+            });
 
-			view.$document.on('/sm/stops/startUpdate', function () {
-				var v = UIK.view;
-				v.$searchResults.prop('class', 'update');
-				v.$filterName.prop('disabled', true);
+            view.$document.on('/uik/uiks/startUpdate', function () {
+                var v = UIK.view;
+                v.$searchResults.prop('class', 'update');
+                v.$filterName.prop('disabled', true);
                 v.$filterAddr.prop('disabled', true);
                 context.validateSearch();
-			});
+            });
 
-			view.$document.on('/sm/stops/endUpdate', function () {
-				var v = UIK.view;
-				v.$searchResults.prop('class', 'active');
-				v.$filterName.prop('disabled', false);
+            view.$document.on('/sm/stops/endUpdate', function () {
+                var v = UIK.view;
+                v.$searchResults.prop('class', 'active');
+                v.$filterName.prop('disabled', false);
                 v.$filterAddr.prop('disabled', false);
-			});
-		},
+            });
+        },
 
-		keyUpHandler: function (e) {
-			this.validateSearch();
-			if (e.keyCode === 13) {
-				this.applyFilter();
-			}
-		},
+        keyUpHandler: function (e) {
+            this.validateSearch();
+            if (e.keyCode === 13) {
+                this.applyFilter();
+            }
+        },
 
-		validateSearch: function () {
-			var min_characters_name = this.min_characters_name,
-				view = UIK.view,
-				viewmodel = UIK.viewmodel,
+        validateSearch: function () {
+            var min_characters_name = this.min_characters_name,
+                view = UIK.view,
+                viewmodel = UIK.viewmodel,
                 name = $.trim(view.$filterName.val()),
-				addr = $.trim(view.$filterAddr.val()),
+                addr = $.trim(view.$filterAddr.val()),
                 isAddrValidated = addr.length > min_characters_name || addr === '';
 
             view.$filterAddr.toggleClass('invalid', !isAddrValidated);
@@ -1262,25 +1263,25 @@ $.fn.imagesLoaded = function( callback ) {
             viewmodel.isFilterValidated = isAddrValidated;
             view.$searchButton.toggleClass('active', UIK.viewmodel.isFilterValidated);
             view.$clearSearch.toggleClass('disabled', name === '' && addr === '');
-		},
+        },
 
         applyFilter: function () {
-			if (UIK.viewmodel.isFilterValidated) {
-				this.updateFilter();
-				this.search();
-			}
-		},
+            if (UIK.viewmodel.isFilterValidated) {
+                this.updateFilter();
+                this.search();
+            }
+        },
 
-		updateFilter: function () {
-			var view = UIK.view,
-				viewmodel = UIK.viewmodel;
-			viewmodel.filter.name = view.$filterName.val();
+        updateFilter: function () {
+            var view = UIK.view,
+                viewmodel = UIK.viewmodel;
+            viewmodel.filter.name = view.$filterName.val();
             viewmodel.filter.addr = view.$filterAddr.val();
-		},
+        },
 
-		search: function () {
-			UIK.view.$document.trigger('/sm/stops/updateStops');
-		},
+        search: function () {
+            UIK.view.$document.trigger('/sm/stops/updateStops');
+        },
 
         updateSearch: function () {
             var pointLayers = UIK.viewmodel.pointLayers,
@@ -1320,13 +1321,41 @@ $.fn.imagesLoaded = function( callback ) {
         },
 
         getHtmlForSearchResults: function (cssClass, uiks) {
-			return UIK.templates.searchResultsTemplate({
-				cssClass: cssClass,
+            return UIK.templates.searchResultsTemplate({
+                cssClass: cssClass,
                 uiks: uiks,
                 isAuth: UIK.viewmodel.isAuth
-			});
-		}
-	});
+            });
+        }
+    });
+})(jQuery, UIK);
+
+(function ($, UIK) {
+    $.extend(UIK.viewmodel, {
+
+    });
+    $.extend(UIK.view, {
+
+    });
+
+    UIK.searcher.tab = {};
+
+    $.extend(UIK.searcher.tab, {
+
+
+        init: function () {
+            this.bindEvents();
+        },
+
+
+        bindEvents: function () {
+            UIK.view.$searchContainer.find('ul.nav a').off('click').on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        }
+
+    });
 })(jQuery, UIK);
 
 (function ($, UIK) {
@@ -1716,6 +1745,6 @@ UIK.templates = {};
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="stop-popup" class="{{css}} loader"></div>');
 UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_stops}}</td> </tr> {{/user_logs}} </table>');
 UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
-UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Id</td> <td>{{id}}</td> </tr> <tr> <td>Номер</td> <td>{{name}}</td> </tr> <tr> <td>Адрес</td> <td>{{address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{comment}}</td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td><button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button></td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
+UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Адрес комиссии</td> <td>{{uik.address_office}}</td> </tr> <tr> <td>Место помещения комиссии</td> <td>{{uik.place_office}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
 UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
 UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');

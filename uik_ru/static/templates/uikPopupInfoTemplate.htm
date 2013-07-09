@@ -1,36 +1,67 @@
 <table class="table table-striped">
     <tr>
-        <td>Id</td>
-        <td>{{id}}</td>
+        <td>Номер УИКа</td>
+        <td>{{uik.number_official}}</td>
     </tr>
     <tr>
-		<td>Номер</td>
-		<td>{{name}}</td>
-	</tr>
-    <tr>
-        <td>Адрес</td>
-        <td>{{address}}</td>
+        <td>ТИК</td>
+        <td>{{tik.name}}</td>
     </tr>
-	<tr>
-		<td>Комментарий</td>
-		<td>{{comment}}</td>
-	</tr>
-	{{#isBlocked}}
-	<tr class="block">
-		{{#isUnBlocked}}
-			<td>Заблокирована вами</td>
-			<td><button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button></td>
-		{{/isUnBlocked}}
-		{{^isUnBlocked}}
-			<td>Заблокировал</td>
-			<td>{{userBlocked}}</td>
-		{{/isUnBlocked}}
-	</tr>
-	{{/isBlocked}}
+    <tr>
+        <td>Регион</td>
+        <td>{{region.name}}</td>
+    </tr>
+    <tr>
+        <td>Адрес голосования</td>
+        <td>{{uik.address_voting}}</td>
+    </tr>
+    <tr>
+        <td>Место помещения голосования</td>
+        <td>{{uik.place_voting}}</td>
+    </tr>
+    <tr>
+        <td>Адрес комиссии</td>
+        <td>{{uik.address_office}}</td>
+    </tr>
+    <tr>
+        <td>Место помещения комиссии</td>
+        <td>{{uik.place_office}}</td>
+    </tr>
+    <tr>
+        <td>Точность геокодирования</td>
+        <td>{{geo_precision.name}}</td>
+    </tr>
+
+    <tr>
+        <td>Комментарий</td>
+        <td>{{uik.comment}}</td>
+    </tr>
+    <tr>
+        <td>Проверен</td>
+        <td>
+            {{#uik.is_applied}}Да{{/uik.is_applied}}
+            {{^uik.is_applied}}Нет{{/uik.is_applied}}
+        </td>
+    </tr>
+    {{#isBlocked}}
+    <tr class="block">
+        {{#isUnBlocked}}
+        <td>Заблокирована вами</td>
+        <td>
+            <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button>
+        </td>
+        {{/isUnBlocked}}
+        {{^isUnBlocked}}
+        <td>Заблокировал</td>
+        <td>{{userBlocked}}</td>
+        {{/isUnBlocked}}
+    </tr>
+    {{/isBlocked}}
 </table>
 {{#isUserEditor}}
 <div class="edit">
-	<button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button>
+    <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button"
+    {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button>
 </div>
 {{/isUserEditor}}
 
