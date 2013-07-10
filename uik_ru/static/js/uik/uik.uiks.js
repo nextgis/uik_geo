@@ -128,7 +128,7 @@
         buildUikPopup: function (uikId) {
             return $.getJSON(document['url_root'] + 'uik/' + uikId, function (data) {
                 if (!UIK.viewmodel.editable) {
-                    UIK.viewmodel.uikSelected = data.uik;
+                    UIK.viewmodel.uikSelected = data;
                 }
                 var html = UIK.templates.uikPopupInfoTemplate({
                     uik: data.uik,
@@ -143,13 +143,13 @@
                 });
                 $('#stop-popup').removeClass('loader').empty().append(html);
                 $('button#edit').off('click').on('click', function () {
-                    UIK.view.$document.trigger('/sm/editor/startEdit');
+                    UIK.view.$document.trigger('/uik/editor/startEdit');
                 });
                 if (data.uik.is_unblocked) {
                     $('#unblock').off('click').on('click', function () {
                         $.ajax({
                             type: 'GET',
-                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.id
+                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.uik.id
                         }).done(function () {
                                 UIK.viewmodel.map.closePopup();
                                 UIK.view.$document.trigger('/sm/map/updateAllLayers');

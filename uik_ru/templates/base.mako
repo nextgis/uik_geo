@@ -46,12 +46,6 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
 
-    ## Temporary styles
-    <style>
-        #userContainer * {
-            display: none;
-        }
-    </style>
 </head>
 <body class="editor-collapsed loading">
 <div class="loading">
@@ -145,50 +139,35 @@
         <form class="form-inline disabled" id="editorForm">
             <div class="group">
                 <label class="control-label middle" for="id">ID</label>
-                <input type="text" id="id" name="id" class="stand" disabled="disabled"/>
+                <input type="text" id="id" class="stand" disabled="disabled"/>
             </div>
             <div class="group">
-                <label class="control-label middle" for="name">Номер</label>
-                <input type="text" id="name" name="name" class="stand" disabled="disabled"/>
-            </div>
-##            <div class="group">
-##                <label class="control-label middle" for="district">Федераль-</br>ный округ</label>
-##                <select id="district" name="district" class="route-type-sel" disabled="disabled">
-##                </select>
-##            </div>
-##            <div class="group">
-##                <label class="control-label middle" for="area">Регион</label>
-##                <select id="area" name="area" class="route-type-sel" disabled="disabled">
-##                </select>
-##            </div>
-##            <div class="group">
-##                <label class="control-label middle" for="sub_area">Район</label>
-##                <select id="sub_area" name="sub_area" class="route-type-sel" disabled="disabled">
-##                </select>
-##            </div>
-##            <div class="group">
-##                <label class="control-label middle" for="locality">Населенный пункт</label>
-##                <select id="locality" name="locality" class="route-type-sel" disabled="disabled">
-##                </select>
-##            </div>
-##            <div class="group">
-##                <label class="control-label middle" for="street">Улица</label>
-##                <select id="street" name="street" class="route-type-sel" disabled="disabled">
-##                </select>
-##            </div>
-##            <div class="group-checkboxes">
-##                <input id="is_committee_here" type="hidden" value="0">
-##                <input id="chb_is_committee_here" name="is_committee_here" type="checkbox" class="stand"
-##                       disabled="disabled" data-id="is_committee_here"/>
-##                <label class="control-label top" for="is_committee_here">Также расположение комиссии</label>
-##            </div>
-            <div class="group">
-                <label class="control-label top" for="address">Адрес</label>
-                <textarea id="address" name="address" disabled="disabled"></textarea>
+                <label class="control-label middle" for="name">Номер УИКа</label>
+                <input type="text" id="name" class="stand" disabled="disabled"/>
             </div>
             <div class="group">
-                <label class="control-label top" for="comment">Коммента-</br>рий</label>
-                <textarea id="comment" name="comment" disabled="disabled"></textarea>
+                <label class="control-label middle" for="region">Регион</label>
+                <input type="text" id="region" class="stand" disabled="disabled"/>
+            </div>
+            <div class="group">
+                <label class="control-label middle" for="tik">ТИК</label>
+                <input type="text" id="tik" class="stand" disabled="disabled"/>
+            </div>
+            <div class="group">
+                <label class="control-label top" for="address_voting">Адрес голосования</label>
+                <textarea id="address_voting" name="address_voting" disabled="disabled"></textarea>
+            </div>
+            <div class="group">
+                <label class="control-label top" for="place_voting">Место помещения голосования</label>
+                <textarea id="place_voting" name="place_voting" disabled="disabled"></textarea>
+            </div>
+            <div class="group">
+                <label class="control-label" for="geo_precision">Точность геокодиро-<br>вания</label>
+                <select id="geo_precision" class="stand" name="geo_precision" disabled="disabled">
+                    % for geocoding_precision in geocoding_precisions:
+                        <option value="${geocoding_precision.id}">${geocoding_precision.name_ru}</option>
+                    % endfor
+                </select>
             </div>
             <div class="geographic">
                 <div class="group">
@@ -200,14 +179,18 @@
                     <input type="text" id="lng" name="lng" class="stand" disabled="disabled"/>
                 </div>
                 <div class="wrapper-coordinates">
-                    <button id="applyCoordinates" class="btn btn-small" disabled="disabled" type="button">Применить координаты</button>
+                    <button id="applyCoordinates" class="btn btn-small" disabled="disabled" type="button">
+                        Применить координаты</button>
                 </div>
             </div>
+            <div class="group">
+                <label class="control-label top" for="comment">Коммента-</br>рий</label>
+                <textarea id="comment" name="comment" disabled="disabled"></textarea>
+            </div>
             <div class="group-checkboxes">
-                <input id="is_checked" type="hidden" name="is_checked" value="0"/>
-                <input id="chb_is_checked" type="checkbox" class="stand"
-                       disabled="disabled" data-id="is_checked"/>
-                <label class="control-label top" for="is_checked">Проверена</label>
+                <input id="is_applied" type="hidden" name="is_applied" value="0"/>
+                <input id="chb_is_applied" type="checkbox" class="stand" disabled="disabled" data-id="is_applied"/>
+                <label class="control-label top" for="is_applied">УИК принят</label>
             </div>
             <div class="group-submit">
                 <button id="discard" type="button" class="btn btn-warning" disabled="disabled">Отменить</button>

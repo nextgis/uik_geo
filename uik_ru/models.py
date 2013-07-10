@@ -11,7 +11,7 @@ from sqlalchemy import (
     LargeBinary
 )
 
-from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION
+from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION, BYTEA
 
 from geoalchemy import (
     GeometryColumn,
@@ -28,6 +28,10 @@ from sqlalchemy.orm import (
 )
 
 from zope.sqlalchemy import ZopeTransactionExtension
+
+import zlib
+import base64
+import json
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
@@ -216,11 +220,13 @@ class GeocodingPrecision(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
+    name_ru = Column(Text)
 
     def to_dict(self):
         return dict(
             id=self.id,
-            name=self.name if self.name else ''
+            name=self.name if self.name else '',
+            name_ru=self.name_ru if self.name_ru else ''
         )
 
 
@@ -250,10 +256,18 @@ class UikVersions(Base):
     user = relationship('User')
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     time = Column(DateTime, nullable=False, primary_key=True)
+    dump = Column(BYTEA, nullable=False)
 
     def to_dict(self):
         return dict(
             uik_id=self.uik_id,
             user_id=self.user_id,
-            time=self.time.isoformat()
+            time=self.time.isoformat(),
+            dump=json.loads(zlib.decompress(base64.decodestring(self.dump)))
         )
+
+    def to_json_binary_dump(self, json_object):
+        json_object = json.dumps(json_object)
+        json_object_str = zlib.compress(json_object)
+        return base64.encodestring(json_object_str).strip()
+

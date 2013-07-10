@@ -42,7 +42,7 @@
                 context.toggleEditor();
             });
 
-            UIK.view.$document.on('/sm/editor/startEdit', function (e) {
+            UIK.view.$document.on('/uik/editor/startEdit', function (e) {
                 context.startAjaxEdition();
             });
 
@@ -146,10 +146,10 @@
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.uikSelected.id
+                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.uikSelected.uik.id
             }).done(function () {
-                    context.startEdit();
-                });
+                context.startEdit();
+            });
         },
 
         startEdit: function () {
@@ -160,7 +160,7 @@
             view.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
             view.$editorContainer.find('form').removeClass('disabled');
             viewmodel.editable = true;
-            this.startEditingGeometry(viewmodel.uikSelected.geom.lat, viewmodel.uikSelected.geom.lng);
+            this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.map.closePopup();
         },
@@ -197,8 +197,8 @@
                 isNeedApplied = viewmodel.latlngEditable.isNeedApplied,
                 sourceCoordinates = viewmodel.latlngEditable.sourceCoordinates;
 
-            viewmodel.uikSelected.geom.lat = latLng.lat;
-            viewmodel.uikSelected.geom.lng = latLng.lng;
+            viewmodel.uikSelected.uik.geom.lat = latLng.lat;
+            viewmodel.uikSelected.uik.geom.lng = latLng.lng;
 
             if (isNeedApplied) { $('#applyCoordinates').prop('disabled', true); }
 
@@ -215,18 +215,22 @@
 
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#name').val(uik.name);
-            $('#id').val(uik.id).attr('disabled', 'disabled');
-            $('#lat').val(uik.geom.lat.toFixed(this.precisionDegree));
-            $('#lng').val(uik.geom.lng.toFixed(this.precisionDegree));
-            $('#address').val(helpers.valueNullToString(uik.address));
-            $('#comment').val(helpers.valueNullToString(uik.comment));
-            if (uik.is_checked) {
-                $('#is_checked').val(1);
-                $('#chb_is_checked').prop('checked', true);
+            $('#id').val(uik.uik.id).attr('disabled', 'disabled');
+            $('#name').val(uik.uik.number_official).attr('disabled', 'disabled');
+            $('#region').val(uik.region.name).attr('disabled', 'disabled');
+            $('#tik').val(uik.tik.name).attr('disabled', 'disabled');
+            $('#address_voting').val(helpers.valueNullToString(uik.uik.address_voting));
+            $('#place_voting').val(helpers.valueNullToString(uik.uik.place_voting));
+            $('#geo_precision option:eq(' + uik.geo_precision.id + ')').prop('selected', true);
+            $('#lat').val(uik.uik.geom.lat.toFixed(this.precisionDegree));
+            $('#lng').val(uik.uik.geom.lng.toFixed(this.precisionDegree));
+            $('#comment').val(helpers.valueNullToString(uik.uik.comment));
+            if (uik.uik.is_applied) {
+                $('#is_applied').val(1);
+                $('#chb_is_applied').prop('checked', true);
             } else {
-                $('#is_checked').val(0);
-                $('#chb_is_checked').prop('checked', false);
+                $('#is_applied').val(0);
+                $('#chb_is_applied').prop('checked', false);
             }
         },
 
@@ -237,15 +241,18 @@
             var context = this,
                 frm = $('#editorContainer form'),
                 data_serialized = frm.serializeArray(),
-                i = 0,
-                ds_length = data_serialized.length,
+                data_serialized_length = data_serialized.length,
                 uik_selected = UIK.viewmodel.uikSelected,
-                url = document['url_root'] + 'uik/' + uik_selected.id,
-                saved_uik = { 'id': uik_selected.id };
-            for (i; i < ds_length; i += 1) {
+                saved_uik = { 'id': uik_selected.uik.id },
+                url = document['url_root'] + 'uik/' + saved_uik.id,
+                i = 0;
+
+            for (i; i < data_serialized_length; i += 1) {
                 saved_uik[data_serialized[i].name] = data_serialized[i].value;
             }
-            saved_uik.geom = uik_selected.geom;
+
+            saved_uik.geom = uik_selected.uik.geom;
+
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -276,7 +283,7 @@
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.id
+                url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.uik.id
             }).done(function () {
                 context.finishEditing();
             });

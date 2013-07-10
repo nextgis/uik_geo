@@ -1306,14 +1306,16 @@ $.fn.imagesLoaded = function( callback ) {
             });
 
             $divSearchResults.find('a.edit').on('click', function () {
+                if (UIK.viewmodel.editable) { return false; }
+
                 var $li = $(this).parent(), uikId;
                 UIK.viewmodel.map.setView(new L.LatLng($li.data('lat'), $li.data('lon')), 18);
                 $('#target').show().delay(1000).fadeOut(1000);
                 uikId = $li.data('id');
                 $.getJSON(document['url_root'] + 'uik/' + uikId, function (data) {
                     if (!UIK.viewmodel.editable) {
-                        UIK.viewmodel.uikSelected = data.uik;
-                        UIK.view.$document.trigger('/sm/editor/startEdit');
+                        UIK.viewmodel.uikSelected = data;
+                        UIK.view.$document.trigger('/uik/editor/startEdit');
                     }
                 });
             });
@@ -1402,7 +1404,7 @@ $.fn.imagesLoaded = function( callback ) {
                 context.toggleEditor();
             });
 
-            UIK.view.$document.on('/sm/editor/startEdit', function (e) {
+            UIK.view.$document.on('/uik/editor/startEdit', function (e) {
                 context.startAjaxEdition();
             });
 
@@ -1506,10 +1508,10 @@ $.fn.imagesLoaded = function( callback ) {
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.uikSelected.id
+                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.uikSelected.uik.id
             }).done(function () {
-                    context.startEdit();
-                });
+                context.startEdit();
+            });
         },
 
         startEdit: function () {
@@ -1520,7 +1522,7 @@ $.fn.imagesLoaded = function( callback ) {
             view.$editorContainer.find('input, select, textarea, button').removeAttr('disabled');
             view.$editorContainer.find('form').removeClass('disabled');
             viewmodel.editable = true;
-            this.startEditingGeometry(viewmodel.uikSelected.geom.lat, viewmodel.uikSelected.geom.lng);
+            this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.map.closePopup();
         },
@@ -1557,8 +1559,8 @@ $.fn.imagesLoaded = function( callback ) {
                 isNeedApplied = viewmodel.latlngEditable.isNeedApplied,
                 sourceCoordinates = viewmodel.latlngEditable.sourceCoordinates;
 
-            viewmodel.uikSelected.geom.lat = latLng.lat;
-            viewmodel.uikSelected.geom.lng = latLng.lng;
+            viewmodel.uikSelected.uik.geom.lat = latLng.lat;
+            viewmodel.uikSelected.uik.geom.lng = latLng.lng;
 
             if (isNeedApplied) { $('#applyCoordinates').prop('disabled', true); }
 
@@ -1575,18 +1577,22 @@ $.fn.imagesLoaded = function( callback ) {
 
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#name').val(uik.name);
-            $('#id').val(uik.id).attr('disabled', 'disabled');
-            $('#lat').val(uik.geom.lat.toFixed(this.precisionDegree));
-            $('#lng').val(uik.geom.lng.toFixed(this.precisionDegree));
-            $('#address').val(helpers.valueNullToString(uik.address));
-            $('#comment').val(helpers.valueNullToString(uik.comment));
-            if (uik.is_checked) {
-                $('#is_checked').val(1);
-                $('#chb_is_checked').prop('checked', true);
+            $('#id').val(uik.uik.id).attr('disabled', 'disabled');
+            $('#name').val(uik.uik.number_official).attr('disabled', 'disabled');
+            $('#region').val(uik.region.name).attr('disabled', 'disabled');
+            $('#tik').val(uik.tik.name).attr('disabled', 'disabled');
+            $('#address_voting').val(helpers.valueNullToString(uik.uik.address_voting));
+            $('#place_voting').val(helpers.valueNullToString(uik.uik.place_voting));
+            $('#geo_precision option:eq(' + uik.geo_precision.id + ')').prop('selected', true);
+            $('#lat').val(uik.uik.geom.lat.toFixed(this.precisionDegree));
+            $('#lng').val(uik.uik.geom.lng.toFixed(this.precisionDegree));
+            $('#comment').val(helpers.valueNullToString(uik.uik.comment));
+            if (uik.uik.is_applied) {
+                $('#is_applied').val(1);
+                $('#chb_is_applied').prop('checked', true);
             } else {
-                $('#is_checked').val(0);
-                $('#chb_is_checked').prop('checked', false);
+                $('#is_applied').val(0);
+                $('#chb_is_applied').prop('checked', false);
             }
         },
 
@@ -1597,15 +1603,18 @@ $.fn.imagesLoaded = function( callback ) {
             var context = this,
                 frm = $('#editorContainer form'),
                 data_serialized = frm.serializeArray(),
-                i = 0,
-                ds_length = data_serialized.length,
+                data_serialized_length = data_serialized.length,
                 uik_selected = UIK.viewmodel.uikSelected,
-                url = document['url_root'] + 'uik/' + uik_selected.id,
-                saved_uik = { 'id': uik_selected.id };
-            for (i; i < ds_length; i += 1) {
+                saved_uik = { 'id': uik_selected.uik.id },
+                url = document['url_root'] + 'uik/' + saved_uik.id,
+                i = 0;
+
+            for (i; i < data_serialized_length; i += 1) {
                 saved_uik[data_serialized[i].name] = data_serialized[i].value;
             }
-            saved_uik.geom = uik_selected.geom;
+
+            saved_uik.geom = uik_selected.uik.geom;
+
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -1636,7 +1645,7 @@ $.fn.imagesLoaded = function( callback ) {
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.id
+                url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.uik.id
             }).done(function () {
                 context.finishEditing();
             });
@@ -1695,9 +1704,9 @@ $.fn.imagesLoaded = function( callback ) {
 				type: "GET",
 				url: url,
 				dataType: 'json',
-				success: function(data) {
+				success: function (data) {
 					var html = UIK.templates.userLogsTemplate({
-						user_logs: data.stops_by_users,
+						user_logs: data.uiks_by_users,
 						count_all: data.count.all,
 						count_editable: data.count.editable,
 						percent: (data.count.editable / data.count.all * 100).toFixed(2)
@@ -1743,8 +1752,8 @@ $.fn.imagesLoaded = function( callback ) {
 })(jQuery, UIK);
 UIK.templates = {};
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="stop-popup" class="{{css}} loader"></div>');
-UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_stops}}</td> </tr> {{/user_logs}} </table>');
+UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');
 UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
-UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
+UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
 UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
 UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');

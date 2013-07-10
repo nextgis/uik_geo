@@ -35,9 +35,9 @@
 				type: "GET",
 				url: url,
 				dataType: 'json',
-				success: function(data) {
+				success: function (data) {
 					var html = UIK.templates.userLogsTemplate({
-						user_logs: data.stops_by_users,
+						user_logs: data.uiks_by_users,
 						count_all: data.count.all,
 						count_editable: data.count.editable,
 						percent: (data.count.editable / data.count.all * 100).toFixed(2)

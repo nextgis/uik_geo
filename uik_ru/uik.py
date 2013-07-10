@@ -81,11 +81,13 @@ def get_all(context, request):
 
 
 def _get_uik_from_uik_db(uik_from_db):
-    return {'id': uik_from_db[0].id,
-            'name': uik_from_db[0].number_composite,
-            'addr': uik_from_db[0].address_voting,
-            'lon': uik_from_db[1],
-            'lat': uik_from_db[2]}
+    return {
+        'id': uik_from_db[0].id,
+        'name': uik_from_db[0].number_official,
+        'addr': uik_from_db[0].address_voting,
+        'lon': uik_from_db[1],
+        'lat': uik_from_db[2]
+    }
 
 @view_config(route_name='uik', request_method='GET')
 def get_uik(context, request):
@@ -127,25 +129,26 @@ def update_uik(context, request):
     uik = json.loads(request.POST['uik'])
     session = DBSession()
     from helpers import str_to_boolean
-    session.query(VotingStation).filter(VotingStation.id == uik['id']).update({
-        VotingStation.name: uik['name'],
-        VotingStation.comment: uik['comment'],
-        VotingStation.address: uik['address'],
-        VotingStation.is_checked: str_to_boolean(uik['is_checked']),
-        VotingStation.is_blocked: False,
-        VotingStation.user_block_id: None
+    session.query(Uik).filter(Uik.id == uik['id']).update({
+        Uik.address_voting: uik['address_voting'],
+        Uik.place_voting: uik['place_voting'],
+        Uik.is_applied: str_to_boolean(uik['is_applied']),
+        Uik.comment: uik['comment'],
+        Uik.is_blocked: False,
+        Uik.user_block_id: None
     }, synchronize_session=False)
-    sql = 'UPDATE location SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :location_id'
+    sql = 'UPDATE uiks SET point=GeomFromText(:wkt, 4326) WHERE id = :uik_id'
     session.execute(sql, {
         'wkt': 'POINT(%s %s)' % (uik['geom']['lng'], uik['geom']['lat']),
-        'location_id': uik['geom']['id']
+        'uik_id': uik['id']
     })
 
     log = UikVersions()
-    log.voting_station_id = uik['id']
+    log.uik_id = uik['id']
     log.user_id = request.session['u_id']
     from datetime import datetime
     log.time = datetime.now()
+    log.dump = log.to_json_binary_dump(uik)
     session.add(log)
 
     transaction.commit()
@@ -156,9 +159,9 @@ def update_uik(context, request):
 def uik_block(context, request):
     id = request.matchdict.get('id', None)
     session = DBSession()
-    session.query(VotingStation).filter(VotingStation.id == id).update({
-        VotingStation.is_blocked: True,
-        VotingStation.user_block_id: request.session['u_id']
+    session.query(Uik).filter(Uik.id == id).update({
+        Uik.is_blocked: True,
+        Uik.user_block_id: request.session['u_id']
     })
     transaction.commit()
     return Response()
@@ -169,9 +172,9 @@ def uik_block(context, request):
 def uik_unblock(context, request):
     id = request.matchdict.get('id', None)
     session = DBSession()
-    session.query(VotingStation).filter(VotingStation.id == id).update({
-        VotingStation.is_blocked: False,
-        VotingStation.user_block_id: None
+    session.query(Uik).filter(Uik.id == id).update({
+        Uik.is_blocked: False,
+        Uik.user_block_id: None
     })
     transaction.commit()
     return Response()
@@ -180,20 +183,20 @@ def uik_unblock(context, request):
 @authorized()
 def get_logs(context, request):
     session = DBSession()
-    user_stops_count_sbq = session \
-        .query(LogSavings.user_id.label('user_id'), func.count(LogSavings.voting_station_id.distinct()).label('count_stops')) \
-        .group_by(LogSavings.user_id) \
+    user_uiks_count_sbq = session \
+        .query(UikVersions.user_id.label('user_id'), func.count(UikVersions.uik_id.distinct()).label('count_uiks')) \
+        .group_by(UikVersions.user_id) \
         .subquery()
 
     from sqlalchemy.sql.expression import asc
-    user_stops_log = session.query(User, user_stops_count_sbq.c.count_stops) \
-        .outerjoin(user_stops_count_sbq, User.id == user_stops_count_sbq.c.user_id) \
+    user_uiks_logs = session.query(User, user_uiks_count_sbq.c.count_uiks) \
+        .outerjoin(user_uiks_count_sbq, User.id == user_uiks_count_sbq.c.user_id) \
         .order_by(asc(User.display_name))
 
-    count_editable_stops = session.query(func.count(LogSavings.voting_station_id.distinct())).scalar()
-    count_all_stops = session.query(func.count(VotingStation.id)).scalar()
+    count_editable_stops = session.query(func.count(UikVersions.uik_id.distinct())).scalar()
+    count_all_stops = session.query(func.count(Uik.id)).scalar()
     results = {'count': {'all': count_all_stops, 'editable': count_editable_stops},
-               'stops_by_users': []}
-    for user_stops_log in user_stops_log:
-        results['stops_by_users'].append({'user_name': user_stops_log[0].display_name, 'count_stops': user_stops_log[1]})
+               'uiks_by_users': []}
+    for user_uiks_log in user_uiks_logs:
+        results['uiks_by_users'].append({'user_name': user_uiks_log[0].display_name, 'count_uiks': user_uiks_log[1]})
     return Response(json.dumps(results))

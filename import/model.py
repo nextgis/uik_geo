@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from helpers import *
 
 
@@ -73,14 +76,15 @@ class TikRepository:
 
 class GeocodingPrecisionRepository:
     def __init__(self):
-        self.geocoding_precisions = dict()
-        self.geocoding_precision_index = 0
+        self.geocoding_precisions = {
+            'region': {'name_ru': u'Район', 'id': 0},
+            'settlement': {'name_ru': u'Населенный пункт', 'id': 1},
+            'street': {'name_ru': u'Улица', 'id': 2},
+            'building': {'name_ru': u'Дом', 'id': 3}
+        }
 
-    def add(self, geocoding_precision_name):
-        if geocoding_precision_name not in self.geocoding_precisions:
-            self.geocoding_precisions[geocoding_precision_name] = self.geocoding_precision_index
-            self.geocoding_precision_index += 1
-        return self.geocoding_precisions[geocoding_precision_name]
+    def get_id(self, geocoding_precision_name):
+        return self.geocoding_precisions[geocoding_precision_name]['id']
 
     def count(self):
         return len(self.geocoding_precisions.keys())
@@ -89,12 +93,13 @@ class GeocodingPrecisionRepository:
         return self.geocoding_precisions
 
     def get_sql(self):
-        sql = "INSERT INTO geocoding_precisions(id, name) VALUES "
+        sql = "INSERT INTO geocoding_precisions(id, name, name_ru) VALUES "
 
-        for name, id in self.geocoding_precisions.iteritems():
+        for name in self.geocoding_precisions.keys():
             sql += get_values([
-                check_null(id),
-                check_null(name)
+                check_null(self.geocoding_precisions[name]['id']),
+                check_null(name),
+                check_null(self.geocoding_precisions[name]['name_ru'].encode('utf-8'))
             ]) + ","
 
         return sql[:-1] + ';'
@@ -117,7 +122,7 @@ class UikRepository:
             'address_office': records[5],
             'place_office': records[6],
             'comment': records[8],
-            'geocoding_precision_id': self.geocoding_precision.add(records[16]),
+            'geocoding_precision_id': self.geocoding_precision.get_id(records[16]),
             'point': record.shape.points[0]
         }
         self.uiks.append(uik)

@@ -5,6 +5,10 @@ from models import DBSession, User
 from pyramid.view import view_config
 import transaction
 from security import generate_session_id
+from sqlalchemy.sql.expression import asc
+
+from models import GeocodingPrecision
+
 
 @view_config(route_name='home', renderer='base.mako')
 def home(request):
@@ -12,7 +16,11 @@ def home(request):
     if hasattr(request, 'cookies') and 'sk' in request.cookies.keys() and 'sk' in request.session and \
         request.session['sk'] == request.cookies['sk'] and 'u_name' in request.session:
         user_name = request.session['u_name']
-    return {'u_name': user_name, 'project': 'uik_ru'}
+
+    session = DBSession()
+    geocoding_precisions = session.query(GeocodingPrecision).order_by(asc(GeocodingPrecision.id)).all()
+
+    return {'u_name': user_name, 'project': 'uik_ru', 'geocoding_precisions': geocoding_precisions}
 
 @view_config(route_name='home', request_method='POST', renderer='base.mako')
 def home_signin(request):
