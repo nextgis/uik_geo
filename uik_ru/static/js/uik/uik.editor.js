@@ -33,7 +33,8 @@
 
         buildEditLayer: function () {
             var editedLayer = L.layerGroup();
-            UIK.viewmodel.mapLayers['edit'] = UIK.viewmodel.map.addLayer(editedLayer);
+            UIK.viewmodel.mapLayers['edit'] = editedLayer;
+            UIK.viewmodel.map.addLayer(editedLayer);
         },
 
         bindEvents: function () {
@@ -300,7 +301,7 @@
             v.$editorContainer.find('input:checkbox').prop('checked', false);
             v.$editorContainer.find('input, select, textarea, button').attr('disabled', 'disabled').removeClass('invalid');
             v.$editorContainer.find('form').addClass('disabled');
-            UIK.view.$document.trigger('/sm/map/updateAllLayers');
+            UIK.view.$document.trigger('/uik/map/updateAllLayers');
         }
     });
 })(jQuery, UIK);

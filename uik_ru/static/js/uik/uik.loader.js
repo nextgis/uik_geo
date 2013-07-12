@@ -34,6 +34,7 @@
                 UIK.editor.init();
                 UIK.user.init();
                 UIK.uiks.init();
+                UIK.uiks_2012.init();
             } catch (e) {
                 alert(e);
             }

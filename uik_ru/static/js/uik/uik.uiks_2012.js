@@ -1,23 +1,23 @@
 (function ($, UIK) {
     $.extend(UIK.viewmodel, {
         uikSelected: null,
-        uikSelectedId: null,
-        pointLayers: {}
+        uikSelectedId: null
     });
-    $.extend(UIK.view, {
 
+    $.extend(UIK.view, {
     });
-    UIK.uiks = {};
-    $.extend(UIK.uiks, {
+
+    UIK.uiks_2012 = {};
+
+    $.extend(UIK.uiks_2012, {
         init: function () {
             this.updatePoints();
             this.bindEvents();
         },
 
-
         bindEvents: function () {
             var context = this;
-            UIK.view.$document.on('/uik/uiks/updateUiks', function () {
+            UIK.view.$document.on('/uik/uiks_2012/updateUiks', function () {
                 context.updatePoints();
             });
         },
@@ -27,20 +27,17 @@
             var validateZoom = this.validateZoom();
             this.clearLayers();
             if (!validateZoom) { return; }
-            UIK.view.$document.trigger('/uik/uiks/startUpdate');
+            UIK.view.$document.trigger('/uik/uiks_2012/startUpdate');
             this.updateUiksByAjax();
         },
 
         clearLayers: function () {
-            var mapLayers = UIK.viewmodel.mapLayers;
-            mapLayers.points.checked.clearLayers();
-            mapLayers.points.unchecked.clearLayers();
-            mapLayers.points.blocked.clearLayers();
+            UIK.viewmodel.mapLayers.points['uik_2012'].clearLayers();
         },
 
         updateUiksByAjax: function () {
             var context = this,
-                url = document['url_root'] + 'uik/all',
+                url = document['url_root'] + 'uikp/all',
                 filter = UIK.viewmodel.filter,
                 filter_json = {
                     'uik' : filter.uik.json,
@@ -68,7 +65,7 @@
             var viewmodel = UIK.viewmodel,
                 pointsLayers = viewmodel.mapLayers.points,
                 pointsConfig = UIK.config.data.points,
-                dataPointsLayers = data.data.points.layers,
+                dataPointsLayers = data.points.layers,
                 dataPointType,
                 dataPointsIterable,
                 dataPointsCount,
@@ -79,7 +76,7 @@
                 htmlPopup = UIK.templates.uikPopupTemplate({ css: 'edit' }),
                 context = this;
 
-            viewmodel.pointLayers.uiks = data.data.points.layers;
+            viewmodel.pointLayers.uiksp = data.points.layers;
 
             for (dataPointType in dataPointsLayers) {
                 if (dataPointsLayers.hasOwnProperty(dataPointType)) {
@@ -101,39 +98,14 @@
         },
 
         buildUikPopup: function (uikId) {
-            return $.getJSON(document['url_root'] + 'uik/' + uikId, function (data) {
-                if (!UIK.viewmodel.editable) {
-                    UIK.viewmodel.uikSelected = data;
-                }
-                var html = UIK.templates.uikPopupInfoTemplate({
-                    uik: data.uik,
-                    tik: data.tik,
-                    region: data.region,
-                    geo_precision: data.geo_precision,
-                    isUserEditor: UIK.viewmodel.isAuth,
-                    editDenied: UIK.viewmodel.editable || data.uik.is_blocked,
-                    isBlocked: data.uik.is_blocked,
-                    userBlocked: data.uik.user_blocked,
-                    isUnBlocked: data.uik.is_unblocked
+            return $.getJSON(document['url_root'] + 'uikp/' + uikId, function (data) {
+                var html = UIK.templates.uik2012PopupInfoTemplate({
+                    uikp: data.uikp
                 });
                 $('#uik-popup').removeClass('loader').empty().append(html);
-                $('button#edit').off('click').on('click', function () {
-                    UIK.view.$document.trigger('/uik/editor/startEdit');
-                });
-                if (data.uik.is_unblocked) {
-                    $('#unblock').off('click').on('click', function () {
-                        $.ajax({
-                            type: 'GET',
-                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.uik.id
-                        }).done(function () {
-                                UIK.viewmodel.map.closePopup();
-                                UIK.view.$document.trigger('/uik/map/updateAllLayers');
-                        });
-                    });
-                }
             }).error(function () {
-                    $('#uik-popup').removeClass('loader').empty().append('Error connection');
-                });
+                $('#uik-popup').removeClass('loader').empty().append('Error connection');
+            });
         },
 
         validateZoom: function () {
@@ -145,4 +117,3 @@
         }
     });
 })(jQuery, UIK);
-

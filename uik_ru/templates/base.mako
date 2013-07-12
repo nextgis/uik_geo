@@ -41,6 +41,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.tab.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks_2012.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
@@ -91,33 +92,64 @@
         </fieldset>
     </form>
 </div>
-<div id="searchContainer">
+<div id="searchContainer" class="searchUIK">
     <span class="icon-collapse"></span>
     <div class="title"><span>Поиск</span></div>
     <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="searchUIK">УИК</a>
-        </li>
-        <li><a href="searchUIKp">УИК 2012</a></li>
-        <li><a href="searchAddress">Адреса</a></li>
+        <li class="active" data-id="searchUIK"><a href="javascript:void(0)">УИК</a></li>
+        <li data-id="searchUIK_2012"><a href="javascript:void(0)">УИК 2012</a></li>
+        <li data-id="searchAddress"><a href="javascript:void(0)">Адреса</a></li>
     </ul>
-    <div id="searchUIK">
+
+    <div id="searchUIK" onsubmit="return false"  class="search-block" data-trigger="/uik/uiks/updateUiks" data-isMapTriggered="true" data-filter="uik">
         <form class="form-search">
             <fieldset>
-                <input id="filter_name" type="text" class="input-name" placeholder="Номер" />
-                <input id="filter_address" type="text" class="input-address" placeholder="Адрес" />
-                <div id="search" class="active" title="Поиск">
+                <input type="text" class="name filterable" data-filter="number" data-validate="validateNumber" placeholder="Номер" />
+                <input type="text" class="address filterable" data-filter="address" data-validate="validateDefault" placeholder="Адрес" />
+                <div class="search" title="Поиск">
                     <span></span>
                 </div>
             </fieldset>
             <a href="javascript:void(0)" class="clear-search">Очистить поля поиска</a>
         </form>
 
-        <div id="searchResults" class="active">
+        <div class="active searchResults" data-template="">
             <p class="update">Запрос данных...</p>
-            <p class="description">Для поиска введите</br>часть адреса (более 3 символов)</br>и нажмите на кнопку</br></br>
-                Для отображения списка УИКов кликните на эту область
-            </p>
+            <div></div>
+        </div>
+    </div>
+
+    <div id="searchUIK_2012" onsubmit="return false"  class="search-block" data-trigger="/uik/uiks_2012/updateUiks" data-isMapTriggered="true"  data-filter="uik_2012">
+        <form class="form-search">
+            <fieldset>
+                <input type="text" class="name filterable" data-filter="number" data-validate="validateNumber" placeholder="Номер" />
+                <input type="text" class="address filterable" data-filter="address" data-validate="validateDefault" placeholder="Адрес" />
+                <div class="search" title="Поиск">
+                    <span></span>
+                </div>
+            </fieldset>
+            <a href="javascript:void(0)" class="clear-search">Очистить поля поиска</a>
+        </form>
+
+        <div class="active searchResults">
+            <p class="update">Запрос данных...</p>
+            <div></div>
+        </div>
+    </div>
+
+    <div id="searchAddress" onsubmit="return false" class="search-block"  data-trigger="search/address" data-filter="address">
+        <form class="form-search">
+            <fieldset>
+                <input type="text" class="address filterable" data-filter="address" data-validate="validateDefault" placeholder="Адрес" />
+                <div class="search" title="Поиск">
+                    <span></span>
+                </div>
+            </fieldset>
+            <a href="javascript:void(0)" class="clear-search">Очистить поле поиска</a>
+        </form>
+
+        <div class="active searchResults">
+            <p class="update">Запрос данных...</p>
             <div></div>
         </div>
     </div>

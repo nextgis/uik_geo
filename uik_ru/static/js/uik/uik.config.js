@@ -26,7 +26,8 @@ UIK.templates = {};
                             }
                         });
                     },
-                    searchCssClass: 'checked'
+                    searchCssClass: 'checked',
+                    z: 1
                 },
                 unchecked: {
                     name: 'Непроверенные',
@@ -45,7 +46,8 @@ UIK.templates = {};
                             }
                         });
                     },
-                    searchCssClass: 'non-checked'
+                    searchCssClass: 'non-checked',
+                    z: 2
                 },
                 blocked: {
                     name: 'Заблокированные',
@@ -64,7 +66,28 @@ UIK.templates = {};
                             }
                         });
                     },
-                    searchCssClass: 'blocked'
+                    searchCssClass: 'blocked',
+                    z: 3
+                },
+                uik_2012: {
+                    name: 'УИК 2012',
+                    createIcon: function () {
+                        return UIK.map.getIcon('uik-2012', 20);
+                    },
+                    createLayer: function () {
+                        return new L.MarkerClusterGroup({
+                            disableClusteringAtZoom: 17,
+                            iconCreateFunction: function(cluster) {
+                                return new L.DivIcon({
+                                    html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+                                    className: 'marker-cluster marker-cluster-large',
+                                    iconSize: new L.Point(40, 40)
+                                });
+                            }
+                        });
+                    },
+                    searchCssClass: 'uik2012',
+                    z: 4
                 }
             }
         }

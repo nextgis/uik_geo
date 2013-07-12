@@ -15,21 +15,21 @@ import json
 
 @view_config(route_name='uiks', request_method='GET')
 def get_all(context, request):
-    page_size = 100
+    page_size = 50
     is_filter_applied = False
     filter = json.loads(request.GET['filter'])
     clauses = []
-    if 'filter' in request.GET:
-        filter['addr'] = filter['addr'].encode('UTF-8').strip()
-        filter['name'] = filter['name'].encode('UTF-8').strip()
-        if filter['addr'] or filter['name']:
+    if filter['uik']:
+        filter['uik']['address'] = filter['uik']['address'].encode('UTF-8').strip()
+        filter['uik']['number'] = filter['uik']['number'].encode('UTF-8').strip()
+        if filter['uik']['address'] or filter['uik']['number']:
             is_filter_applied = True
-            if filter['addr'].__len__() > 3:
-                address = '%' + filter['addr'] + '%'
+            if filter['uik']['address'].__len__() > 3:
+                address = '%' + filter['uik']['address'] + '%'
                 clauses.append(Uik.address_voting.ilike(address))
-            if filter['name']:
-                name = filter['name']
-                clauses.append(Uik.number_composite == name)
+            if filter['uik']['number']:
+                number = '%' + filter['uik']['number'] + '%'
+                clauses.append(Uik.number_composite.ilike(number))
 
     bbox = json.loads(request.params.getall('bbox')[0])
     box_geom = leaflet_bbox_to_polygon(bbox)
@@ -77,7 +77,7 @@ def get_all(context, request):
 
     uiks_result = {'data': uiks_for_json}
 
-    return Response(json.dumps(uiks_result))
+    return Response(json.dumps(uiks_result), content_type='application/json')
 
 
 def _get_uik_from_uik_db(uik_from_db):
@@ -120,7 +120,7 @@ def get_uik(context, request):
         request.session['u_id'] == uik[0].user_block.id:
         uik_res['uik']['is_unblocked'] = True
 
-    return Response(json.dumps(uik_res))
+    return Response(json.dumps(uik_res), content_type='application/json')
 
 
 @view_config(route_name='uik', request_method='POST')
@@ -199,4 +199,89 @@ def get_logs(context, request):
                'uiks_by_users': []}
     for user_uiks_log in user_uiks_logs:
         results['uiks_by_users'].append({'user_name': user_uiks_log[0].display_name, 'count_uiks': user_uiks_log[1]})
-    return Response(json.dumps(results))
+    return Response(json.dumps(results), content_type='application/json')
+
+
+@view_config(route_name='uikp_all', request_method='GET')
+def get_president_uiks(context, request):
+    page_size = 100
+    is_filter_applied = False
+    filter = json.loads(request.GET['filter'])
+    clauses = []
+    if 'filter' in request.GET:
+        filter['uik_2012']['address'] = filter['uik_2012']['address'].encode('UTF-8').strip()
+        filter['uik_2012']['number'] = filter['uik_2012']['number'].encode('UTF-8').strip()
+        if filter['uik_2012']['address'] or filter['uik_2012']['number']:
+            is_filter_applied = True
+            if filter['uik_2012']['address'].__len__() > 3:
+                address = '%' + filter['uik_2012']['address'] + '%'
+                clauses.append(VotingStation.address.ilike(address))
+            if filter['uik_2012']['number']:
+                number = '%' + filter['uik']['number'] + '%'
+                clauses.append(VotingStation.name.ilike(number))
+
+    bbox = json.loads(request.params.getall('bbox')[0])
+    box_geom = leaflet_bbox_to_polygon(bbox)
+
+    uiks_for_json = {'points': {
+        'count': 0,
+        'layers': {
+            'uik_2012': {'elements': [], 'count': 0}
+        }}}
+
+    session = DBSession()
+    if is_filter_applied:
+        contains = functions.gcontains(box_geom, Location.point).label('contains')
+        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
+            .join(VotingStation.location) \
+            .filter(*clauses) \
+            .order_by(contains.desc()) \
+            .limit(page_size) \
+            .all()
+        if len(uiks_from_db) < page_size:
+            uiks_for_json['points']['count'] = len(uiks_from_db)
+        else:
+            uiks_for_json['points']['count'] = session.query(VotingStation.id) \
+                .filter(*clauses) \
+                .count()
+    else:
+        uiks_from_db = session.query(VotingStation, Location.point.x, Location.point.y) \
+            .join(VotingStation.location) \
+            .filter(Location.point.within(box_geom)) \
+            .all()
+        uiks_for_json['points']['count'] = len(uiks_from_db)
+
+    for uik in uiks_from_db:
+        uiks_for_json['points']['layers']['uik_2012']['elements'].append(_get_uik2012_from_uik_db(uik))
+        uiks_for_json['points']['layers']['uik_2012']['count'] = uiks_for_json['points']['count']
+
+    return Response(json.dumps(uiks_for_json), content_type='application/json')
+
+
+def _get_uik2012_from_uik_db(uik_from_db):
+    return {'id': uik_from_db[0].id,
+            'name': uik_from_db[0].name,
+            'addr': uik_from_db[0].address,
+            'lon': uik_from_db[1],
+            'lat': uik_from_db[2]}
+
+@view_config(route_name='uikp', request_method='GET')
+def get_uik2012(context, request):
+    id = request.matchdict.get('id', None)
+    session = DBSession()
+    uik = session.query(VotingStation, Location, Location.point.x, Location.point.y) \
+        .join(VotingStation.location) \
+        .filter(VotingStation.id == id).one()
+
+    uik_res = {
+        'uikp': {
+            'id': uik[0].id,
+            'name': uik[0].name if uik[0].name else'',
+            'comment': uik[0].comment if uik[0].comment else '',
+            'address': uik[0].address if uik[0].address else ''
+        }
+    }
+
+    uik_res['uikp']['geom'] = {'id': uik[1].id, 'lng': uik[2], 'lat': uik[3]}
+
+    return Response(json.dumps(uik_res), content_type='application/json')

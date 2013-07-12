@@ -258,6 +258,18 @@ input.need-apply {
     line-height: 14px;
 }
 
+#searchUIK,
+#searchUIK_2012,
+#searchAddress {
+    display: none;
+}
+
+#searchContainer.searchUIK #searchUIK,
+#searchContainer.searchUIK_2012 #searchUIK_2012,
+#searchContainer.searchAddress #searchAddress {
+    display: block;
+}
+
 #searchContainer span.icon-collapse:hover {
     background: url('../img/sm-icons.png') -12px -20px;
 }
@@ -277,7 +289,7 @@ body.searcher-collapsed #searchContainer {
 body.searcher-collapsed #searchContainer ul.nav,
 body.searcher-collapsed #searchContainer div.title,
 body.searcher-collapsed #searchContainer form.form-search,
-body.searcher-collapsed #searchContainer #searchResults {
+body.searcher-collapsed #searchContainer .searchResults {
     display: none;
 }
 
@@ -319,12 +331,17 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     cursor: default;
 }
 
-#searchContainer input.input-address {
+#searchContainer input.address {
     width: 117px;
     margin-left: 4px;
 }
 
-#searchContainer input.input-name {
+#searchAddress input.address {
+    width: 225px;
+    margin-left: 4px;
+}
+
+#searchContainer input.name {
     width: 90px;
 }
 
@@ -337,7 +354,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     margin-top: -3px;
 }
 
-#search {
+#searchContainer div.search {
     display: inline-block;
     border-radius: 4px 4px 4px 4px;
     background-color: #ebebeb;
@@ -348,7 +365,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     padding: 1px;
 }
 
-#search span {
+#searchContainer div.search span {
     display: block;
     width: 26px;
     height: 26px;
@@ -356,17 +373,17 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     background: url("../img/sm-icons.png") repeat scroll 0 -35px transparent;
 }
 
-#search.active:hover span {
+#searchContainer div.search.active:hover span {
     background: url('../img/sm-icons.png') -25px -35px;
 }
 
-#search.active {
+#searchContainer div.search.active {
     background-color: transparent;
     border: 1px solid #bebcb8;
     cursor: pointer;
 }
 
-#searchResults {
+#searchContainer div.searchResults {
     margin: 5px;
     border: 1px solid #AFAFAF;
     position: absolute;
@@ -379,30 +396,30 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     text-align: center;
 }
 
-#searchResults.description p.update,
-#searchResults.description ul,
-#searchResults.update div ul,
-#searchResults.update p.description,
-#searchResults.active p.description,
-#searchResults.active p.update {
+#searchContainer div.searchResults.description p.update,
+#searchContainer div.searchResults.description ul,
+#searchContainer div.searchResults.update div ul,
+#searchContainer div.searchResults.update p.description,
+#searchContainer div.searchResults.active p.description,
+#searchContainer div.searchResults.active p.update {
     display: none;
 }
 
-#searchResults.description p.description,
-#searchResults.update p.update {
+#searchContainer div.searchResults.description p.description,
+#searchContainer div.searchResults.update p.update {
     display: inline;
     color: #b2b1a6;
     text-align: center;
 }
 
-#searchResults.active ul {
+#searchContainer div.searchResults.active ul {
     display: block;
     text-align: left;
     list-style-type: none;
     margin: 0;
 }
 
-#searchResults.active ul li {
+#searchContainer div.searchResults.active ul li {
     margin: 2px;
     color: #676767;
     font-size: 13px;
@@ -410,15 +427,15 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     padding: 2px;
 }
 
-#searchResults.active ul li:first-child {
+#searchContainer div.searchResults.active ul li:first-child {
     border-top: none;
 }
 
-#searchResults.active ul li span {
+#searchContainer div.searchResults.active ul li span {
     font-weight: bold;
 }
 
-#searchResults.active ul li:hover a.target {
+#searchContainer div.searchResults.active ul li:hover a.target {
     background: url("../img/sm-icons.png") repeat scroll -25px -20px transparent;
     display: inline-block;
     height: 14px;
@@ -427,7 +444,7 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     cursor: pointer;
 }
 
-#searchResults.active ul li:hover a.edit {
+#searchContainer div.searchResults.active ul li:hover a.edit {
     background: url("../img/sm-icons.png") repeat scroll -40px -21px transparent;
     display: inline-block;
     height: 14px;
@@ -436,16 +453,20 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     cursor: pointer;
 }
 
-#searchResults.active ul.blocked li {
+#searchContainer div.searchResults.active ul.blocked li {
     color: #ff0000;
 }
 
-#searchResults.active ul.checked li {
+#searchContainer div.searchResults.active ul.checked li {
     color: #15c700;
 }
 
-#searchResults.active ul.non-checked li {
+#searchContainer div.searchResults.active ul.non-checked li {
     color: #BD9C19;
+}
+
+#searchContainer div.searchResults.active ul.uik2012 li {
+    color: #95898f;
 }
 
 body #manager {
@@ -735,7 +756,16 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
     background: url('../img/sm-icons.png') -100px -145px;
 }
 
-#stop-popup.loader {
+#map .uik-2012 {
+    background: url('../img/sm-icons.png') -120px -145px;
+    z-index: 300 !important;
+}
+
+#map .uik-2012:hover {
+    background: url('../img/sm-icons.png') -140px -145px;
+}
+
+#uik-popup.loader {
     width: 250px;
     height: 100px;
 }
@@ -744,28 +774,28 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
     min-width: 250px;
 }
 
-#stop-popup .table {
+#uik-popup .table {
     margin-bottom: 5px;
 }
 
-#stop-popup .table th, #stop-popup .table td {
+#uik-popup .table th, #uik-popup .table td {
     line-height: normal;
     padding: 4px;
 }
 
-#stop-popup div.edit {
+#uik-popup div.edit {
     text-align: right;
 }
 
-#stop-popup div.edit a {
+#uik-popup div.edit a {
     cursor: pointer;
 }
 
-#stop-popup #edit {
+#uik-popup #edit {
     padding: 5px;
 }
 
-#stop-popup tr.block {
+#uik-popup tr.block {
     color: red;
     font-weight: bold;
 }
@@ -774,7 +804,7 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
     float: right;
 }
 
-#stop-popup div.edit button.block {
+#uik-popup div.edit button.block {
     color: #ffdbd6;
     background-color: #cc8774;
     background-image: none;
