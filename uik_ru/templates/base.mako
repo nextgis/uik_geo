@@ -245,7 +245,7 @@
 </div>
 <div class="permalink">
     <a id="permalink" name="Ссылка на текущую область">Ссылка на карту</a></br>
-    <a id="json_link" name="Открыть в JOSM">Открыть в JOSM</a>
+    <a id="json_link" name="Открыть в JOSM" target="_blank">Открыть в JOSM</a>
 </div>
 </body>
 </html>
