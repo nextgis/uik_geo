@@ -44,7 +44,7 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 print file2model.addToGeocodingPrecision(session=DBSession())
-print file2model.addToRegion(options.csv_file_reg, session=DBSession() )
+print file2model.addToRegion(options.csv_file_reg, session=DBSession())
 print file2model.addToTik(options.csv_file_tik, session=DBSession())
 print file2model.addToUik(options.shp_file, session=DBSession())
 

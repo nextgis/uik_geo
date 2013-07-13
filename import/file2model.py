@@ -43,7 +43,7 @@ def addToGeocodingPrecision(session):
             prec = GeocodingPrecision()
             prec.id   = row['id']
             prec.name = name
-            prec.name = row['name_ru']
+            prec.name_ru = row['name_ru']
             dbsession.add(prec)
     return success
 
@@ -73,12 +73,11 @@ def addToUik(fileName, session):
         count_shapes = len(shp.shapes())
         records = shp.shapeRecords()
         shapes = shp.shapes()
-        #geocoding_precisions = GeocodingPrecisionRepository()
-        #uiks = UikRepository(geocoding_precisions)
 
         for i in range(count_shapes - 1):
             record = records[i]
             row = record.record
+            prec = dbsession.query(GeocodingPrecision).filter_by(name=row[16]).one()
             uikRec = {
                 'region_id': row[0],
                 'tik_id': row[17],
@@ -89,13 +88,11 @@ def addToUik(fileName, session):
                 'address_office': row[5],
                 'place_office': row[6],
                 'comment': row[8],
-                'geocoding_precision_id': 1, #self.geocoding_precision.get_id(records[16]),
+                'geocoding_precision_id': prec.id,
                 'point' : "POINT(%s %s)" % (record.shape.points[0][0], record.shape.points[0][1])
             }
 
             uik = Uik()
-
-            #uik.id  = uikRec['']
             uik.number_official  = uikRec['number_official']
             uik.number_composite  = uikRec['number_composite']
             uik.address_voting  = uikRec['address_voting']
@@ -108,9 +105,6 @@ def addToUik(fileName, session):
             uik.geocoding_precision_id  = uikRec['geocoding_precision_id']
             uik.tik_id  = uikRec['tik_id']
             uik.region_id  = uikRec['region_id']
-            #uik.is_blocked  = uikRec['']
-            #uik.user_block  = uikRec['']
-            #uik.user_block_id  = uikRec['']
 
             dbsession.add(uik)
     return success
