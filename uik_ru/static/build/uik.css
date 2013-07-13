@@ -534,7 +534,8 @@ body.bing #manager div.icon.bing button,
 }
 
 body.osm #manager div.icon.osm,
-body.bing #manager div.icon.bing {
+body.bing #manager div.icon.bing,
+body.bing #manager div.icon.josm {
     border: 1px solid #838383;
 }
 
