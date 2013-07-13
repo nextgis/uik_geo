@@ -45,6 +45,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.josm.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
 
 </head>
