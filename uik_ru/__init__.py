@@ -27,7 +27,7 @@ def main(global_config, **settings):
     config.add_route('uik_unblock', '/uik/unblock/{id}')
     config.add_route('logs', '/logs')
     config.add_route('uikp_all', '/uikp/all')
-    config.add_route('uikp', '/uikp/{id}')
     config.add_route('stat', '/uik/stat')
+    config.add_route('uikp', '/uikp/{id}')
     config.scan()
     return config.make_wsgi_app()
