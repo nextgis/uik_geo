@@ -135,11 +135,11 @@ def update_uik(context, request):
         Uik.place_voting: uik['place_voting'],
         Uik.is_applied: str_to_boolean(uik['is_applied']),
         Uik.comment: uik['comment'],
-        Uik.geocoding_precision_id: uik['geocoding_precision_id'],
+        Uik.geocoding_precision_id: uik['geo_precision'],
         Uik.is_blocked: False,
         Uik.user_block_id: None
     }, synchronize_session=False)
-    sql = 'UPDATE uiks SET point=GeomFromText(:wkt, 4326) WHERE id = :uik_id'
+    sql = 'UPDATE uiks SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :uik_id'
     session.execute(sql, {
         'wkt': 'POINT(%s %s)' % (uik['geom']['lng'], uik['geom']['lat']),
         'uik_id': uik['id']

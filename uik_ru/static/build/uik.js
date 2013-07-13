@@ -2195,7 +2195,7 @@ $.fn.imagesLoaded = function( callback ) {
     });
 
     $.extend(UIK.view, {
-
+        $josmLink: null
     });
 
     UIK.josm = {};
@@ -2203,14 +2203,25 @@ $.fn.imagesLoaded = function( callback ) {
 
         init: function () {
             this.bindEvents();
+            this.setDomOptions();
         },
 
-        bindEvents: function () {
-
-        },
 
         setDomOptions: function () {
+            UIK.view.$josmLink = $('#josm-link');
+        },
 
+
+        bindEvents: function () {
+            $('div.icon.josm').on('mouseover', function() {
+                var bounds = UIK.viewmodel.map.getBounds(),
+                    link = ('http://127.0.0.1:8111/load_and_zoom?' +
+                        'left=' + bounds.getNorthWest().lng +
+                        '&top=' + bounds.getNorthWest().lat +
+                        '&right=' + bounds.getSouthEast().lng +
+                        '&bottom=' + bounds.getSouthEast().lat);
+                UIK.view.$josmLink.attr('href', link);
+            });
         }
     });
 
