@@ -79,6 +79,16 @@
             $('#applyCoordinates').off('click').on('click', function () {
                 context.applyCoordinates(UIK.viewmodel.latlngEditable);
             });
+
+            $('#undoCoordinates').off('click').on('click', function () {
+                context.undoCoordinates();
+            });
+
+            $('#resetCenter').off('click').on('click', function () {
+                context.resetCenter();
+            });
+
+
         },
 
         toggleEditor: function () {
@@ -141,6 +151,28 @@
             viewmodel.map.setView(latlng, 18);
             $('#target').show().delay(1000).fadeOut(1000);
             $('#lat, #lng').removeClass('need-apply');
+            
+            $('#undoCoordinates').prop('disabled', false);
+        },
+
+        undoCoordinates: function () {
+            var viewmodel = UIK.viewmodel,
+                latlng = new L.LatLng(viewmodel.uikSelected.uik.old_geom.lat, viewmodel.uikSelected.uik.old_geom.lng);
+
+            this.updateCoordinates(latlng);
+            viewmodel.markerEditable.setLatLng(latlng);
+            viewmodel.map.setView(latlng, viewmodel.map.getZoom());
+
+            $('#undoCoordinates').prop('disabled', true);
+        },
+
+        resetCenter: function () {
+            var newCenter = UIK.viewmodel.map.getCenter();
+
+            this.updateCoordinates(newCenter);
+            UIK.viewmodel.markerEditable.setLatLng(newCenter);
+
+            $('#undoCoordinates').prop('disabled', false);
         },
 
         startAjaxEdition: function () {
@@ -163,6 +195,7 @@
             viewmodel.editable = true;
             this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
+            viewmodel.uikSelected.uik.old_geom = jQuery.extend({}, viewmodel.uikSelected.uik.geom);
             viewmodel.map.closePopup();
         },
 
@@ -177,10 +210,12 @@
 
             marker.on('dragend', function (e) {
                 context.updateCoordinates(e.target.getLatLng());
+                $('#undoCoordinates').prop('disabled', false);
             });
             UIK.viewmodel.mapLayers['edit'].addLayer(marker);
 
             $('#applyCoordinates').prop('disabled', true);
+            $('#undoCoordinates').prop('disabled', true);
 
             UIK.viewmodel.latlngEditable = {
                 lat: {validated: true, marker: stringLat, editor: stringLat},
