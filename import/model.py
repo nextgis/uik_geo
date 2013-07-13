@@ -134,12 +134,10 @@ class UikRepository:
         return self.uiks
 
     def get_sql(self):
-        sql = "INSERT INTO uiks(id, number_official, number_composite, address_voting, place_voting, address_office, " \
+        sql = "INSERT INTO uiks(number_official, number_composite, address_voting, place_voting, address_office, " \
               "place_office, comment, point, is_applied, geocoding_precision_id, tik_id, region_id) VALUES "
-        uik_id = 0
         for uik in self.uiks:
             sql += get_values([
-                check_null(uik_id),
                 check_null(uik['number_official']),
                 check_null(uik['number_composite']),
                 check_null(uik['address_voting']),
@@ -153,5 +151,4 @@ class UikRepository:
                 check_null(uik['tik_id']),
                 check_null(uik['region_id']),
             ]) + ","
-            uik_id += 1
         return sql[:-1] + ';'

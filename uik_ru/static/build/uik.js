@@ -1065,9 +1065,9 @@ $.fn.imagesLoaded = function( callback ) {
                 UIK.viewmodel.mapLayers.points[layerIndex[zIndex]].bringToFront();
             });
 
-            editGroup = new L.layerGroup();
-            UIK.viewmodel.map.addLayer(editGroup);
-            UIK.viewmodel.mapLayers['edit'] = editGroup;
+//            editGroup = new L.layerGroup();
+//            UIK.viewmodel.map.addLayer(editGroup);
+//            UIK.viewmodel.mapLayers['edit'] = editGroup;
         },
 
 
@@ -1565,7 +1565,8 @@ $.fn.imagesLoaded = function( callback ) {
 
         buildEditLayer: function () {
             var editedLayer = L.layerGroup();
-            UIK.viewmodel.mapLayers['edit'] = UIK.viewmodel.map.addLayer(editedLayer);
+            UIK.viewmodel.mapLayers['edit'] = editedLayer;
+            UIK.viewmodel.map.addLayer(editedLayer);
         },
 
         bindEvents: function () {
@@ -1871,14 +1872,10 @@ $.fn.imagesLoaded = function( callback ) {
         },
 
         clearLayers: function () {
-            var configPoints = UIK.config.data.points,
-                mapLayers = UIK.viewmodel.mapLayers.points,
-                pointType;
-            for (pointType in configPoints) {
-                if (configPoints.hasOwnProperty(pointType)) {
-                    mapLayers[pointType].clearLayers();
-                }
-            }
+            var mapLayers = UIK.viewmodel.mapLayers;
+            mapLayers.points.checked.clearLayers();
+            mapLayers.points.unchecked.clearLayers();
+            mapLayers.points.blocked.clearLayers();
         },
 
         updateUiksByAjax: function () {

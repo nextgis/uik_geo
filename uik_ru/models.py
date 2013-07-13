@@ -148,7 +148,7 @@ class VotingStation(Base):
 class Uik(Base):
     __tablename__ = 'uiks'
 
-    id = Column(Integer, Sequence('uik_id_seq'), primary_key=True)
+    id = Column(Integer, primary_key=True)
     number_official = Column(Text, nullable=False, index=True)
     number_composite = Column(Text, nullable=False, index=True)
     address_voting = Column(Text, nullable=False, index=True)
