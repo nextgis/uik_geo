@@ -163,6 +163,13 @@
         <div class="icon bing" title="Слой Bing" data-layer="bing">
             <button></button>
         </div>
+        <div class="icon josm" title="Редактировать в JOSM">
+            <button>
+                <a href="" id="josm-link">
+                    <img id="josm-link-img" src="${request.static_url('uik_ru:static/img/josm-link-icon.png')}">
+                </a>
+            </button>
+        </div>
     </div>
 </div>
 <div id="editorContainer">
