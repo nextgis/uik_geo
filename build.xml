@@ -31,6 +31,7 @@
             <file file="${rootProjectDirName}/static/js/uik/uik.uiks_2012.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.user.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.permalink.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.josm.js"/>
             <file file="${rootProjectDirName}/static/build/compile-templates.js"/>
         </concat>
     </target>

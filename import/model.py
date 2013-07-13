@@ -44,7 +44,6 @@ class TikRepository:
         return self.tiks
 
     def add_tik(self, row):
-        id = row[1]
         if id not in self.tiks:
             self.tiks[id] = {
                 'id': id,

@@ -811,6 +811,7 @@ $.fn.imagesLoaded = function( callback ) {
                 UIK.user.init();
                 UIK.uiks.init();
                 UIK.uiks_2012.init();
+                UIK.josm.init();
             } catch (e) {
                 alert(e);
             }
@@ -2186,6 +2187,33 @@ $.fn.imagesLoaded = function( callback ) {
             });
         }
     });
+})(jQuery, UIK);
+(function ($, UIK) {
+
+    $.extend(UIK.viewmodel, {
+
+    });
+
+    $.extend(UIK.view, {
+
+    });
+
+    UIK.josm = {};
+    $.extend(UIK.josm, {
+
+        init: function () {
+            this.bindEvents();
+        },
+
+        bindEvents: function () {
+
+        },
+
+        setDomOptions: function () {
+
+        }
+    });
+
 })(jQuery, UIK);
 UIK.templates = {};
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');

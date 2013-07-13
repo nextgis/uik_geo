@@ -185,7 +185,7 @@ class Uik(Base):
 class Tik(Base):
     __tablename__ = 'tiks'
 
-    id = Column(Integer, Sequence('tik_id_seq'), primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(Text)
     link_orig = Column(Text)
     link_save = Column(Text)

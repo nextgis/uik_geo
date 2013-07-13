@@ -35,6 +35,7 @@
                 UIK.user.init();
                 UIK.uiks.init();
                 UIK.uiks_2012.init();
+                UIK.josm.init();
             } catch (e) {
                 alert(e);
             }

@@ -7,6 +7,7 @@ from decorators import authorized
 from pyramid.view import view_config
 from pyramid.response import Response
 from sqlalchemy import func
+from sqlalchemy.sql.expression import asc
 from geoalchemy import WKTSpatialElement, functions
 import transaction
 
@@ -134,6 +135,7 @@ def update_uik(context, request):
         Uik.place_voting: uik['place_voting'],
         Uik.is_applied: str_to_boolean(uik['is_applied']),
         Uik.comment: uik['comment'],
+        Uik.geocoding_precision_id: uik['geocoding_precision_id'],
         Uik.is_blocked: False,
         Uik.user_block_id: None
     }, synchronize_session=False)
@@ -285,3 +287,24 @@ def get_uik2012(context, request):
     uik_res['uikp']['geom'] = {'id': uik[1].id, 'lng': uik[2], 'lat': uik[3]}
 
     return Response(json.dumps(uik_res), content_type='application/json')
+
+
+@view_config(route_name='stat', request_method='GET')
+def get_stat(context, request):
+    user_name = None
+    if hasattr(request, 'cookies') and 'sk' in request.cookies.keys() and 'sk' in request.session and \
+                    request.session['sk'] == request.cookies['sk'] and 'u_name' in request.session:
+        user_name = request.session['u_name']
+
+    session = DBSession()
+    geocoding_precisions = session.query(GeocodingPrecision).order_by(asc(GeocodingPrecision.id)).all()
+    regions = session.query(Region).order_by(asc(Region.name)).all()
+    tiks = session.query(Tik).order_by(asc(Tik.name)).all()
+
+    return {
+        'u_name': user_name,
+        'project': 'uik_ru',
+        'geocoding_precisions': geocoding_precisions,
+        'regions': regions,
+        'tiks': tiks
+    }
