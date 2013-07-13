@@ -2213,14 +2213,14 @@ $.fn.imagesLoaded = function( callback ) {
 
 
         bindEvents: function () {
-            $('div.icon.josm').on('mouseover', function() {
+            $('#json_link').on('mouseover', function() {
                 var bounds = UIK.viewmodel.map.getBounds(),
                     link = ('http://127.0.0.1:8111/load_and_zoom?' +
                         'left=' + bounds.getNorthWest().lng +
                         '&top=' + bounds.getNorthWest().lat +
                         '&right=' + bounds.getSouthEast().lng +
                         '&bottom=' + bounds.getSouthEast().lat);
-                UIK.view.$josmLink.attr('href', link);
+                $(this).attr('href', link);
             });
         }
     });

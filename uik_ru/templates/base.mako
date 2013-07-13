@@ -163,13 +163,13 @@
         <div class="icon bing" title="Слой Bing" data-layer="bing">
             <button></button>
         </div>
-        <div class="icon josm" title="Редактировать в JOSM">
-            <button>
-                <a href="" id="josm-link">
-                    <img id="josm-link-img" src="${request.static_url('uik_ru:static/img/josm-link-icon.png')}">
-                </a>
-            </button>
-        </div>
+##        <div class="icon josm" title="Редактировать в JOSM">
+##            <button>
+##                <a href="" id="josm-link">
+##                    <img id="josm-link-img" src="${request.static_url('uik_ru:static/img/josm-link-icon.png')}">
+##                </a>
+##            </button>
+##        </div>
     </div>
 </div>
 <div id="editorContainer">
@@ -240,7 +240,8 @@
     </div>
 </div>
 <div class="permalink">
-    <a id="permalink" name="Ссылка на текущую область">Ссылка на карту</a>
+    <a id="permalink" name="Ссылка на текущую область">Ссылка на карту</a></br>
+    <a id="json_link" name="Открыть в JOSM">Открыть в JOSM</a>
 </div>
 </body>
 </html>
