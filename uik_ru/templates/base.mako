@@ -221,6 +221,10 @@
                 <div class="wrapper-coordinates">
                     <button id="applyCoordinates" class="btn btn-small" disabled="disabled" type="button">
                         Применить координаты</button>
+                    <button id="resetCenter" class="btn btn-small" disabled="disabled" type="button">
+                        Перецентрировать</button>                                            
+                    <button id="undoCoordinates" class="btn btn-small" disabled="disabled" type="button">
+                        Отменить координаты</button>                        
                 </div>
             </div>
             <div class="group">
