@@ -259,23 +259,29 @@ input.need-apply {
     cursor: pointer;
 }
 
-#searchContainer ul.nav {
+#searchContainer ul.nav,
+#editorContainer ul.nav {
     margin: 5px 6px;
 }
 
-#searchContainer ul.nav li a {
+#searchContainer ul.nav li a,
+#editorContainer ul.nav li a {
     line-height: 14px;
 }
 
 #searchUIK,
 #searchUIK_2012,
-#searchAddress {
+#searchAddress,
+#editUIK, 
+#versionsUIK {
     display: none;
 }
 
 #searchContainer.searchUIK #searchUIK,
 #searchContainer.searchUIK_2012 #searchUIK_2012,
-#searchContainer.searchAddress #searchAddress {
+#searchContainer.searchAddress #searchAddress,
+#editorContainer.editUIK #editUIK, 
+#editorContainer.versionsUIK #versionsUIK {
     display: block;
 }
 
@@ -573,7 +579,7 @@ body.bing #manager div.icon.josm {
     overflow-x: hidden;
     overflow-y: auto;
     position: absolute;
-    top: 34px;
+    top: 70px;
     right: 3px;
     left: 0px;
 }

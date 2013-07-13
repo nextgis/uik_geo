@@ -101,7 +101,8 @@ def get_uik(context, request):
         .outerjoin((User, Uik.user_block_id == User.id)) \
         .filter(Uik.id == id).one()
 
-    versions = session.query(UikVersions, UikVersions.uik_id, UikVersions.user_id, UikVersions.time) \
+    versions = session.query(UikVersions, User.display_name, UikVersions.time) \
+        .outerjoin((User, UikVersions.user_id == User.id)) \
         .filter(UikVersions.uik_id == id).order_by(UikVersions.time).all()
 
     uik_res = {
@@ -109,7 +110,7 @@ def get_uik(context, request):
         'geo_precision': uik[3].to_dict(),
         'region': uik[4].to_dict(),
         'tik': uik[5].to_dict(),
-        'versions': [version.to_dict_without_dump() for version in versions]
+        'versions': [{'display_name': version[1], 'time': version[2].isoformat()} for version in versions]
     }
 
     uik_res['uik']['geom'] = {'lng': uik[1], 'lat': uik[2]}

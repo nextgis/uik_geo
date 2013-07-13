@@ -196,6 +196,7 @@
             this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.uikSelected.uik.old_geom = jQuery.extend({}, viewmodel.uikSelected.uik.geom);
+            UIK.uiks.versions.showVersions();
             viewmodel.map.closePopup();
         },
 

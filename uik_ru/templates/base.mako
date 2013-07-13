@@ -46,6 +46,8 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.josm.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.versions.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.tab.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
 
 </head>
@@ -172,10 +174,17 @@
 ##        </div>
     </div>
 </div>
-<div id="editorContainer">
+<div id="editorContainer" class="versionsUIK">
     <span class="icon-collapse"></span>
+
     <div class="title"><span>Редактор</span></div>
-    <div class="form-wrap">
+
+    <ul class="nav nav-tabs">
+        <li data-id="editUIK"><a href="javascript:void(0)">Данные УИКа</a></li>
+        <li class="active" data-id="versionsUIK"><a href="javascript:void(0)">Версии</a></li>
+    </ul>
+
+    <div class="form-wrap" id="editUIK">
         <form class="form-inline disabled" id="editorForm">
             <div class="group">
                 <label class="control-label middle" for="id">ID</label>
@@ -241,6 +250,10 @@
                 <button id="save" type="button" class="btn btn-success" disabled="disabled">Сохранить</button>
             </div>
         </form>
+    </div>
+
+    <div id="versionsUIK">
+
     </div>
 </div>
 <div class="permalink">

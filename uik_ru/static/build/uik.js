@@ -812,6 +812,7 @@ $.fn.imagesLoaded = function( callback ) {
                 UIK.uiks.init();
                 UIK.uiks_2012.init();
                 UIK.josm.init();
+                UIK.editor.tab.init();
             } catch (e) {
                 alert(e);
             }
@@ -1489,7 +1490,7 @@ $.fn.imagesLoaded = function( callback ) {
 
     });
     $.extend(UIK.view, {
-        $activatedTab: null
+        $activatedSearchTab: null
     });
 
     UIK.searcher.tab = {};
@@ -1504,7 +1505,7 @@ $.fn.imagesLoaded = function( callback ) {
 
 
         setDomOptions: function () {
-            UIK.view.$activatedTab = UIK.view.$searchContainer.find('ul.nav li.active');
+            UIK.view.$activatedSearchTab = UIK.view.$searchContainer.find('ul.nav li.active');
         },
 
 
@@ -1514,7 +1515,7 @@ $.fn.imagesLoaded = function( callback ) {
 
             UIK.view.$searchContainer.find('ul.nav li').off('click').on('click', function (e) {
                 $tab = $(this);
-                if ($tab.data('id') !== UIK.view.$activatedTab.data('id')) {
+                if ($tab.data('id') !== UIK.view.$activatedSearchTab.data('id')) {
                     context.activateTab($tab);
                 }
             });
@@ -1523,8 +1524,8 @@ $.fn.imagesLoaded = function( callback ) {
 
         activateTab: function ($tab) {
             var view = UIK.view;
-            view.$activatedTab.removeClass('active');
-            view.$activatedTab = $tab.addClass('active');
+            view.$activatedSearchTab.removeClass('active');
+            view.$activatedSearchTab = $tab.addClass('active');
             view.$searchContainer.attr('class', $tab.data('id'));
         }
 
@@ -1612,6 +1613,16 @@ $.fn.imagesLoaded = function( callback ) {
             $('#applyCoordinates').off('click').on('click', function () {
                 context.applyCoordinates(UIK.viewmodel.latlngEditable);
             });
+
+            $('#undoCoordinates').off('click').on('click', function () {
+                context.undoCoordinates();
+            });
+
+            $('#resetCenter').off('click').on('click', function () {
+                context.resetCenter();
+            });
+
+
         },
 
         toggleEditor: function () {
@@ -1674,6 +1685,28 @@ $.fn.imagesLoaded = function( callback ) {
             viewmodel.map.setView(latlng, 18);
             $('#target').show().delay(1000).fadeOut(1000);
             $('#lat, #lng').removeClass('need-apply');
+            
+            $('#undoCoordinates').prop('disabled', false);
+        },
+
+        undoCoordinates: function () {
+            var viewmodel = UIK.viewmodel,
+                latlng = new L.LatLng(viewmodel.uikSelected.uik.old_geom.lat, viewmodel.uikSelected.uik.old_geom.lng);
+
+            this.updateCoordinates(latlng);
+            viewmodel.markerEditable.setLatLng(latlng);
+            viewmodel.map.setView(latlng, viewmodel.map.getZoom());
+
+            $('#undoCoordinates').prop('disabled', true);
+        },
+
+        resetCenter: function () {
+            var newCenter = UIK.viewmodel.map.getCenter();
+
+            this.updateCoordinates(newCenter);
+            UIK.viewmodel.markerEditable.setLatLng(newCenter);
+
+            $('#undoCoordinates').prop('disabled', false);
         },
 
         startAjaxEdition: function () {
@@ -1696,6 +1729,8 @@ $.fn.imagesLoaded = function( callback ) {
             viewmodel.editable = true;
             this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
+            viewmodel.uikSelected.uik.old_geom = jQuery.extend({}, viewmodel.uikSelected.uik.geom);
+            UIK.uiks.versions.showVersions();
             viewmodel.map.closePopup();
         },
 
@@ -1710,10 +1745,12 @@ $.fn.imagesLoaded = function( callback ) {
 
             marker.on('dragend', function (e) {
                 context.updateCoordinates(e.target.getLatLng());
+                $('#undoCoordinates').prop('disabled', false);
             });
             UIK.viewmodel.mapLayers['edit'].addLayer(marker);
 
             $('#applyCoordinates').prop('disabled', true);
+            $('#undoCoordinates').prop('disabled', true);
 
             UIK.viewmodel.latlngEditable = {
                 lat: {validated: true, marker: stringLat, editor: stringLat},
@@ -2227,10 +2264,12 @@ $.fn.imagesLoaded = function( callback ) {
 
 })(jQuery, UIK);
 UIK.templates = {};
-UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');
-UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');
-UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
+UIK.templates['versionsTemplate'] = Mustache.compile('<ul><li>v{{num}} {{text}} {{time}}</li></ul>');
 UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
 UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
+UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');
 UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
+UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');
 UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
+UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
+UIK.templates['.subl878'] = Mustache.compile('<ul><li>v{{num}} {{text}} {{time}}</li></ul>');
