@@ -16,7 +16,8 @@ from sqlalchemy.dialects.postgresql import DOUBLE_PRECISION, BYTEA
 from geoalchemy import (
     GeometryColumn,
     Geometry,
-    Polygon
+    Polygon,
+    WKTSpatialElement
 )
 
 from sqlalchemy.ext.declarative import declarative_base
