@@ -21,7 +21,15 @@
             this.buildMap();
             this.buildLayerManager();
             this.buildLayers();
+
+            UIK.map.lockHistory = false;
+            UIK.map.extentHistory = [];
+            UIK.map.extentHistoryPointer = -1;
+            this.pushCurrentExtent();
+
             this.bindEvents();
+
+            UIK.alerts.showAlert('historyShortcuts');
         },
 
         bindEvents: function () {
@@ -32,6 +40,7 @@
                     zoom = map.getZoom();
 
                 context.setLastExtentToCookie(center, zoom);
+                UIK.map.pushCurrentExtent();
                 UIK.view.$document.trigger('/uik/permalink/update', [center, zoom]);
                 UIK.view.$document.trigger('/uik/map/updateAllLayers');
 
@@ -54,6 +63,63 @@
                 vm.isPopupOpened = false;
                 vm.mapLayers.select.clearLayers();
             });
+            $('#map').keydown(function(event) {
+                if (event.keyCode == 80) {
+                    // english letter 'p'
+                    UIK.map.backwardExtentHistory();
+                }
+                if (event.keyCode == 78) {  
+                    // english letter 'n'
+                    UIK.map.forwardExtentHistory();
+                }
+            });            
+        },
+
+        pushCurrentExtent: function () {
+            // if (UIK.map.lockHistory) {
+            //     return;
+            // }
+            var newExtent = [UIK.viewmodel.map.getCenter(), UIK.viewmodel.map.getZoom()];
+
+            if (UIK.map.extentHistoryPointer >= 0 && 
+                UIK.map.extentHistory[UIK.map.extentHistoryPointer][0].lat == newExtent[0].lat &&
+                UIK.map.extentHistory[UIK.map.extentHistoryPointer][0].lng == newExtent[0].lng &&
+                UIK.map.extentHistory[UIK.map.extentHistoryPointer][1] == newExtent[1]) {
+                return;
+            }
+
+            while (UIK.map.extentHistory.length - 1 > UIK.map.extentHistoryPointer) {
+                UIK.map.extentHistory.pop();
+            }
+
+            UIK.map.extentHistory.push(newExtent);
+            UIK.map.extentHistoryPointer++;
+        },
+
+        backwardExtentHistory: function () {
+            // if (UIK.map.lockHistory) {
+            //     return;
+            // }
+            if (UIK.map.extentHistoryPointer > 0) {
+                UIK.map.extentHistoryPointer -= 1;
+                var prevExtent = UIK.map.extentHistory[UIK.map.extentHistoryPointer];
+                UIK.map.lockHistory = true;
+                UIK.viewmodel.map.setView(prevExtent[0], prevExtent[1]);
+                UIK.map.lockHistory = false;
+            }
+        },
+
+        forwardExtentHistory: function () {
+            // if (UIK.map.lockHistory) {
+            //     return;
+            // }
+            if (UIK.map.extentHistoryPointer + 1 < UIK.map.extentHistory.length) {
+                UIK.map.extentHistoryPointer += 1;
+                var nextExtent = UIK.map.extentHistory[UIK.map.extentHistoryPointer];
+                UIK.map.lockHistory = true;
+                UIK.viewmodel.map.setView(nextExtent[0], nextExtent[1]);                
+                UIK.map.lockHistory = false;
+            }
         },
 
         buildMap: function () {
