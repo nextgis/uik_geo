@@ -1,0 +1,8 @@
+*.ini
+*.egg-info
+dist/*
+build/bdist*
+build/lib*
+venv/*
+dev.sh
+uik_ru/static/build/*

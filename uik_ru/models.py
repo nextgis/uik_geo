@@ -267,13 +267,6 @@ class UikVersions(Base):
             dump=json.loads(zlib.decompress(base64.decodestring(self.dump)))
         )
 
-    def to_dict_without_dump(self):
-        return dict(
-            uik_id=self.uik_id,
-            user_id=self.user_id,
-            time=self.time.isoformat(),            
-        )
-
     def to_json_binary_dump(self, json_object):
         json_object = json.dumps(json_object)
         json_object_str = zlib.compress(json_object)

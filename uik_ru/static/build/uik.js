@@ -812,6 +812,7 @@ $.fn.imagesLoaded = function( callback ) {
                 UIK.uiks.init();
                 UIK.uiks_2012.init();
                 UIK.josm.init();
+                UIK.editor.tab.init();
             } catch (e) {
                 alert(e);
             }
@@ -1008,7 +1009,6 @@ $.fn.imagesLoaded = function( callback ) {
                     map = vm.map;
                 map.panTo(latlng);
                 map.openPopup(L.popup().setLatLng(latlng).setContent(html));
-
             });
             UIK.viewmodel.map.on('popupclose', function () {
                 var vm = UIK.viewmodel;
@@ -1555,7 +1555,7 @@ $.fn.imagesLoaded = function( callback ) {
 
     });
     $.extend(UIK.view, {
-        $activatedTab: null
+        $activatedSearchTab: null
     });
 
     UIK.searcher.tab = {};
@@ -1570,7 +1570,7 @@ $.fn.imagesLoaded = function( callback ) {
 
 
         setDomOptions: function () {
-            UIK.view.$activatedTab = UIK.view.$searchContainer.find('ul.nav li.active');
+            UIK.view.$activatedSearchTab = UIK.view.$searchContainer.find('ul.nav li.active');
         },
 
 
@@ -1580,7 +1580,7 @@ $.fn.imagesLoaded = function( callback ) {
 
             UIK.view.$searchContainer.find('ul.nav li').off('click').on('click', function (e) {
                 $tab = $(this);
-                if ($tab.data('id') !== UIK.view.$activatedTab.data('id')) {
+                if ($tab.data('id') !== UIK.view.$activatedSearchTab.data('id')) {
                     context.activateTab($tab);
                 }
             });
@@ -1589,8 +1589,8 @@ $.fn.imagesLoaded = function( callback ) {
 
         activateTab: function ($tab) {
             var view = UIK.view;
-            view.$activatedTab.removeClass('active');
-            view.$activatedTab = $tab.addClass('active');
+            view.$activatedSearchTab.removeClass('active');
+            view.$activatedSearchTab = $tab.addClass('active');
             view.$searchContainer.attr('class', $tab.data('id'));
         }
 
@@ -1795,7 +1795,9 @@ $.fn.imagesLoaded = function( callback ) {
             this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.uikSelected.uik.old_geom = jQuery.extend({}, viewmodel.uikSelected.uik.geom);
+            UIK.uiks.versions.showVersions();
             viewmodel.map.closePopup();
+            $('#editUIK-link').click();
         },
 
         startEditingGeometry: function (lat, lng) {
@@ -2073,6 +2075,8 @@ $.fn.imagesLoaded = function( callback ) {
                         });
                     });
                 }
+                UIK.uiks.versions.showVersions();
+                $('#versionsUIK-link').click();
             }).error(function () {
                     $('#uik-popup').removeClass('loader').empty().append('Error connection');
                 });
@@ -2328,6 +2332,7 @@ $.fn.imagesLoaded = function( callback ) {
 
 })(jQuery, UIK);
 UIK.templates = {};
+UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
 UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
 UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');

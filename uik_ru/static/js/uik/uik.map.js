@@ -56,7 +56,6 @@
                     map = vm.map;
                 map.panTo(latlng);
                 map.openPopup(L.popup().setLatLng(latlng).setContent(html));
-
             });
             UIK.viewmodel.map.on('popupclose', function () {
                 var vm = UIK.viewmodel;
