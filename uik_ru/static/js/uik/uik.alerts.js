@@ -12,6 +12,12 @@
     $.extend(UIK.alerts, {
 
         alerts: {
+            historyShortcuts : {
+                id: 'historyShortcuts',
+                type: 'info',
+                text: 'Используйте клавиши p и n при работе с картой',
+                statusText: 'Можно перемещаться по истории экранов.'
+            },
             'zoom' : {
                 id: 'zoom',
                 type: 'alert',
