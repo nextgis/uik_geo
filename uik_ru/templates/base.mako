@@ -180,8 +180,8 @@
     <div class="title"><span>Редактор</span></div>
 
     <ul class="nav nav-tabs">
-        <li data-id="editUIK"><a href="javascript:void(0)">Данные УИКа</a></li>
-        <li class="active" data-id="versionsUIK"><a href="javascript:void(0)">Версии</a></li>
+        <li data-id="editUIK" id="editUIK-link"><a href="javascript:void(0)">Данные УИКа</a></li>
+        <li class="active" data-id="versionsUIK" id="versionsUIK-link"><a href="javascript:void(0)">Версии</a></li>
     </ul>
 
     <div class="form-wrap" id="editUIK">

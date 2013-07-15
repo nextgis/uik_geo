@@ -418,14 +418,16 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     text-align: center;
 }
 
-#searchContainer div.searchResults.active ul {
+#searchContainer div.searchResults.active ul,
+#versionsUIK ul {
     display: block;
     text-align: left;
     list-style-type: none;
     margin: 0;
 }
 
-#searchContainer div.searchResults.active ul li {
+#searchContainer div.searchResults.active ul li,
+#versionsUIK ul li {
     margin: 2px;
     color: #676767;
     font-size: 13px;
@@ -433,7 +435,8 @@ body.searcher-collapsed #map .leaflet-control-container .leaflet-left {
     padding: 2px;
 }
 
-#searchContainer div.searchResults.active ul li:first-child {
+#searchContainer div.searchResults.active ul li:first-child,
+#versionsUIK ul li:first-child {
     border-top: none;
 }
 
