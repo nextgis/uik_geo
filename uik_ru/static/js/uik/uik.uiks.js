@@ -131,6 +131,8 @@
                         });
                     });
                 }
+                UIK.uiks.versions.showVersions();
+                $('#versionsUIK-link').click();
             }).error(function () {
                     $('#uik-popup').removeClass('loader').empty().append('Error connection');
                 });
