@@ -2,15 +2,18 @@
 <html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
-    <title>Регистрация</title>
+    <title>Статистика</title>
     <meta name="description" content="участковая избирательная комиссия выборы адрес">
     <meta name="viewport" content="width=device-width">
 
     <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
-    <link rel="stylesheet" href="${request.static_url('uik_ru:static/frameworks/jtable.2.3.0/themes/metro/jtable_metro_base.min.css')}">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/stat.css')}">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/frameworks/jtable.2.3.0/themes/lightcolor/gray/jtable.css')}">
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/frameworks/jtable.2.3.0/jquery.jtable.min.js')}"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/frameworks/jtable.2.3.0/jquery.jtable.js')}"></script>
 
     <script type="text/javascript">
 
@@ -20,36 +23,30 @@
                 title: 'Список УИКов',
                 paging: true,
                 sorting: true,
+                pageSize: 20,
                 defaultSorting: 'Name ASC',
                 actions: {
-                    listAction: '/Demo/StudentListByFiter'
+                    listAction: '/uik/stat/json'
                 },
                 fields: {
-                    ID: {
-                        key: true,
-                        create: false,
-                        edit: false,
-                        list: false
-                    },
-                    Name: {
+                    number_official: {
                         title: 'Номер',
-                        width: '23%'
+                        width: '4%'
                     },
                     tik: {
                         title: 'ТИК',
-                        list: false
+                        width: '5%'
                     },
                     region: {
                         title: 'Регион',
-                        list: false
+                        width: '5%'
                     },
                     geocoding_precision: {
-                        title: 'Точность геокод',
-                        width: '13%'
+                        title: 'Точность геокодирования',
+                        width: '5%'
                     },
                     is_applied: {
-                        title: 'City',
-                        width: '12%'
+                        title: 'Проверен'
                     }
                 }
             });
@@ -64,16 +61,16 @@
 
             $('#LoadRecordsButton').click();
         });
-
     </script>
-
 </head>
 <body style="margin: 10px;">
 <div class="filtering">
     <form>
-        ID: <input type="text" name="id" id="id" />
+<div class="width_5per">
+    <label class="control-label" for="number_official">Номер</label>
+    <input type="text" name="number_official" id="number_official" />
+</div>
 
-        Номер: <input type="text" name="number_official" id="number_official" />
 
         ТИК:
         <select id="tik" name="tik">
@@ -106,10 +103,10 @@
             <option value="False">Нет</option>
         </select>
 
-        <button type="submit" id="LoadRecordsButton">Загрузить</button>
+        <button class="btn btn-primary" type="submit" id="LoadRecordsButton">Загрузить</button>
     </form>
 </div>
 
-<div id="UiksTableContainer"></div>
+<div id="UiksTableContainer" style="margin: auto;"></div>
 </body>
 </html>

@@ -1,0 +1,19 @@
+label {
+    display: inline;
+    width: auto;
+}
+
+input, select {
+    margin-top: 8px;
+}
+
+div.width_5per {
+    width: 5%;
+    display: inline-block;
+}
+
+div.width_5per label,
+div.width_5per input,
+div.width_5per select {
+    width: auto;
+}
