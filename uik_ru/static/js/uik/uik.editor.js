@@ -228,6 +228,7 @@
             UIK.viewmodel.markerEditable = marker;
         },
 
+
         updateCoordinates: function (latLng) {
             var lat = latLng.lat.toFixed(this.precisionDegree),
                 lng = latLng.lng.toFixed(this.precisionDegree),
@@ -251,9 +252,9 @@
             $('#lng').val(lng);
         },
 
+
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#id').val(uik.uik.id).attr('disabled', 'disabled');
             $('#name').val(uik.uik.number_official).attr('disabled', 'disabled');
             $('#region').val(uik.region.name).attr('disabled', 'disabled');
             $('#tik').val(uik.tik.name).attr('disabled', 'disabled');

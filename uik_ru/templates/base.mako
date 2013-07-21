@@ -165,13 +165,6 @@
         <div class="icon bing" title="Слой Bing" data-layer="bing">
             <button></button>
         </div>
-##        <div class="icon josm" title="Редактировать в JOSM">
-##            <button>
-##                <a href="" id="josm-link">
-##                    <img id="josm-link-img" src="${request.static_url('uik_ru:static/img/josm-link-icon.png')}">
-##                </a>
-##            </button>
-##        </div>
     </div>
 </div>
 <div id="editorContainer" class="versionsUIK">
@@ -186,10 +179,6 @@
 
     <div class="form-wrap" id="editUIK">
         <form class="form-inline disabled" id="editorForm">
-            <div class="group">
-                <label class="control-label middle" for="id">ID</label>
-                <input type="text" id="id" class="stand" disabled="disabled"/>
-            </div>
             <div class="group">
                 <label class="control-label middle" for="name">Номер УИКа</label>
                 <input type="text" id="name" class="stand" disabled="disabled"/>
@@ -207,11 +196,11 @@
                 <textarea id="address_voting" name="address_voting" disabled="disabled"></textarea>
             </div>
             <div class="group">
-                <label class="control-label top" for="place_voting">Место помещения голосования</label>
+                <label class="control-label top" for="place_voting">Место голосования</label>
                 <textarea id="place_voting" name="place_voting" disabled="disabled"></textarea>
             </div>
             <div class="group">
-                <label class="control-label" for="geo_precision">Точность геокодиро-<br>вания</label>
+                <label class="control-label" for="geo_precision">Точность</label>
                 <select id="geo_precision" class="stand" name="geo_precision" disabled="disabled">
                     % for geocoding_precision in geocoding_precisions:
                         <option value="${geocoding_precision.id}">${geocoding_precision.name_ru}</option>

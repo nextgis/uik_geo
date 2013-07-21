@@ -7,6 +7,7 @@ from decorators import authorized
 from pyramid.view import view_config
 from pyramid.response import Response
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import asc
 from geoalchemy import WKTSpatialElement, functions
 import transaction
@@ -30,7 +31,7 @@ def get_all(context, request):
                 clauses.append(Uik.address_voting.ilike(address))
             if filter['uik']['number']:
                 number = '%' + filter['uik']['number'] + '%'
-                clauses.append(Uik.number_composite.ilike(number))
+                clauses.append(Uik.number_official.ilike(number))
 
     bbox = json.loads(request.params.getall('bbox')[0])
     box_geom = leaflet_bbox_to_polygon(bbox)
@@ -296,7 +297,7 @@ def get_uik2012(context, request):
     return Response(json.dumps(uik_res), content_type='application/json')
 
 
-@view_config(route_name='stat', request_method='GET')
+@view_config(route_name='stat_json', request_method='POST')
 def get_stat(context, request):
     user_name = None
     if hasattr(request, 'cookies') and 'sk' in request.cookies.keys() and 'sk' in request.session and \
@@ -304,14 +305,35 @@ def get_stat(context, request):
         user_name = request.session['u_name']
 
     session = DBSession()
-    geocoding_precisions = session.query(GeocodingPrecision).order_by(asc(GeocodingPrecision.id)).all()
-    regions = session.query(Region).order_by(asc(Region.name)).all()
-    tiks = session.query(Tik).order_by(asc(Tik.name)).all()
+    uiks_from_db = session.query(Uik)\
+        .options(joinedload('geocoding_precision'),\
+            joinedload('tik'),\
+            joinedload('region'))
 
+    count = uiks_from_db.count()
+    uiks_from_db = uiks_from_db.offset(request.params['jtStartIndex']) \
+        .limit(request.params['jtPageSize']) \
+        .all()
+
+    return Response(json.dumps({
+        'Result': 'OK',
+        'Records': [create_uik_stat(uik) for uik in uiks_from_db],
+        'TotalRecordCount': count
+    }), content_type='application/json')
+
+
+def create_uik_stat (uik_from_db):
+    uik = uik_from_db.to_dict()
+    uik['tik'] = uik_from_db.tik.name
+    uik['geocoding_precision'] = uik_from_db.geocoding_precision.name_ru
+    uik['region'] = uik_from_db.region.name
+    return uik
+
+@view_config(route_name='statistic', request_method='GET', renderer='stat.mako')
+def get_stat_page(context, request):
+    session = DBSession()
     return {
-        'u_name': user_name,
-        'project': 'uik_ru',
-        'geocoding_precisions': geocoding_precisions,
-        'regions': regions,
-        'tiks': tiks
+        'tiks': session.query(Tik).all(),
+        'geocoding_precisions': session.query(GeocodingPrecision).all(),
+        'regions': session.query(GeocodingPrecision).all()
     }
