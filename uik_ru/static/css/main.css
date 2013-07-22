@@ -191,27 +191,52 @@ input.need-apply {
     float: right;
 }
 
-#signOutForm div.log {
-    width: 39px;
-    height: 39px;
+body div.stat-group {
     position: absolute;
-    top: 0px;
-    left: -46px;
+    left: 309px;
+    top: 142px;
+    background-color: #F5F5F5;
+    border: 1px solid #AFAFAF;
+    border-radius: 4px 4px 4px 4px;
+}
+
+body.searcher-collapsed div.stat-group {
+    top: 105px;
+    left: 3px;
+}
+
+div.stat-group div.log,
+div.stat-group div.stat {
+    width: 32px;
+    height: 36px;
+    margin: 2px;
     background-color: #ffffff;
     border: 1px solid #afafaf;
     cursor: pointer;
 }
 
-#signOutForm div.log span {
+div.stat-group div.log a,
+div.stat-group div.stat a {
     display: inline-block;
-    margin: 4px 0 0 5px;
+    margin: 2px 0 0 2px;
     width: 29px;
     height: 31px;
+}
+
+div.stat-group div.log a {
     background: url('../img/sm-icons.png') -30px -190px;
 }
 
-#signOutForm div.log:hover span {
+div.stat-group div.log:hover a {
     background: url('../img/sm-icons.png') -58px -190px;
+}
+
+div.stat-group div.stat a {
+    background: url('../img/sm-icons.png') -87px -190px;
+}
+
+div.stat-group div.stat:hover a {
+    background: url('../img/sm-icons.png') -116px -190px;
 }
 
 #searchContainer .title,
@@ -542,7 +567,7 @@ body.bing #manager div.icon.josm {
 #editorContainer {
     right: 5px;
     position: absolute;
-    top: 66px;
+    top: 51px;
     bottom: 5px;
     width: 310px;
     background-color: #ffffff;

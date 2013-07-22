@@ -83,7 +83,6 @@
         <div>или <a href="${request.application_url}/register">зарегистрироваться</a></div>
     </form>
     <form id="signOutForm" class="form-inline" method="post">
-        <div class="log"><span></span></div>
         <fieldset>
             <label id="display-name" class="control-label">
                     % if u_name:
@@ -167,6 +166,11 @@
         </div>
     </div>
 </div>
+<div class="stat-group">
+    <div class="log"><a href=""></a></div>
+    <div class="stat"><a href="${request.route_url('statistic')}" title="Статистика по УИКам"></a></div>
+</div>
+
 <div id="editorContainer" class="versionsUIK">
     <span class="icon-collapse"></span>
 
