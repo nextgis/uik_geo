@@ -1202,9 +1202,6 @@ $.fn.imagesLoaded = function( callback ) {
 		buildLayerManager: function () {
 			var v = UIK.view;
 			UIK.view.$manager = $('#manager');
-			// http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
-			// http://{s}.tile.osmosnimki.ru/kosmo/{z}/{x}/{y}.png
-			// http://{s}.tiles.mapbox.com/v3/karavanjo.map-opq7bhsy/{z}/{x}/{y}.png
 			this.addTileLayer('osm', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '© OpenStreetMap contributors');
 			this.addBingLayer('AujH--7B6FRTK8b81QgPhuvw_Sb3kc8hBO-Lp5OLNyhCD4ZQoGGW4cQS6zBgaeEh');
 			UIK.view.$tileLayers = v.$map.find('div.leaflet-tile-pane div.leaflet-layer');
@@ -1245,7 +1242,7 @@ $.fn.imagesLoaded = function( callback ) {
 		},
 
 		addBingLayer: function (key) {
-			var bingLayer = new L.BingLayer(key, {minZoom: 8, maxZoom: 19});
+			var bingLayer = new L.BingLayer(key, {minZoom: 8, maxZoom: 18});
 			this._layers['bing'] = {
 				'layer' : UIK.viewmodel.map.addLayer(bingLayer, true),
 				'index' : this._lastIndex
@@ -1827,6 +1824,7 @@ $.fn.imagesLoaded = function( callback ) {
             UIK.viewmodel.markerEditable = marker;
         },
 
+
         updateCoordinates: function (latLng) {
             var lat = latLng.lat.toFixed(this.precisionDegree),
                 lng = latLng.lng.toFixed(this.precisionDegree),
@@ -1850,9 +1848,9 @@ $.fn.imagesLoaded = function( callback ) {
             $('#lng').val(lng);
         },
 
+
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#id').val(uik.uik.id).attr('disabled', 'disabled');
             $('#name').val(uik.uik.number_official).attr('disabled', 'disabled');
             $('#region').val(uik.region.name).attr('disabled', 'disabled');
             $('#tik').val(uik.tik.name).attr('disabled', 'disabled');
@@ -2332,11 +2330,11 @@ $.fn.imagesLoaded = function( callback ) {
 
 })(jQuery, UIK);
 UIK.templates = {};
-UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
-UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
-UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
-UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
-UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');
-UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
 UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');
+UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
+UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
+UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
+UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
+UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
+UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');

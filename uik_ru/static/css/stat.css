@@ -3,17 +3,64 @@ label {
     width: auto;
 }
 
-input, select {
-    margin-top: 8px;
+div.header-table {
+    width: 100%;
+    margin: 5px 0px;
 }
 
-div.width_5per {
-    width: 5%;
+div.header-table div.column {
+    width: 49%;
     display: inline-block;
 }
 
-div.width_5per label,
-div.width_5per input,
-div.width_5per select {
+div.header-table div.column select {
+    margin: 0px;
+    padding: 0px;
+    height: auto;
+}
+
+div.filtering {
+    border: 1px solid #C8C8C8;
+    padding: 5px 0;
+}
+
+div.filter {
+    width: 20%;
+    display: inline-block;
+    margin: 0 -5px 0 0;
+    padding: 0px;
+    text-align: center;
+}
+
+
+div.filter input,
+div.filter select {
+    margin: 0px;
+    padding: 0px;
+    height: auto;
+    width: 90%;
+}
+
+div.jtable-left-area select {
     width: auto;
+    height: auto;
+    padding: 0px;
+    margin: 0px;
+    line-height: normal;
+}
+
+div.green {
+    background-color: rgba(0, 127, 0, 0.35);
+}
+
+div.red {
+    background-color: rgba(255, 0, 0, 0.39);
+}
+
+div.rose {
+    background-color: #bc77b1;
+}
+
+div.yellow {
+    background-color: yellow;
 }

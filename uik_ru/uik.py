@@ -8,7 +8,7 @@ from pyramid.view import view_config
 from pyramid.response import Response
 from sqlalchemy import func
 from sqlalchemy.orm import joinedload
-from sqlalchemy.sql.expression import asc
+from sqlalchemy.sql.expression import asc, desc
 from geoalchemy import WKTSpatialElement, functions
 import transaction
 
@@ -305,12 +305,39 @@ def get_stat(context, request):
         user_name = request.session['u_name']
 
     session = DBSession()
+
+
+    clauses = []
+    if request.POST:
+        if exist_filter_parameter('geocoding_precision', request):
+            clauses.append(Uik.geocoding_precision_id == request.POST['geocoding_precision'])
+        if exist_filter_parameter('is_applied', request):
+            clauses.append(Uik.is_applied == (request.POST['is_applied'] == 'True'))
+        if exist_filter_parameter('number_official', request):
+            clauses.append(Uik.number_official.ilike('%' + request.POST['number_official'] + '%'))
+        if exist_filter_parameter('region', request):
+            clauses.append(Uik.region_id == int(request.POST['region']))
+        if exist_filter_parameter('tik', request):
+            clauses.append(Uik.tik_id == int(request.POST['tik']))
+
     uiks_from_db = session.query(Uik)\
-        .options(joinedload('geocoding_precision'),\
-            joinedload('tik'),\
-            joinedload('region'))
+        .join('geocoding_precision') \
+        .join('tik') \
+        .join('region') \
+        .filter(*clauses)
+
+    if 'jtSorting' in request.params:
+        sort = request.params['jtSorting']
+        sort = sort.split(' ')
+        if sort[1] == 'ASC':
+            uiks_from_db = uiks_from_db.order_by(asc(get_sort_param(sort[0])))
+        if sort[1] == 'DESC':
+            uiks_from_db = uiks_from_db.order_by(desc(get_sort_param(sort[0])))
+    else:
+        uiks_from_db = uiks_from_db.order_by(asc(Uik.number_official))
 
     count = uiks_from_db.count()
+
     uiks_from_db = uiks_from_db.offset(request.params['jtStartIndex']) \
         .limit(request.params['jtPageSize']) \
         .all()
@@ -322,18 +349,42 @@ def get_stat(context, request):
     }), content_type='application/json')
 
 
-def create_uik_stat (uik_from_db):
+def exist_filter_parameter(param, request):
+    return (param in request.POST) and (len(str(request.POST[param])) > 0)
+
+
+def create_uik_stat(uik_from_db):
     uik = uik_from_db.to_dict()
     uik['tik'] = uik_from_db.tik.name
     uik['geocoding_precision'] = uik_from_db.geocoding_precision.name_ru
     uik['region'] = uik_from_db.region.name
     return uik
 
+
+params = {
+    'number_official': Uik.number_official,
+    'tik': Tik.name,
+    'geocoding_precision': GeocodingPrecision.name_ru,
+    'region': Region.name,
+    'is_applied': Uik.is_applied
+}
+
+
+def get_sort_param(param):
+    return params[param]
+
+
+def build_filtering_query(request, query):
+    if 'jtSorting' in request.params:
+        return request
+
+
 @view_config(route_name='statistic', request_method='GET', renderer='stat.mako')
 def get_stat_page(context, request):
     session = DBSession()
     return {
-        'tiks': session.query(Tik).all(),
-        'geocoding_precisions': session.query(GeocodingPrecision).all(),
-        'regions': session.query(GeocodingPrecision).all()
+        'tiks': session.query(Tik).order_by(Tik.name).all(),
+        'geocoding_precisions': session.query(GeocodingPrecision).order_by(GeocodingPrecision.name_ru).all(),
+        'regions': session.query(Region).order_by(Region.name).all(),
+        'users': session.query(User).order_by(User.display_name).all()
     }
