@@ -167,7 +167,7 @@
     </div>
 </div>
 <div class="stat-group">
-    <div class="log"><a href=""></a></div>
+    <div class="log"><a href="${request.route_url('logs')}" title="Статистика пользователей"></a></div>
     <div class="stat"><a href="${request.route_url('statistic')}" title="Статистика по УИКам"></a></div>
 </div>
 

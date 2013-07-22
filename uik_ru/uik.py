@@ -189,7 +189,7 @@ def uik_unblock(context, request):
     transaction.commit()
     return Response()
 
-@view_config(route_name='logs', request_method='GET')
+@view_config(route_name='logs', request_method='GET', renderer='log.mako')
 @authorized()
 def get_logs(context, request):
     session = DBSession()
@@ -198,18 +198,26 @@ def get_logs(context, request):
         .group_by(UikVersions.user_id) \
         .subquery()
 
-    from sqlalchemy.sql.expression import asc
     user_uiks_logs = session.query(User, user_uiks_count_sbq.c.count_uiks) \
         .outerjoin(user_uiks_count_sbq, User.id == user_uiks_count_sbq.c.user_id) \
-        .order_by(asc(User.display_name))
+        .order_by(desc(user_uiks_count_sbq.c.count_uiks))
 
     count_editable_stops = session.query(func.count(UikVersions.uik_id.distinct())).scalar()
     count_all_stops = session.query(func.count(Uik.id)).scalar()
     results = {'count': {'all': count_all_stops, 'editable': count_editable_stops},
                'uiks_by_users': []}
+    rank = 1
     for user_uiks_log in user_uiks_logs:
-        results['uiks_by_users'].append({'user_name': user_uiks_log[0].display_name, 'count_uiks': user_uiks_log[1]})
-    return Response(json.dumps(results), content_type='application/json')
+        if user_uiks_log[1]:
+            results['uiks_by_users'].append({
+                'user_name': user_uiks_log[0].display_name,
+                'count_uiks': user_uiks_log[1],
+                'rank': rank
+            })
+            rank += 1
+    return {
+        'results': results
+    }
 
 
 @view_config(route_name='uikp_all', request_method='GET')
@@ -305,7 +313,6 @@ def get_stat(context, request):
         user_name = request.session['u_name']
 
     session = DBSession()
-
 
     clauses = []
     if request.POST:
