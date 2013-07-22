@@ -28,7 +28,7 @@
                 pageSize: 10,
                 defaultSorting: 'Name ASC',
                 actions: {
-                    listAction: '/uik/stat/json'
+                    listAction: '${request.route_url('home')}uik/stat/json'
                 },
                 fields: {
                     number_official: {
