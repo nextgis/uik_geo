@@ -18,6 +18,8 @@
 </head>
 <body style="margin: 10px;">
 <h2>Статистика пользователей</h2>
+<p class="muted">В базе <span style="color:blue">${results['count']['all']}</span> УИКов,
+    из них принято <span style="color:green">${results['count']['approved']}</span> УИКов</p>
 <table class="table">
 <thead>
     <tr>

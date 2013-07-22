@@ -201,10 +201,16 @@ def get_logs(context, request):
         .outerjoin(user_uiks_count_sbq, User.id == user_uiks_count_sbq.c.user_id) \
         .order_by(desc(user_uiks_count_sbq.c.count_uiks))
 
-    count_editable_stops = session.query(func.count(UikVersions.uik_id.distinct())).scalar()
-    count_all_stops = session.query(func.count(Uik.id)).scalar()
-    results = {'count': {'all': count_all_stops, 'editable': count_editable_stops},
-               'uiks_by_users': []}
+    # count_editable_uiks = session.query(func.count(UikVersions.uik_id.distinct())).scalar()
+    count_approved_uiks = session.query(func.count(Uik.id)).filter(Uik.is_applied == True).scalar()
+    count_all_uiks = session.query(func.count(Uik.id)).scalar()
+    results = {
+        'count': {
+            'all': count_all_uiks,
+            # 'editable': count_editable_uiks,
+            'approved': count_approved_uiks
+        },
+        'uiks_by_users': []}
     rank = 1
     for user_uiks_log in user_uiks_logs:
         if user_uiks_log[1]:
