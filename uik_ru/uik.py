@@ -190,7 +190,6 @@ def uik_unblock(context, request):
     return Response()
 
 @view_config(route_name='logs', request_method='GET', renderer='log.mako')
-@authorized()
 def get_logs(context, request):
     session = DBSession()
     user_uiks_count_sbq = session \
