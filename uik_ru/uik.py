@@ -332,7 +332,7 @@ def get_stat(context, request):
         if exist_filter_parameter('tik', request):
             clauses.append(Uik.tik_id == int(request.POST['tik']))
 
-    uiks_from_db = session.query(Uik)\
+    uiks_from_db = session.query(Uik, Uik.point.x, Uik.point.y)\
         .join('geocoding_precision') \
         .join('tik') \
         .join('region') \
@@ -366,10 +366,12 @@ def exist_filter_parameter(param, request):
 
 
 def create_uik_stat(uik_from_db):
-    uik = uik_from_db.to_dict()
-    uik['tik'] = uik_from_db.tik.name
-    uik['geocoding_precision'] = uik_from_db.geocoding_precision.name_ru
-    uik['region'] = uik_from_db.region.name
+    uik = uik_from_db[0].to_dict()
+    uik['tik'] = uik_from_db[0].tik.name
+    uik['geocoding_precision'] = uik_from_db[0].geocoding_precision.name_ru
+    uik['region'] = uik_from_db[0].region.name
+    uik['lng'] = uik_from_db[1]
+    uik['lat'] = uik_from_db[2]
     return uik
 
 

@@ -166,9 +166,13 @@
         </div>
     </div>
 </div>
-<div class="stat-group">
-    <div class="log"><a href="${request.route_url('logs')}" title="Статистика пользователей"></a></div>
-    <div class="stat"><a href="${request.route_url('statistic')}" title="Статистика по УИКам"></a></div>
+<div class="stat-group icons-group">
+    <div class="log"><a target="_blank" href="${request.route_url('logs')}" title="Статистика пользователей"></a></div>
+    <div class="stat"><a target="_blank" href="${request.route_url('statistic')}" title="Статистика по УИКам"></a></div>
+</div>
+<div class="help-group icons-group">
+    <div class="help"><a target="_blank" href="http://wiki.gis-lab.info/w/%D0%A0%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE_%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F_%D0%A3%D0%98%D0%9A_%D0%93%D0%95%D0%9E" title="Руководство пользователя"></a></div>
+    <div class="github"><a target="_blank" href="https://github.com/nextgis/uik_geo" title="Репозиторий на GitHub"></a></div>
 </div>
 
 <div id="editorContainer" class="versionsUIK">

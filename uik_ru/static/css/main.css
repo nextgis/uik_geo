@@ -191,13 +191,18 @@ input.need-apply {
     float: right;
 }
 
-body div.stat-group {
+body div.icons-group {
     position: absolute;
-    left: 309px;
-    top: 142px;
     background-color: #F5F5F5;
     border: 1px solid #AFAFAF;
     border-radius: 4px 4px 4px 4px;
+    width: auto;
+    height: auto;
+}
+
+body div.stat-group {
+    left: 309px;
+    top: 142px;
 }
 
 body.searcher-collapsed div.stat-group {
@@ -206,7 +211,9 @@ body.searcher-collapsed div.stat-group {
 }
 
 div.stat-group div.log,
-div.stat-group div.stat {
+div.stat-group div.stat,
+div.help-group div.help,
+div.help-group div.github {
     width: 32px;
     height: 36px;
     margin: 2px;
@@ -216,7 +223,9 @@ div.stat-group div.stat {
 }
 
 div.stat-group div.log a,
-div.stat-group div.stat a {
+div.stat-group div.stat a,
+div.help-group div.help a,
+div.help-group div.github a {
     display: inline-block;
     margin: 2px 0 0 2px;
     width: 29px;
@@ -237,6 +246,32 @@ div.stat-group div.stat a {
 
 div.stat-group div.stat:hover a {
     background: url('../img/sm-icons.png') -116px -190px;
+}
+
+body div.help-group {
+    left: 309px;
+    top: 232px;
+}
+
+body.searcher-collapsed div.help-group {
+    top: 277px;
+    left: 3px;
+}
+
+div.help-group div.help a {
+    background: url('../img/sm-icons.png') -0px -223px;
+}
+
+div.help-group div.help:hover a {
+    background: url('../img/sm-icons.png') -30px -223px;
+}
+
+div.help-group div.github a {
+    background: url('../img/sm-icons.png') -59px -223px;
+}
+
+div.help-group div.github:hover a {
+    background: url('../img/sm-icons.png') -87px -223px;
 }
 
 #searchContainer .title,
