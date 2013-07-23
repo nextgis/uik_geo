@@ -213,7 +213,7 @@ body.searcher-collapsed div.stat-group {
 div.stat-group div.log,
 div.stat-group div.stat,
 div.help-group div.help,
-div.help-group div.github {
+div.help-group div.nextgis {
     width: 32px;
     height: 36px;
     margin: 2px;
@@ -225,7 +225,7 @@ div.help-group div.github {
 div.stat-group div.log a,
 div.stat-group div.stat a,
 div.help-group div.help a,
-div.help-group div.github a {
+div.help-group div.nextgis a {
     display: inline-block;
     margin: 2px 0 0 2px;
     width: 29px;
@@ -266,11 +266,11 @@ div.help-group div.help:hover a {
     background: url('../img/sm-icons.png') -30px -223px;
 }
 
-div.help-group div.github a {
+div.help-group div.nextgis a {
     background: url('../img/sm-icons.png') -59px -223px;
 }
 
-div.help-group div.github:hover a {
+div.help-group div.nextgis:hover a {
     background: url('../img/sm-icons.png') -87px -223px;
 }
 
