@@ -35,7 +35,7 @@
                         title: 'Номер',
                         width: '20%',
                         display: function (data) {
-                            return $('<a href="${request.route_url('home')}' +
+                            return $('<a target="_blank" href="${request.route_url('home')}' +
                                     '?lat=' + data.record.lat + '&lon=' + data.record.lng + '&zoom=' + 18 +
                                     '" >' + data.record.number_official + '</a>');
                         }
