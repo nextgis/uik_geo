@@ -58,6 +58,7 @@ def addToTik(fileName, session, regionID=None):
     Если не указан regionID, то импортируется все ТИКи.
     """
     processAll = (regionID==None)
+    tiks = dict()
     success = True
     dbsession = session
     with transaction.manager:
@@ -69,12 +70,15 @@ def addToTik(fileName, session, regionID=None):
             reader = csv.DictReader(csvFile)
             for row in reader:
                 if processAll or row['auto_code'] == regionID:
+                    if row['tik_id'] in tiks:
+                        continue
                     tik = Tik()
                     tik.id   = row['tik_id']
                     tik.name = row['tik']
-                    tik.link_orig = row['link_orig']
-                    tik.link_save = row['link_save']
+                    # tik.link_orig = row['link_orig']
+                    # tik.link_save = row['link_save']
                     tik.region_id = row['auto_code']
+                    tiks[tik.id] = None
                     dbsession.add(tik)
     return success
 
@@ -94,22 +98,38 @@ def addToUik(fileName, session, regionID=None):
         records = shp.shapeRecords()
         shapes = shp.shapes()
 
+        fields = shp.fields
+        field_index = 0
+        shp_fields = dict()
+        for field in fields:
+            if field[0] == 'DeletionFlag':
+                continue
+            shp_fields[field[0]] = field_index
+            field_index += 1
+
+        precisions_db = dbsession.query(GeocodingPrecision) \
+            .all()
+
+        precisions = dict()
+        for prec in precisions_db:
+            precisions[prec.name] = prec.id
+        precisions['district'] = precisions['region']
+
         for i in range(count_shapes - 1):
             record = records[i]
             row = record.record
-            if processAll or row[0] == regionID:
-                prec = dbsession.query(GeocodingPrecision).filter_by(name=row[16]).one()
+            if processAll or row[shp_fields['auto_code']] == regionID:
                 uikRec = {
-                    'region_id': row[0],
-                    'tik_id': row[17],
-                    'number_official': row[2],
-                    'number_composite': '_'.join([str(row[17]), str(row[2])]),
-                    'address_voting': row[3],
-                    'place_voting': row[4],
-                    'address_office': row[5],
-                    'place_office': row[6],
-                    'comment': row[8],
-                    'geocoding_precision_id': prec.id,
+                    'region_id': row[shp_fields['auto_code']],
+                    'tik_id': row[shp_fields['tik_id']],
+                    'number_official': row[shp_fields['uik']],
+                    'number_composite': '_'.join([str(row[shp_fields['tik_id']]), str(row[shp_fields['uik']])]),
+                    'address_voting': row[shp_fields['addr_v']],
+                    'place_voting': row[shp_fields['place_v']],
+                    'address_office': row[shp_fields['addr_o']],
+                    'place_office': row[shp_fields['place_o']],
+                    'comment': row[shp_fields['info']],
+                    'geocoding_precision_id': precisions[row[shp_fields['g_status']]],
                     'point' : "POINT(%s %s)" % (record.shape.points[0][0], record.shape.points[0][1])
                 }
 
