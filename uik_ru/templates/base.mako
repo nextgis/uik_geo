@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Отметь свой УИК</title>
-    <meta name="description" content="участковая избирательная комиссия выборы адрес">
+    <meta name="description" content="УИК ГЕО - это краудсорсинговое приложение и проект для совместной работы с географической информацией, предназначенное для редактирования точек местоположений УИКов по территории России">
     <meta name="viewport" content="width=device-width">
 
     <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
