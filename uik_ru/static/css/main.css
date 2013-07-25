@@ -191,7 +191,7 @@ input.need-apply {
     float: right;
 }
 
-body div.icons-group {
+body div.panel {
     position: absolute;
     background-color: #F5F5F5;
     border: 1px solid #AFAFAF;
@@ -200,20 +200,17 @@ body div.icons-group {
     height: auto;
 }
 
-body div.stat-group {
+body div.stat-panel {
     left: 309px;
     top: 142px;
 }
 
-body.searcher-collapsed div.stat-group {
+body.searcher-collapsed div.stat-panel {
     top: 185px;
     left: 3px;
 }
 
-div.stat-group div.log,
-div.stat-group div.stat,
-div.help-group div.help,
-div.help-group div.nextgis {
+div.panel div.panel-item {
     width: 32px;
     height: 36px;
     margin: 2px;
@@ -222,56 +219,69 @@ div.help-group div.nextgis {
     cursor: pointer;
 }
 
-div.stat-group div.log a,
-div.stat-group div.stat a,
-div.help-group div.help a,
-div.help-group div.nextgis a {
+div.panel div.panel-item a {
     display: inline-block;
     margin: 2px 0 0 2px;
     width: 29px;
     height: 31px;
 }
 
-div.stat-group div.log a {
+div.panel div.log a {
     background: url('../img/sm-icons.png') -30px -190px;
 }
 
-div.stat-group div.log:hover a {
+div.panel div.log:hover a {
     background: url('../img/sm-icons.png') -58px -190px;
 }
 
-div.stat-group div.stat a {
+div.panel div.stat a {
     background: url('../img/sm-icons.png') -87px -190px;
 }
 
-div.stat-group div.stat:hover a {
+div.panel div.stat:hover a {
     background: url('../img/sm-icons.png') -116px -190px;
 }
 
-body div.help-group {
+body div.help-panel {
     left: 309px;
     top: 232px;
 }
 
-body.searcher-collapsed div.help-group {
+body.searcher-collapsed div.help-panel {
     top: 277px;
     left: 3px;
 }
 
-div.help-group div.help a {
+div.panel div.help a {
     background: url('../img/sm-icons.png') -0px -223px;
 }
 
-div.help-group div.help:hover a {
+div.panel div.help:hover a {
     background: url('../img/sm-icons.png') -30px -223px;
 }
 
-div.help-group div.nextgis a {
+div.panel div.nextgis a {
     background: url('../img/sm-icons.png') -59px -223px;
 }
 
-div.help-group div.nextgis:hover a {
+div.panel div.nextgis:hover a {
     background: url('../img/sm-icons.png') -87px -223px;
+}
+
+div.panel div.facebook a {
+    background: url('../img/sm-icons.png') -116px -223px;
+}
+
+div.panel div.facebook:hover a {
+    background: url('../img/sm-icons.png') -144px -223px;
+}
+
+div.panel div.twitter a {
+    background: url('../img/sm-icons.png') -1px -256px;
+}
+
+div.panel div.twitter:hover a {
+    background: url('../img/sm-icons.png') -31px -256px;
 }
 
 #searchContainer .title,
