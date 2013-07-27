@@ -242,7 +242,7 @@
             <div class="group-checkboxes">
                 <input id="is_applied" type="hidden" name="is_applied" value="0"/>
                 <input id="chb_is_applied" type="checkbox" class="stand" disabled="disabled" data-id="is_applied"/>
-                <label class="control-label top" for="is_applied">УИК принят</label>
+                <label class="control-label top" for="chb_is_applied">УИК принят</label>
             </div>
             <div class="group-submit">
                 <button id="discard" type="button" class="btn btn-warning" disabled="disabled">Отменить</button>
