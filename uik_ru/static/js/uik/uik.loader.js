@@ -29,7 +29,9 @@
                 UIK.alerts.init();
                 UIK.permalink.init();
                 UIK.map.init();
+                UIK.geocoder.init();
                 UIK.searcher.init();
+                UIK.searcher.address.init();
                 UIK.searcher.tab.init();
                 UIK.editor.init();
                 UIK.user.init();
