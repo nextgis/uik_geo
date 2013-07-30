@@ -2876,6 +2876,7 @@ UIK.templates = {};
                 UIK.uiks_2012.init();
                 UIK.josm.init();
                 UIK.editor.tab.init();
+                UIK.versions.init();
             } catch (e) {
                 alert(e);
             }
@@ -3947,7 +3948,6 @@ UIK.templates = {};
             this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.uikSelected.uik.old_geom = jQuery.extend({}, viewmodel.uikSelected.uik.geom);
-            UIK.uiks.versions.showVersions();
             viewmodel.map.closePopup();
             $('#editUIK-link').click();
         },
@@ -4022,6 +4022,7 @@ UIK.templates = {};
                 $('#is_applied').val(0);
                 $('#chb_is_applied').prop('checked', false);
             }
+            UIK.view.$document.trigger('/uik/versions/build');
         },
 
         save: function () {
@@ -4090,7 +4091,9 @@ UIK.templates = {};
             v.$editorContainer.find('input:checkbox').prop('checked', false);
             v.$editorContainer.find('input, select, textarea, button').attr('disabled', 'disabled').removeClass('invalid');
             v.$editorContainer.find('form').addClass('disabled');
+            UIK.view.$document.trigger('/uik/versions/clearUI');
             UIK.view.$document.trigger('/uik/map/updateAllLayers');
+
         }
     });
 })(jQuery, UIK);
@@ -4228,8 +4231,6 @@ UIK.templates = {};
                         });
                     });
                 }
-                UIK.uiks.versions.showVersions();
-                $('#versionsUIK-link').click();
             }).error(function () {
                     $('#uik-popup').removeClass('loader').empty().append('Error connection');
                 });
@@ -4563,21 +4564,38 @@ UIK.templates = {};
         version: null
     });
     $.extend(UIK.view, {
-        $document: null
+        $divVersions: null
     });
 
-    UIK.uiks.versions = {};
-    $.extend(UIK.uiks.versions, {
+    UIK.versions = {};
+    $.extend(UIK.versions, {
         init: function () {
             this.setDomOptions();
+            this.bindEvents();
         },
 
-        showVersions: function () {
-            var $divVersions = $('#versionsUIK');
 
-            $divVersions.empty();
+        setDomOptions: function () {
+            UIK.view.$divVersions = $('#versionsUIK');
+        },
 
-            if (typeof UIK.viewmodel.uikSelected.versions == 'object' && UIK.viewmodel.uikSelected.versions.length > 0) {
+
+        bindEvents: function () {
+            var context = this;
+
+            UIK.view.$document.on('/uik/versions/build', function () {
+                context.buildVersions();
+            });
+
+            UIK.view.$document.on('/uik/versions/clearUI', function () {
+                context.clearVersionsUI();
+            });
+        },
+
+
+        buildVersions: function () {
+            UIK.view.$divVersions.empty();
+            if (UIK.viewmodel.uikSelected.versions && UIK.viewmodel.uikSelected.versions.length > 0) {
                 for (var version_id in UIK.viewmodel.uikSelected.versions) {
                     var version = UIK.viewmodel.uikSelected.versions[version_id];
                     var html = UIK.templates.versionsTemplate({
@@ -4585,11 +4603,15 @@ UIK.templates = {};
                         name: version.display_name,
                         time: version.time
                     });
-                    $divVersions.append(html);
+                    UIK.view.$divVersions.append(html);
                 }
             } else {
-                $divVersions.append('У этого УИКа нет сохраненных версий');
+                UIK.view.$divVersions.append('У этого УИКа нет сохраненных версий');
             }
+        },
+
+        clearVersionsUI: function () {
+            UIK.view.$divVersions.empty();
         }
     });
 })(jQuery, UIK);(function ($, UIK) {
@@ -4639,12 +4661,12 @@ UIK.templates = {};
 })(jQuery, UIK);
 
 UIK.templates = {};
-UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');
-UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');
-UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
-UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
-UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
-UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
 UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
+UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
 UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
+UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
 UIK.templates['addressSearchTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#matches}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> {{display_name}} <a class="target" title="Перейти к объекту"></a> </li> {{/matches}} </ul>');
+UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
+UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');
+UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> {{#isUserEditor}} <div class="edit"> <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> </div> {{/isUserEditor}} ');
+UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');

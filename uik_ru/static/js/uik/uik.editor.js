@@ -196,7 +196,6 @@
             this.startEditingGeometry(viewmodel.uikSelected.uik.geom.lat, viewmodel.uikSelected.uik.geom.lng);
             this.fillEditor(viewmodel.uikSelected);
             viewmodel.uikSelected.uik.old_geom = jQuery.extend({}, viewmodel.uikSelected.uik.geom);
-            UIK.uiks.versions.showVersions();
             viewmodel.map.closePopup();
             $('#editUIK-link').click();
         },
@@ -271,6 +270,7 @@
                 $('#is_applied').val(0);
                 $('#chb_is_applied').prop('checked', false);
             }
+            UIK.view.$document.trigger('/uik/versions/build');
         },
 
         save: function () {
@@ -339,7 +339,9 @@
             v.$editorContainer.find('input:checkbox').prop('checked', false);
             v.$editorContainer.find('input, select, textarea, button').attr('disabled', 'disabled').removeClass('invalid');
             v.$editorContainer.find('form').addClass('disabled');
+            UIK.view.$document.trigger('/uik/versions/clearUI');
             UIK.view.$document.trigger('/uik/map/updateAllLayers');
+
         }
     });
 })(jQuery, UIK);

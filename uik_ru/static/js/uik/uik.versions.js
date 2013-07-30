@@ -3,21 +3,38 @@
         version: null
     });
     $.extend(UIK.view, {
-        $document: null
+        $divVersions: null
     });
 
-    UIK.uiks.versions = {};
-    $.extend(UIK.uiks.versions, {
+    UIK.versions = {};
+    $.extend(UIK.versions, {
         init: function () {
             this.setDomOptions();
+            this.bindEvents();
         },
 
-        showVersions: function () {
-            var $divVersions = $('#versionsUIK');
 
-            $divVersions.empty();
+        setDomOptions: function () {
+            UIK.view.$divVersions = $('#versionsUIK');
+        },
 
-            if (typeof UIK.viewmodel.uikSelected.versions == 'object' && UIK.viewmodel.uikSelected.versions.length > 0) {
+
+        bindEvents: function () {
+            var context = this;
+
+            UIK.view.$document.on('/uik/versions/build', function () {
+                context.buildVersions();
+            });
+
+            UIK.view.$document.on('/uik/versions/clearUI', function () {
+                context.clearVersionsUI();
+            });
+        },
+
+
+        buildVersions: function () {
+            UIK.view.$divVersions.empty();
+            if (UIK.viewmodel.uikSelected.versions && UIK.viewmodel.uikSelected.versions.length > 0) {
                 for (var version_id in UIK.viewmodel.uikSelected.versions) {
                     var version = UIK.viewmodel.uikSelected.versions[version_id];
                     var html = UIK.templates.versionsTemplate({
@@ -25,11 +42,15 @@
                         name: version.display_name,
                         time: version.time
                     });
-                    $divVersions.append(html);
+                    UIK.view.$divVersions.append(html);
                 }
             } else {
-                $divVersions.append('У этого УИКа нет сохраненных версий');
+                UIK.view.$divVersions.append('У этого УИКа нет сохраненных версий');
             }
+        },
+
+        clearVersionsUI: function () {
+            UIK.view.$divVersions.empty();
         }
     });
 })(jQuery, UIK);

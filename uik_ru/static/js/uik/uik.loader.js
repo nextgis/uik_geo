@@ -39,6 +39,7 @@
                 UIK.uiks_2012.init();
                 UIK.josm.init();
                 UIK.editor.tab.init();
+                UIK.versions.init();
             } catch (e) {
                 alert(e);
             }
