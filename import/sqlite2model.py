@@ -54,7 +54,7 @@ def addToUik(fileName, session, regionID):
                     'place_office': row['place_o'],
                     'comment': row['info'],
                     'geocoding_precision_id': precisions[row['g_status']],
-                    'point': "POINT(%s %s)" % (row['lat'], row['lon'])
+                    'point': "POINT(%s %s)" % (row['lon'], row['lat'])
                 }
 
                 uik = Uik()
