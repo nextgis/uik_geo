@@ -3547,9 +3547,7 @@ UIK.templates = {};
 
 
         validateNumber: function (value) {
-            var trimValue = $.trim(value);
-            return trimValue.length > 2 ||
-                trimValue === '';
+            return true;
         },
 
 

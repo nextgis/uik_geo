@@ -30,8 +30,8 @@ def get_all(context, request):
                 address = '%' + filter['uik']['address'] + '%'
                 clauses.append(Uik.address_voting.ilike(address))
             if filter['uik']['number']:
-                number = '%' + filter['uik']['number'] + '%'
-                clauses.append(Uik.number_official.ilike(number))
+                number = filter['uik']['number']
+                clauses.append(Uik.number_official == number)
 
     bbox = json.loads(request.params.getall('bbox')[0])
     box_geom = leaflet_bbox_to_polygon(bbox)
@@ -240,8 +240,8 @@ def get_president_uiks(context, request):
                 address = '%' + filter['uik_2012']['address'] + '%'
                 clauses.append(VotingStation.address.ilike(address))
             if filter['uik_2012']['number']:
-                number = '%' + filter['uik']['number'] + '%'
-                clauses.append(VotingStation.name.ilike(number))
+                number = filter['uik']['number']
+                clauses.append(VotingStation.name == number)
 
     bbox = json.loads(request.params.getall('bbox')[0])
     box_geom = leaflet_bbox_to_polygon(bbox)
@@ -326,7 +326,7 @@ def get_stat(context, request):
         if exist_filter_parameter('is_applied', request):
             clauses.append(Uik.is_applied == (request.POST['is_applied'] == 'True'))
         if exist_filter_parameter('number_official', request):
-            clauses.append(Uik.number_official.ilike('%' + request.POST['number_official'] + '%'))
+            clauses.append(Uik.number_official == request.POST['number_official'])
         if exist_filter_parameter('region', request):
             clauses.append(Uik.region_id == int(request.POST['region']))
         if exist_filter_parameter('tik', request):
