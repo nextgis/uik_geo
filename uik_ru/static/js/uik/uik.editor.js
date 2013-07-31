@@ -88,7 +88,9 @@
                 context.resetCenter();
             });
 
-
+            $('#regeocode').off('click').on('click', function () {
+                context.regeocode();
+            });
         },
 
         toggleEditor: function () {
@@ -174,6 +176,28 @@
 
             $('#undoCoordinates').prop('disabled', false);
         },
+
+
+        regeocode: function () {
+            var context = this,
+                viewmodel = UIK.viewmodel,
+                alerts = UIK.alerts,
+                address = $('#address_voting').val(),
+                newCoords;
+            UIK.geocoder.directGeocode(address, function (result) {
+                if (result.find) {
+                    alerts.showAlert('regeocodeSuccess');
+                    newCoords = new L.LatLng(result.matches[0].lat, result.matches[0].lon);
+                    context.updateCoordinates(newCoords);
+                    viewmodel.markerEditable.setLatLng(newCoords);
+                    viewmodel.map.setView(newCoords, viewmodel.map.getZoom());
+                    $('#undoCoordinates').prop('disabled', false);
+                } else {
+                    alerts.showAlert('regeocodeFail');
+                }
+            });
+        },
+
 
         startAjaxEdition: function () {
             var context = this;

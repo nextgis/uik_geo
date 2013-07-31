@@ -53,6 +53,18 @@
                 type: 'error',
                 text: 'Десятичные градусы должны быть введены как 58.00000',
                 statusText: 'Неправильный формат ввода координат:'
+            },
+            regeocodeSuccess: {
+                id: 'regeocodeSuccess',
+                type: 'info',
+                text: 'координаты обновлены',
+                statusText: 'Геокодирование завершилось успешно:'
+            },
+            regeocodeFail: {
+                id: 'regeocodeFail',
+                type: 'error',
+                text: 'координаты не были обновлены',
+                statusText: 'Адрес не был геокодирован:'
             }
         },
 

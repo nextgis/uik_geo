@@ -748,7 +748,7 @@ body.bing #manager div.icon.josm {
 
 #editorContainer .wrapper-coordinates {
     text-align: right;
-    margin-right: 10px;
+    margin: 10px;
 }
 
 body.editor-collapsed #editorContainer {

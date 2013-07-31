@@ -11,11 +11,11 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css"/>
     <![endif]-->
 
-##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
-##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
-##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
-##   	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.css')}" />
-    <link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik.min.css')}">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
+   	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.css')}" />
+##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik.min.css')}">
    	<!--[if lte IE 8]><!--<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.ie.css')}" />--><![endif]-->
 
 
@@ -210,12 +210,6 @@
             <div class="group">
                 <label class="control-label top" for="address_voting">Адрес голосования</label>
                 <textarea id="address_voting" name="address_voting" disabled="disabled"></textarea>
-                <div class="wrapper-coordinates">
-                    <button id="regeocode" class="btn btn-small" disabled="disabled" type="button">
-                        Перегеокодировать</button>
-                    <button id="resetGeocode" class="btn btn-small" disabled="disabled" type="button">
-                        Вернуть</button>
-                </div>
             </div>
             <div class="group">
                 <label class="control-label top" for="place_voting">Место голосования</label>
@@ -239,12 +233,16 @@
                     <input type="text" id="lng" name="lng" class="stand" disabled="disabled"/>
                 </div>
                 <div class="wrapper-coordinates">
-                    <button id="applyCoordinates" class="btn btn-small" disabled="disabled" type="button">
-                        Применить координаты</button>
+                    <button id="regeocode" class="btn btn-small" disabled="disabled" type="button">
+                        Перегеокодировать</button>
                     <button id="resetCenter" class="btn btn-small" disabled="disabled" type="button">
-                        Перецентрировать</button>                                            
+                        Перецентрировать</button>
+                </div>
+                <div class="wrapper-coordinates">
+                    <button id="applyCoordinates" class="btn btn-small" disabled="disabled" type="button">
+                        Применить</button>
                     <button id="undoCoordinates" class="btn btn-small" disabled="disabled" type="button">
-                        Отменить координаты</button>                        
+                        Отменить</button>
                 </div>
             </div>
             <div class="group">
