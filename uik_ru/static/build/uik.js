@@ -3838,7 +3838,9 @@ UIK.templates = {};
                 context.resetCenter();
             });
 
-
+            $('#regeocode').off('click').on('click', function () {
+                context.regeocode();
+            });
         },
 
         toggleEditor: function () {
@@ -3924,6 +3926,28 @@ UIK.templates = {};
 
             $('#undoCoordinates').prop('disabled', false);
         },
+
+
+        regeocode: function () {
+            var context = this,
+                viewmodel = UIK.viewmodel,
+                alerts = UIK.alerts,
+                address = $('#address_voting').val(),
+                newCoords;
+            UIK.geocoder.directGeocode(address, function (result) {
+                if (result.find) {
+                    alerts.showAlert('regeocodeSuccess');
+                    newCoords = new L.LatLng(result.matches[0].lat, result.matches[0].lon);
+                    context.updateCoordinates(newCoords);
+                    viewmodel.markerEditable.setLatLng(newCoords);
+                    viewmodel.map.setView(newCoords, viewmodel.map.getZoom());
+                    $('#undoCoordinates').prop('disabled', false);
+                } else {
+                    alerts.showAlert('regeocodeFail');
+                }
+            });
+        },
+
 
         startAjaxEdition: function () {
             var context = this;
@@ -4417,6 +4441,18 @@ UIK.templates = {};
                 type: 'error',
                 text: 'Десятичные градусы должны быть введены как 58.00000',
                 statusText: 'Неправильный формат ввода координат:'
+            },
+            regeocodeSuccess: {
+                id: 'regeocodeSuccess',
+                type: 'info',
+                text: 'координаты обновлены',
+                statusText: 'Геокодирование завершилось успешно:'
+            },
+            regeocodeFail: {
+                id: 'regeocodeFail',
+                type: 'error',
+                text: 'координаты не были обновлены',
+                statusText: 'Адрес не был геокодирован:'
             }
         },
 
@@ -4661,7 +4697,7 @@ UIK.templates = {};
 UIK.templates = {};
 UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
 UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
-UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
+UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<div class="header">Это местоположение УИК в 2012 году (выборы Президента):</div> <table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
 UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
 UIK.templates['addressSearchTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#matches}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> {{display_name}} <a class="target" title="Перейти к объекту"></a> </li> {{/matches}} </ul>');
 UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');

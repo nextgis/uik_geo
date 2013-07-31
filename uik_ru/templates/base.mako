@@ -178,7 +178,7 @@
 </div>
 <div class="help-panel panel">
     <div class="help panel-item"><a target="_blank" href="http://gis-lab.info/qa/uikgeo-manual.html" title="Руководство пользователя"></a></div>
-    <div class="nextgis panel-item"><a target="_blank" href="http://nextgis.ru/" title="Перейти на сайт разработчика NextGIS"></a></div>
+    <div class="nextgis panel-item"><a target="_blank" href="http://nextgis.ru/" title="Перейти на сайт разработчика - NextGIS"></a></div>
     <div class="facebook panel-item"><a target="_blank" title="Поделиться с друзьями на Facebook" href="https://www.facebook.com/sharer/sharer.php?u=uikgeo.gis-lab.info"></a></div>
     <div class="twitter panel-item"><a target="_blank" title="Твитнуть"  href="https://twitter.com/intent/tweet?hashtags=uik_geo&original_referer=http%3A%2F%2Fuikgeo.gis-lab.info%2F&text=%D0%9E%D1%82%D0%BC%D0%B5%D1%82%D1%8C%20%D1%81%D0%B2%D0%BE%D0%B9%20%D0%A3%D0%98%D0%9A&tw_p=tweetbutton&url=http%3A%2F%2Fuikgeo.gis-lab.info%2F"></a></div>
 </div>
@@ -252,11 +252,11 @@
             <div class="group-checkboxes">
                 <input id="is_applied" type="hidden" name="is_applied" value="0"/>
                 <input id="chb_is_applied" type="checkbox" class="stand" disabled="disabled" data-id="is_applied"/>
-                <label class="control-label top" for="chb_is_applied">УИК принят</label>
+                <label class="control-label top" for="chb_is_applied">УИК принят (точность до дома)</label>
             </div>
             <div class="group-submit">
-                <button id="discard" type="button" class="btn btn-warning" disabled="disabled">Отменить</button>
-                <button id="save" type="button" class="btn btn-success" disabled="disabled">Сохранить</button>
+                <input id="discard" class="main-button" type="button"  disabled="disabled" title="Отменить"/>
+                <input id="save" class="main-button" type="button"  disabled="disabled" title="Сохранить"/>
             </div>
         </form>
     </div>

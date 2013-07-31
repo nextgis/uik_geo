@@ -724,10 +724,6 @@ body.bing #manager div.icon.josm {
     margin-top: 8px;
 }
 
-#editorContainer form #discard {
-    margin-right: 10px;
-}
-
 #editorContainer .parameters {
     display: table-cell;
     width: 197px;
@@ -757,7 +753,7 @@ body.bing #manager div.icon.josm {
 
 #editorContainer .wrapper-coordinates {
     text-align: right;
-    margin-right: 10px;
+    margin: 10px;
 }
 
 body.editor-collapsed #editorContainer {
@@ -774,6 +770,39 @@ body.editor-collapsed #editorContainer span.icon-collapse:hover {
 
 body.editor-collapsed #editorContainer form {
     display: none;
+}
+
+#editorContainer input.main-button {
+    margin: 5px;
+    height: 45px;
+    width: 45px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-radius: 4px 4px 4px 4px;
+}
+
+#editorContainer form #discard {
+    background: url("../img/sm-icons.png") repeat scroll -82px -100px #FF8181;
+}
+
+#editorContainer form #save {
+    background: url("../img/sm-icons.png") repeat scroll -129px -101px #9EFF91;
+}
+
+#editorForm #discard:hover,
+#editorForm #save:hover {
+    -moz-opacity: 1.00;
+    opacity:1;
+    filter: alpha(opacity=100);
+}
+
+#editorForm #discard,
+#editorForm #save,
+#editorForm.disabled #discard:hover,
+#editorForm.disabled #save:hover {
+    -moz-opacity: 0.70;
+    opacity:.70;
+    filter: alpha(opacity=70);
 }
 
 body.editor-collapsed #map .leaflet-control-container .leaflet-right {
@@ -897,6 +926,11 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
     color: #ffdbd6;
     background-color: #cc8774;
     background-image: none;
+}
+
+#uik-popup div.header {
+    margin-bottom: 5px;
+    text-align: center;
 }
 
 #map .osm-popup table {

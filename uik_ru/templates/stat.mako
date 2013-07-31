@@ -85,7 +85,8 @@
                     region: $('#region').val(),
                     geocoding_precision: $('#geocoding_precision').val(),
                     is_applied: $('#is_applied').val(),
-                    user: $('#user').val()
+                    user: ''
+                    // $('#user').val()
                 });
             });
 
@@ -95,20 +96,20 @@
 </head>
 <body style="margin: 10px;">
 <h2>Список УИКов</h2>
-<div class="header-table">
-    <div class="column">
-        <label for="user">Выбрать УИКи пользователя: </label>
-        <select id="user" name="user">
-            <option selected="selected" value="">Любой</option>
-            % for user in users:
-                    <option value="${user.id}">${user.display_name}</option>
-            % endfor
-        </select>
-    </div>
-    <div  class="column" style="text-align: right;">
-        <button class="btn btn-primary" type="button" id="LoadRecordsButton">Применить фильтры</button>
-    </div>
-</div>
+##<div class="header-table">
+##    <div class="column">
+##        <label for="user">Выбрать УИКи пользователя: </label>
+##        <select id="user" name="user">
+##            <option selected="selected" value="">Любой</option>
+##            % for user in users:
+##                    <option value="${user.id}">${user.display_name}</option>
+##            % endfor
+##        </select>
+##    </div>
+##    <div  class="column" style="text-align: right;">
+##        <button class="btn btn-primary" type="button" id="LoadRecordsButton">Применить фильтры</button>
+##    </div>
+##</div>
 <div class="filtering">
     <div class="filter">
         <input type="text" name="number_official" id="number_official"/>
