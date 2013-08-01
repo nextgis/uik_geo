@@ -781,6 +781,10 @@ body.editor-collapsed #editorContainer form {
     border-radius: 4px 4px 4px 4px;
 }
 
+#editorContainer form label.lbl-applied {
+    width: auto;
+}
+
 #editorContainer form #discard {
     background: url("../img/sm-icons.png") repeat scroll -82px -100px #FF8181;
 }
