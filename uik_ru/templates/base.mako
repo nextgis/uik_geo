@@ -255,8 +255,8 @@
                 <label class="control-label top lbl-applied" for="chb_is_applied">УИК принят (точность до дома)</label>
             </div>
             <div class="group-submit">
-                <input id="discard" class="main-button" type="button"  disabled="disabled" title="Отменить"/>
-                <input id="save" class="main-button" type="button"  disabled="disabled" title="Сохранить"/>
+                <button id="discard" type="button" class="btn btn-warning" disabled="disabled">Отменить</button>
+                <button id="save" type="button" class="btn btn-success" disabled="disabled">Сохранить</button>
             </div>
         </form>
     </div>
