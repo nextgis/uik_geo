@@ -671,18 +671,26 @@ body.bing #manager div.icon.josm {
 }
 
 #editorContainer form span.value {
-    background-color: #FFFFFF;
+    display: inline-block;
+    padding: 0px;
+}
+
+#editorContainer form span.value p {
+    margin: 0px;
+    padding: 5px;
+    font-size: 14px;
     border: 1px solid #CCCCCC;
+    border-radius: 4px 4px 4px 4px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
     transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
-    border-radius: 4px 4px 4px 4px;
-    color: #555555;
-    display: inline-block;
-    font-size: 14px;
-    height: 20px;
-    line-height: 20px;
-    margin-bottom: 10px;
-    padding: 4px 6px;
+    color: #999999;
+}
+
+#editorContainer form span.form-label {
+    display: table-cell;
+    vertical-align: middle;
+    line-height: 14px;
+    width: 89px;
 }
 
 #editorContainer form label,
@@ -703,9 +711,12 @@ body.bing #manager div.icon.josm {
 }
 
 #editorContainer form input.stand,
-#editorContainer form textarea,
-#editorContainer form span.value {
+#editorContainer form textarea {
     width: 185px;
+}
+
+#editorContainer form span.value {
+    width: 200px;
 }
 
 #editorContainer form select.stand {
@@ -763,13 +774,14 @@ body.bing #manager div.icon.josm {
     display: inline;
 }
 
-#editorContainer .geographic {
+#editorContainer div.geographic {
     margin: 15px 0;
 }
 
-#editorContainer .wrapper-coordinates {
-    text-align: right;
-    margin: 10px;
+#editorContainer div.wrapper-coordinates {
+    text-align: center;
+    width: 288px;
+    margin: 5px 0;
 }
 
 #editorContainer form label.lbl-applied {

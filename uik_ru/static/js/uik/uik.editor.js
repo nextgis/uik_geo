@@ -19,6 +19,7 @@
     $.extend(UIK.editor, {
         regex: { url: new RegExp("(https?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]") },
         precisionDegree: 6,
+        notEditableValue: Mustache.compile('<p>{{value}}</p>'),
 
         init: function () {
             this.setDomOptions();
@@ -278,9 +279,9 @@
 
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#name').html(uik.uik.number_official);
-            $('#region').html(uik.region.name);
-            $('#tik').html(uik.tik.name);
+            $('#name').html(this.notEditableValue({value: uik.uik.number_official}));
+            $('#region').html(this.notEditableValue({value: uik.region.name }));
+            $('#tik').html(this.notEditableValue({value: uik.tik.name }));
             $('#address_voting').val(helpers.valueNullToString(uik.uik.address_voting));
             $('#place_voting').val(helpers.valueNullToString(uik.uik.place_voting));
             $('#geo_precision option:eq(' + uik.geo_precision.id + ')').prop('selected', true);
@@ -363,6 +364,7 @@
             v.$editorContainer.find('input:checkbox').prop('checked', false);
             v.$editorContainer.find('input, select, textarea, button').attr('disabled', 'disabled').removeClass('invalid');
             v.$editorContainer.find('form').addClass('disabled');
+            v.$editorContainer.find('span.value').empty();
             UIK.view.$document.trigger('/uik/versions/clearUI');
             UIK.view.$document.trigger('/uik/map/updateAllLayers');
 
