@@ -401,9 +401,19 @@ def build_filtering_query(request, query):
 @view_config(route_name='statistic', request_method='GET', renderer='stat.mako')
 def get_stat_page(context, request):
     session = DBSession()
+
+    user_uiks_count_sbq = session \
+        .query(UikVersions.user_id.label('user_id'), func.count(UikVersions.uik_id.distinct()).label('count_uiks')) \
+        .group_by(UikVersions.user_id) \
+        .subquery()
+
+    user_uiks_logs = session.query(User, user_uiks_count_sbq.c.count_uiks) \
+        .outerjoin(user_uiks_count_sbq, User.id == user_uiks_count_sbq.c.user_id) \
+        .order_by(User.display_name)
+
     return {
         'tiks': session.query(Tik).order_by(Tik.name).all(),
         'geocoding_precisions': session.query(GeocodingPrecision).order_by(GeocodingPrecision.name_ru).all(),
         'regions': session.query(Region).order_by(Region.name).all(),
-        'users': session.query(User).order_by(User.display_name).all()
+        'users': user_uiks_logs.all()
     }

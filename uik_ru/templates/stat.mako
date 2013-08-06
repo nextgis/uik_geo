@@ -100,7 +100,9 @@
         <select id="user" name="user">
             <option selected="selected" value="">Любой</option>
             % for user in users:
-                    <option value="${user.id}">${user.display_name}</option>
+                % if user[1] > 0:
+                    <option value="${user[0].id}">${user[0].display_name} (${user[1]})</option>
+                % endif
             % endfor
         </select>
     </div>
