@@ -6,7 +6,7 @@ from helpers import *
 from decorators import authorized
 from pyramid.view import view_config
 from pyramid.response import Response
-from sqlalchemy import func
+from sqlalchemy import func, distinct, and_
 from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import asc, desc
 from geoalchemy import WKTSpatialElement, functions
@@ -318,6 +318,10 @@ def get_stat(context, request):
         user_name = request.session['u_name']
 
     session = DBSession()
+    uiks_from_db = session.query(Uik, Uik.point.x, Uik.point.y) \
+        .join('geocoding_precision') \
+        .join('tik') \
+        .join('region')
 
     clauses = []
     if request.POST:
@@ -331,12 +335,13 @@ def get_stat(context, request):
             clauses.append(Uik.region_id == int(request.POST['region']))
         if exist_filter_parameter('tik', request):
             clauses.append(Uik.tik_id == int(request.POST['tik']))
+        if exist_filter_parameter('user_id', request):
+            user_uiks_subq = (session.query(distinct(UikVersions.uik_id).label("uik_id"))
+                              .filter(UikVersions.user_id == int(request.POST['user_id']))) \
+                .subquery()
+            uiks_from_db = uiks_from_db.join(user_uiks_subq, and_(Uik.id == user_uiks_subq.c.uik_id))
 
-    uiks_from_db = session.query(Uik, Uik.point.x, Uik.point.y)\
-        .join('geocoding_precision') \
-        .join('tik') \
-        .join('region') \
-        .filter(*clauses)
+    uiks_from_db = uiks_from_db.filter(*clauses)
 
     if 'jtSorting' in request.params:
         sort = request.params['jtSorting']

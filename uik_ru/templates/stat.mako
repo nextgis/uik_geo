@@ -22,8 +22,7 @@
         $(document).ready(function () {
 
             $('#UiksTableContainer').jtable({
-                ##                title: 'Список УИКов',
-                                paging: true,
+                paging: true,
                 sorting: true,
                 pageSize: 10,
                 defaultSorting: 'Name ASC',
@@ -36,8 +35,8 @@
                         width: '20%',
                         display: function (data) {
                             return $('<a target="_blank" href="${request.route_url('home')}' +
-                                    '?lat=' + data.record.lat + '&lon=' + data.record.lng + '&zoom=' + 18 +
-                                    '" >' + data.record.number_official + '</a>');
+                                    '?lat=' + data.record.lat + '&lon=' + data.record.lng + '&zoom=' + 18 + '" >' +
+                                    data.record.number_official + '</a>');
                         }
                     },
                     tik: {
@@ -85,8 +84,7 @@
                     region: $('#region').val(),
                     geocoding_precision: $('#geocoding_precision').val(),
                     is_applied: $('#is_applied').val(),
-                    user: ''
-                    // $('#user').val()
+                    user_id: $('#user').val()
                 });
             });
 
@@ -98,13 +96,13 @@
 <h2>Список УИКов</h2>
 <div class="header-table">
     <div class="column">
-##        <label for="user">Выбрать УИКи пользователя: </label>
-##        <select id="user" name="user">
-##            <option selected="selected" value="">Любой</option>
-##            % for user in users:
-##                    <option value="${user.id}">${user.display_name}</option>
-##            % endfor
-##        </select>
+        <label for="user">Выбрать УИКи пользователя: </label>
+        <select id="user" name="user">
+            <option selected="selected" value="">Любой</option>
+            % for user in users:
+                    <option value="${user.id}">${user.display_name}</option>
+            % endfor
+        </select>
     </div>
     <div  class="column" style="text-align: right;">
         <button class="btn btn-primary" type="button" id="LoadRecordsButton">Применить фильтры</button>
