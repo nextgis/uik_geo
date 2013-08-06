@@ -4028,9 +4028,9 @@ UIK.templates = {};
 
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#name').val(uik.uik.number_official).attr('disabled', 'disabled');
-            $('#region').val(uik.region.name).attr('disabled', 'disabled');
-            $('#tik').val(uik.tik.name).attr('disabled', 'disabled');
+            $('#name').html(uik.uik.number_official);
+            $('#region').html(uik.region.name);
+            $('#tik').html(uik.tik.name);
             $('#address_voting').val(helpers.valueNullToString(uik.uik.address_voting));
             $('#place_voting').val(helpers.valueNullToString(uik.uik.place_voting));
             $('#geo_precision option:eq(' + uik.geo_precision.id + ')').prop('selected', true);

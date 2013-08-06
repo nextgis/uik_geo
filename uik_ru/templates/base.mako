@@ -196,16 +196,23 @@
     <div class="form-wrap" id="editUIK">
         <form class="form-inline disabled" id="editorForm">
             <div class="group">
-                <label class="control-label middle" for="name">Номер УИКа</label>
-                <input type="text" id="name" class="stand" disabled="disabled"/>
+##                <label class="control-label middle" for="name">Номер УИКа</label>
+##                <input type="text" id="name" class="stand" disabled="disabled"/>
+                <span class="control-label middle">Номер УИКа</span>
+                <span id="name" class="value"></span>
+
             </div>
             <div class="group">
-                <label class="control-label middle" for="region">Регион</label>
-                <input type="text" id="region" class="stand" disabled="disabled"/>
+##                <label class="control-label middle" for="region">Регион</label>
+##                <input type="text" id="region" class="stand" disabled="disabled"/>
+                <span class="control-label middle">Регион</span>
+                <span id="region" class="value"></span>
             </div>
             <div class="group">
-                <label class="control-label middle" for="tik">ТИК</label>
-                <input type="text" id="tik" class="stand" disabled="disabled"/>
+##                <label class="control-label middle" for="tik">ТИК</label>
+##                <input type="text" id="tik" class="stand" disabled="disabled"/>
+                <span class="control-label middle">ТИК</span>
+                <span id="tik" class="value"></span>
             </div>
             <div class="group">
                 <label class="control-label top" for="address_voting">Адрес голосования</label>

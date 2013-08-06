@@ -670,6 +670,21 @@ body.bing #manager div.icon.josm {
     color: #808080;
 }
 
+#editorContainer form span.value {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    border-radius: 4px 4px 4px 4px;
+    color: #555555;
+    display: inline-block;
+    font-size: 14px;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 10px;
+    padding: 4px 6px;
+}
+
 #editorContainer form label,
 #editorContainer form input,
 #editorContainer form select,
@@ -688,7 +703,8 @@ body.bing #manager div.icon.josm {
 }
 
 #editorContainer form input.stand,
-#editorContainer form textarea {
+#editorContainer form textarea,
+#editorContainer form span.value {
     width: 185px;
 }
 
@@ -860,7 +876,7 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
 }
 
 #map .leaflet-popup-content {
-    min-width: 250px;
+    /*min-width: 250px;*/
 }
 
 #uik-popup .table {
@@ -887,6 +903,17 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
 #uik-popup tr.block {
     color: red;
     font-weight: bold;
+}
+
+#uik-popup a.output {
+
+}
+
+#uik-popup a.output span {
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    background: url('../img/sm-icons.png') 0 -126px;
 }
 
 #unblock {
