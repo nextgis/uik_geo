@@ -19,7 +19,10 @@
     $.extend(UIK.editor, {
         regex: { url: new RegExp("(https?)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]") },
         precisionDegree: 6,
-        notEditableValue: Mustache.compile('<p>{{value}}</p>'),
+        templates: {
+            notEditableValue: Mustache.compile('<p>{{value}}</p>'),
+            uikNumber: Mustache.compile('<p>{{uikNumber}}<a title="УИК на сайте wikiuiki.org" target="_blank" href="http://www.wikiuiki.org/ik/{{regionId}}-uik-{{uikNumber}}"></a></p>')
+        },
 
         init: function () {
             this.setDomOptions();
@@ -279,9 +282,12 @@
 
         fillEditor: function (uik) {
             var helpers = UIK.helpers;
-            $('#name').html(this.notEditableValue({value: uik.uik.number_official}));
-            $('#region').html(this.notEditableValue({value: uik.region.name }));
-            $('#tik').html(this.notEditableValue({value: uik.tik.name }));
+            $('#name').html(this.templates.uikNumber({
+                uikNumber: uik.uik.number_official,
+                regionId: uik.region.id
+            }));
+            $('#region').html(this.templates.notEditableValue({value: uik.region.name }));
+            $('#tik').html(this.templates.notEditableValue({value: uik.tik.name }));
             $('#address_voting').val(helpers.valueNullToString(uik.uik.address_voting));
             $('#place_voting').val(helpers.valueNullToString(uik.uik.place_voting));
             $('#geo_precision option:eq(' + uik.geo_precision.id + ')').prop('selected', true);

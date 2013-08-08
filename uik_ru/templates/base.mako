@@ -198,7 +198,6 @@
             <div class="group">
                 <span class="form-label">Номер УИКа</span>
                 <span id="name" class="value"></span>
-
             </div>
             <div class="group">
                 <span class="form-label">Регион</span>

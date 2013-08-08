@@ -779,6 +779,21 @@ body.bing #manager div.icon.josm {
     width: auto;
 }
 
+#name a {
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    background: url('../img/sm-icons.png') -17px -126px;
+    margin-bottom: -3px;
+    margin-left: 5px;
+    color: #999999;
+    text-decoration: none;
+}
+
+#name a:hover {
+    background: url('../img/sm-icons.png') -0px -126px;
+}
+
 body.editor-collapsed #editorContainer {
     bottom: auto;
 }
