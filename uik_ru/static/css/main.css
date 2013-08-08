@@ -949,6 +949,11 @@ body.editor-collapsed #map .leaflet-control-container .leaflet-right {
     text-align: center;
 }
 
+#uik-popup  a.btn {
+    color: #FFFFFF;
+    padding: 5px;
+}
+
 #map .osm-popup table {
     border-bottom: solid 1px #a9a9a9;
     border-top: solid 1px #a9a9a9;

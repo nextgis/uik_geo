@@ -208,11 +208,13 @@ class Region(Base):
     # Id of region matches to region code
     id = Column(Integer, primary_key=True)
     name = Column(Text, nullable=False)
+    imported = Column(Boolean)
 
     def to_dict(self):
         return dict(
             id=self.id,
-            name=self.name if self.name else ''
+            name=self.name if self.name else '',
+            imported=self.imported
         )
 
 
