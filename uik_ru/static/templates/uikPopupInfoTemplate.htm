@@ -50,14 +50,15 @@
     </tr>
     {{/isBlocked}}
 </table>
-{{#isUserEditor}}
+
 <div class="edit">
     <a href="http://www.wikiuiki.org/ik/{{region.id}}-uik-{{uik.number_official}}"
        target="_blank"
        class="btn btn-small btn-info">Перейти в wikiuiki</a>
 
+    {{#isUserEditor}}
     <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button"
     {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button>
+    {{/isUserEditor}}
 </div>
-{{/isUserEditor}}
 
