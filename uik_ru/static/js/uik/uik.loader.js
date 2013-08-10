@@ -26,6 +26,7 @@
         initModules: function () {
             try {
                 UIK.common.init();
+                UIK.popup.init();
                 UIK.alerts.init();
                 UIK.permalink.init();
                 UIK.map.init();
