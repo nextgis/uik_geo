@@ -24,6 +24,7 @@
             <file file="${rootProjectDirName}/static/js/uik/uik.loader.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.helpers.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.common.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.popup.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.map.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.map.helpers.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.map.manager.js"/>

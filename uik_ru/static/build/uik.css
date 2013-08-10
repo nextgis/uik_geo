@@ -81,6 +81,10 @@ body.popup #popup {
     z-index: 1101;
 }
 
+#popup {
+    max-width: 50%;
+}
+
 #popup div.header {
     background-color: #F5F0F7;
     color: #756a73;
@@ -121,6 +125,11 @@ body.popup #popup {
 
 #popup div.content table.logs td.stop {
     text-align: right;
+}
+
+#welcomePopup {
+    width: 500px;
+    margin: 5px;
 }
 
 #target {

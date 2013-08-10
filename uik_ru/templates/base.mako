@@ -37,6 +37,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.loader.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.helpers.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.common.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.popup.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.helpers.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.manager.js')}"></script>
@@ -177,7 +178,7 @@
     <div class="stat panel-item"><a target="_blank" href="${request.route_url('statistic')}" title="Статистика по УИКам"></a></div>
 </div>
 <div class="help-panel panel">
-    <div class="help panel-item"><a target="_blank" href="http://gis-lab.info/qa/uikgeo-manual.html" title="Руководство пользователя"></a></div>
+    <div class="help panel-item"><a href="javascript:void(0)" title="Руководство пользователя"></a></div>
     <div class="nextgis panel-item"><a target="_blank" href="http://nextgis.ru/" title="Перейти на сайт разработчика - NextGIS"></a></div>
     <div class="facebook panel-item"><a target="_blank" title="Поделиться с друзьями на Facebook" href="https://www.facebook.com/sharer/sharer.php?u=uikgeo.gis-lab.info"></a></div>
     <div class="twitter panel-item"><a target="_blank" title="Твитнуть"  href="https://twitter.com/intent/tweet?hashtags=uik_geo&original_referer=http%3A%2F%2Fuikgeo.gis-lab.info%2F&text=%D0%9E%D1%82%D0%BC%D0%B5%D1%82%D1%8C%20%D1%81%D0%B2%D0%BE%D0%B9%20%D0%A3%D0%98%D0%9A&tw_p=tweetbutton&url=http%3A%2F%2Fuikgeo.gis-lab.info%2F"></a></div>
