@@ -132,6 +132,11 @@ body.popup #popup {
     margin: 5px;
 }
 
+#welcomePopup div.start {
+    width: 100%;
+    text-align: center;
+}
+
 #target {
     display: none;
     background: url('../img/sm-icons.png') -0px -190px;

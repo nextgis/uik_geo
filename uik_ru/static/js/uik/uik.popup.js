@@ -1,7 +1,11 @@
 (function ($, UIK) {
+    $.extend(UIK.view, {
+        $popup: null
+    });
+
+
     UIK.popup = {};
     $.extend(UIK.popup, {
-        $popup: null,
         $header: null,
         $content: null,
 
@@ -12,25 +16,35 @@
 
 
         setDomOptions: function () {
-            this.$popup = $('#popup');
-            this.$header = this.$popup.find('div.header');
-            this.$content = this.$popup.find('div.content');
+            var view = UIK.view;
+
+            view.$popup = $('#popup');
+            this.$header = view.$popup.find('div.header');
+            this.$content = view.$popup.find('div.content');
         },
 
 
         bindEvents: function () {
-            var context = this;
-            UIK.view.$document.on('/uik/common/openPopup', function (e, header, contentPopup) {
-                context.openPopup(header, contentPopup);
+            var view = UIK.view,
+                context = this;
+
+            view.$document.on('/uik/popup/openPopup', function (e, header, contentPopup, popupName) {
+                context.openPopup(header, contentPopup, popupName);
             });
-            this.$popup.find('a.close').off('click').on('click', function () {
-                UIK.view.$body.removeClass('popup');
+
+            view.$document.on('/uik/popup/closePopup', function () {
+                context.closePopup();
+            });
+
+            view.$popup.find('a.close').off('click').on('click', function () {
+                context.closePopup();
             });
         },
 
 
-        openPopup: function (header, content) {
-            var $popup = this.$popup,
+        openPopup: function (header, content, popupName) {
+            var view = UIK.view,
+                $popup = view.$popup,
                 marginLeft, marginTop;
             this.$header.text(header);
             this.$content.html(content);
@@ -40,7 +54,13 @@
                 'margin-left' : -marginLeft + 'px',
                 'margin-top' :  -marginTop  + 'px'
             });
-            UIK.view.$body.addClass('popup');
+            view.$body.addClass('popup');
+            view.$document.trigger('/uik/popup/' + popupName + '/opened');
+        },
+
+
+        closePopup: function () {
+            UIK.view.$body.removeClass('popup');
         }
     });
 })(jQuery, UIK);
