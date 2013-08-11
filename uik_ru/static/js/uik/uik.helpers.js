@@ -65,6 +65,11 @@
 				var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
 				return result * sortOrder;
 			}
-		}
+		},
+
+
+        getURLParameter: function (name) {
+            return decodeURI((RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || [, null])[1]);
+        }
 	});
 })(jQuery, UIK);

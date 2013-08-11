@@ -207,7 +207,7 @@
             var context = this;
             $.ajax({
                 type: 'GET',
-                url: document['url_root'] + 'uik/block/' + UIK.viewmodel.uikSelected.uik.id
+                url: document.url_root + 'uik/block/' + UIK.viewmodel.uikSelected.uik.id
             }).done(function () {
                 context.startEdit();
             });

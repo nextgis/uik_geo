@@ -24,7 +24,7 @@
         },
 
         initModules: function () {
-            try {
+//            try {
                 UIK.common.init();
                 UIK.popup.init();
                 UIK.alerts.init();
@@ -41,9 +41,9 @@
                 UIK.josm.init();
                 UIK.editor.tab.init();
                 UIK.versions.init();
-            } catch (e) {
-                alert(e);
-            }
+//            } catch (e) {
+//                alert(e);
+//            }
         },
 
         setDomOptions: function () {

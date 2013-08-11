@@ -26,6 +26,8 @@
             <file file="${rootProjectDirName}/static/js/uik/uik.common.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.popup.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.map.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.map.url.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.map.history.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.map.helpers.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.map.manager.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.geocoder.js"/>
