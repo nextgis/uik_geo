@@ -216,6 +216,7 @@ def get_logs(context, request):
         if user_uiks_log[1]:
             results['uiks_by_users'].append({
                 'user_name': user_uiks_log[0].display_name,
+                'registered_time': user_uiks_log[0].registered_time.strftime('%Y-%m-%d %H:%m'),
                 'count_uiks': user_uiks_log[1],
                 'rank': rank
             })

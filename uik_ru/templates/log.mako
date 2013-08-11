@@ -26,6 +26,7 @@
         <th>Ранг</th>
         <th>Пользователь</th>
         <th>Количество правок</th>
+        <th>Зарегистрирован</th>
     </tr>
 </thead>
 <tbody>
@@ -35,6 +36,7 @@
                 <td>${user['rank']}</td>
                 <td>${user['user_name']}</td>
                 <td>${user['count_uiks']}</td>
+                <td>${user['registered_time']}</td>
             </tr>
         % endif
     % endfor
