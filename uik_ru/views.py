@@ -4,6 +4,7 @@ from models import DBSession, User
 
 from pyramid.view import view_config
 import transaction
+import datetime
 from security import generate_session_id
 from sqlalchemy.sql.expression import asc
 
@@ -83,6 +84,7 @@ def register_post(request):
         user.display_name = request.POST['name']
         user.email = request.POST['email']
         user.password = User.password_hash(request.POST['pass'], 'rte45EWRRT')
+        user.registered_time = datetime.datetime.now()
         session.add(user)
         transaction.commit()
         info = u'Вы зарегистрированы. Поздравляем!'

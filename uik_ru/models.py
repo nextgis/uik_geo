@@ -240,6 +240,7 @@ class User(Base):
     email = Column(Text)
     password = Column(Text)
     display_name = Column(Text)
+    registered_time = Column(DateTime)
 
 
     @classmethod
