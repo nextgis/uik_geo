@@ -24,6 +24,7 @@ def main(global_config, **settings):
     config.add_route('stat_json', '/uik/stat/json')
     config.add_route('statistic', '/uik/stat')
     config.add_route('uik', '/uik/{id}')
+    config.add_route('uik_by_off_number', '/uik/{region_id}/{official_number}')
     config.add_route('register', '/register')
     config.add_route('uik_block', '/uik/block/{id}')
     config.add_route('uik_unblock', '/uik/unblock/{id}')

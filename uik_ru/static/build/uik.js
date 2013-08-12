@@ -3208,6 +3208,7 @@ UIK.templates = {};
         initUrlModule: function () {
             var view = UIK.view,
                 viewmodel = UIK.viewmodel,
+                uikFromUrl = this.getUikFromUrl(),
                 extentFromUrl = this.getExtentFromUrl();
 
             if (extentFromUrl) {
@@ -3245,6 +3246,24 @@ UIK.templates = {};
             } else {
                 return null;
             }
+        },
+
+
+        getUikFromUrl: function () {
+            var helpers = UIK.helpers,
+                uikOfficialNumber = helpers.getURLParameter('uik'),
+                regionCode = helpers.getURLParameter('region'),
+                editable = helpers.getURLParameter('edit');
+
+            if (uikOfficialNumber && regionCode) {
+                return {
+                    'uikOfficialNumber': uikOfficialNumber,
+                    'regionCode': regionCode,
+                    'editable': editable === 'True' || editable === 'true'
+                };
+            }
+
+            return null;
         }
     });
 })(jQuery, UIK);

@@ -16,9 +16,12 @@
         initUrlModule: function () {
             var view = UIK.view,
                 viewmodel = UIK.viewmodel,
+                uikFromUrl = this.getUikFromUrl(),
                 extentFromUrl = this.getExtentFromUrl();
 
-            if (extentFromUrl) {
+            if (uikFromUrl) {
+
+            } else if (extentFromUrl) {
                 view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
             } else {
                 lastExtent = this.getLastExtentFromCookie();
@@ -53,6 +56,24 @@
             } else {
                 return null;
             }
+        },
+
+
+        getUikFromUrl: function () {
+            var helpers = UIK.helpers,
+                uikOfficialNumber = helpers.getURLParameter('uik'),
+                regionCode = helpers.getURLParameter('region'),
+                editable = helpers.getURLParameter('edit');
+
+            if (uikOfficialNumber && regionCode) {
+                return {
+                    'uikOfficialNumber': uikOfficialNumber,
+                    'regionCode': regionCode,
+                    'editable': editable === 'True' || editable === 'true'
+                };
+            }
+
+            return null;
         }
     });
 })(jQuery, UIK);

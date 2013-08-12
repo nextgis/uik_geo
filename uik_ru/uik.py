@@ -93,14 +93,25 @@ def _get_uik_from_uik_db(uik_from_db):
 
 @view_config(route_name='uik', request_method='GET')
 def get_uik(context, request):
+    clauses = []
+
     id = request.matchdict.get('id', None)
+    region_id = request.matchdict.get('region_id', None)
+    uik_official_number = request.matchdict.get('region_id', None)
+
+    if id is not None:
+        clauses.append(Uik.id == id)
+    elif (region_id is not None) and (uik_official_number is not None):
+        clauses.append(Uik.number_official == uik_official_number)
+        clauses.append(Uik.region_id == int(region_id))
+
     session = DBSession()
     uik = session.query(Uik, Uik.point.x, Uik.point.y, GeocodingPrecision, Region, Tik, User) \
         .outerjoin((GeocodingPrecision, Uik.geocoding_precision_id == GeocodingPrecision.id)) \
         .outerjoin((Region, Uik.region_id == Region.id)) \
         .outerjoin((Tik, Uik.tik_id == Tik.id)) \
         .outerjoin((User, Uik.user_block_id == User.id)) \
-        .filter(Uik.id == id).one()
+        .filter(*clauses).one()
 
     versions = session.query(UikVersions, User.display_name, UikVersions.time) \
         .outerjoin((User, UikVersions.user_id == User.id)) \
@@ -130,6 +141,11 @@ def get_uik(context, request):
         uik_res['uik']['is_unblocked'] = True
 
     return Response(json.dumps(uik_res), content_type='application/json')
+
+
+@view_config(route_name='uik_by_off_number', request_method='GET')
+def get_uik_by_off_number(context, request):
+    return get_uik(context, request)
 
 
 @view_config(route_name='uik', request_method='POST')
