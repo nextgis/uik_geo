@@ -36,7 +36,7 @@
                     view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);
                     return false;
                 } else {
-                    view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
+                    view.$document.trigger('/uik/map/setView', [this.defaultExtent.latlng, this.defaultExtent.zoom]);
                     return false;
                 }
             }
