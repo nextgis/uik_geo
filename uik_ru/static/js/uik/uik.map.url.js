@@ -22,13 +22,22 @@
             if (uikFromUrl) {
 
             } else if (extentFromUrl) {
-                view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
+//                view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
+                viewmodel.map.setView(extentFromUrl.latlng, extentFromUrl.zoom);
+                this.setLastExtentToCookie(extentFromUrl.latlng, extentFromUrl.zoom);
+                view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);
+                return false;
             } else {
                 lastExtent = this.getLastExtentFromCookie();
                 if (lastExtent) {
-                    view.$document.trigger('/uik/map/setView', [lastExtent.latlng, lastExtent.zoom]);
+//                    view.$document.trigger('/uik/map/setView', [lastExtent.latlng, lastExtent.zoom]);
+                    viewmodel.map.setView(lastExtent.latlng, lastExtent.zoom);
+                    this.setLastExtentToCookie(lastExtent.latlng, lastExtent.zoom);
+                    view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);
+                    return false;
                 } else {
                     view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
+                    return false;
                 }
             }
         },
@@ -65,7 +74,7 @@
                 regionCode = helpers.getURLParameter('region'),
                 editable = helpers.getURLParameter('edit');
 
-            if (uikOfficialNumber && regionCode) {
+            if (uikOfficialNumber !== 'null' && regionCode !== 'null') {
                 return {
                     'uikOfficialNumber': uikOfficialNumber,
                     'regionCode': regionCode,
