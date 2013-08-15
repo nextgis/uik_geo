@@ -22,6 +22,7 @@
             <file file="${rootProjectDirName}/static/js/mustache.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.config.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.loader.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.subscriber.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.helpers.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.common.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.popup.js"/>
@@ -36,6 +37,7 @@
             <file file="${rootProjectDirName}/static/js/uik/uik.searcher.tab.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.editor.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.uiks.js"/>
+            <file file="${rootProjectDirName}/static/js/uik/uik.uiks.url.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.uiks_2012.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.alerts.js"/>
             <file file="${rootProjectDirName}/static/js/uik/uik.user.js"/>

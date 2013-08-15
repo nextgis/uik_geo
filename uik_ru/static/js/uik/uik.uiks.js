@@ -12,6 +12,7 @@
         init: function () {
             this.updatePoints();
             this.bindEvents();
+            this.handleUrl();
         },
 
 

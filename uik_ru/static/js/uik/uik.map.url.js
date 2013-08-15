@@ -14,30 +14,16 @@
         },
 
         initUrlModule: function () {
-            var view = UIK.view,
-                viewmodel = UIK.viewmodel,
-                uikFromUrl = this.getUikFromUrl(),
-                extentFromUrl = this.getExtentFromUrl();
+            var extentFromUrl = this.getExtentFromUrl();
 
-            if (uikFromUrl) {
-
-            } else if (extentFromUrl) {
-//                view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
-                viewmodel.map.setView(extentFromUrl.latlng, extentFromUrl.zoom);
-                this.setLastExtentToCookie(extentFromUrl.latlng, extentFromUrl.zoom);
-                view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);
-                return false;
+            if (extentFromUrl) {
+                UIK.call('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
             } else {
                 lastExtent = this.getLastExtentFromCookie();
                 if (lastExtent) {
-//                    view.$document.trigger('/uik/map/setView', [lastExtent.latlng, lastExtent.zoom]);
-                    viewmodel.map.setView(lastExtent.latlng, lastExtent.zoom);
-                    this.setLastExtentToCookie(lastExtent.latlng, lastExtent.zoom);
-                    view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);
-                    return false;
+                    UIK.call('/uik/map/setView', [lastExtent.latlng, lastExtent.zoom]);
                 } else {
-                    view.$document.trigger('/uik/map/setView', [this.defaultExtent.latlng, this.defaultExtent.zoom]);
-                    return false;
+                    UIK.call('/uik/map/setView', [this.defaultExtent.latlng, this.defaultExtent.zoom]);
                 }
             }
         },
@@ -65,24 +51,6 @@
             } else {
                 return null;
             }
-        },
-
-
-        getUikFromUrl: function () {
-            var helpers = UIK.helpers,
-                uikOfficialNumber = helpers.getURLParameter('uik'),
-                regionCode = helpers.getURLParameter('region'),
-                editable = helpers.getURLParameter('edit');
-
-            if (uikOfficialNumber !== 'null' && regionCode !== 'null') {
-                return {
-                    'uikOfficialNumber': uikOfficialNumber,
-                    'regionCode': regionCode,
-                    'editable': editable === 'True' || editable === 'true'
-                };
-            }
-
-            return null;
         }
     });
 })(jQuery, UIK);

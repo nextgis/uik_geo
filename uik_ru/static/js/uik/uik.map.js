@@ -25,7 +25,7 @@
                 view = UIK.view,
                 viewmodel = UIK.viewmodel;
 
-            view.$document.on('/uik/map/setView', function (e, latlng, zoom) {
+            UIK.subscribe('/uik/map/setView', function (latlng, zoom) {
                 viewmodel.map.setView(latlng, zoom);
                 context.setLastExtentToCookie(latlng, zoom);
                 view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);

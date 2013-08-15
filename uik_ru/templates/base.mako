@@ -34,6 +34,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/leaflet/bing.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/mustache.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.config.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.subscriber.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.loader.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.helpers.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.common.js')}"></script>
@@ -49,6 +50,7 @@
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.tab.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.url.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks_2012.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
     <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>

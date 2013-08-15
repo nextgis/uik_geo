@@ -2819,7 +2819,7 @@ UIK.templates = {};
                     },
                     createLayer: function () {
                         return new L.MarkerClusterGroup({
-                            disableClusteringAtZoom: 15,
+                            disableClusteringAtZoom: 17,
                             iconCreateFunction: function(cluster) {
                                 return new L.DivIcon({
                                     html: '<div><span>' + cluster.getChildCount() + '</span></div>',
@@ -2893,7 +2893,79 @@ UIK.templates = {};
     });
 
 })(jQuery, UIK);
-(function ($, UIK) {
+(function (DB, $) {
+    var subscriber;
+    UIK.subscriber = {};
+    subscriber = UIK.subscriber;
+
+    $.extend(UIK.subscriber, {
+        isLog: false,
+        routes: {},
+        $document: $(document),
+
+
+        subscribe: function (channel, callback, context) {
+            var route = {
+                callback: callback,
+                context: context
+            };
+
+            if (!subscriber.routes[channel]) {
+                subscriber.routes[channel] = [route];
+            } else {
+                subscriber.routes[channel].push(route);
+            }
+        },
+
+
+        publish: function (channel, parameters) {
+            var route,
+                callbackIndex = 0,
+                callbackCount;
+
+            parameters = parameters || [];
+            subscriber.trigger(channel, parameters);
+            if (!subscriber.routes.hasOwnProperty(channel)) {
+                return false;
+            }
+
+            for (callbackIndex = 0, callbackCount = subscriber.routes[channel].length;
+                    callbackIndex < callbackCount; callbackIndex += 1) {
+                route = subscriber.routes[channel][callbackIndex];
+                route.callback.apply(route.context, parameters);
+            }
+        },
+
+
+        unsubscribe: function (channel) {
+            delete subscriber.routes[channel];
+        },
+
+
+        call: function (channel, parameters) {
+            parameters = parameters || [];
+            if (!subscriber.routes.hasOwnProperty(channel)) {
+                return false;
+            }
+
+            var route = subscriber.routes[channel][0];
+            return route.callback.apply(route.context, parameters);
+        },
+
+
+        trigger: function (channel, parameters) {
+            parameters = parameters || [];
+            subscriber.$document.trigger(channel, parameters);
+        }
+    });
+
+    UIK.subscribe = UIK.subscriber.subscribe;
+    UIK.unsubscribe = UIK.subscriber.unsubscribe;
+    UIK.publish = UIK.subscriber.publish;
+    UIK.call = UIK.subscriber.call;
+    UIK.trigger = UIK.subscriber.trigger;
+
+}) (UIK, jQuery);(function ($, UIK) {
 	UIK.helpers = {};
 	$.extend(UIK.helpers, {
 		getIcon: function (cssClass, iconSize) {
@@ -3223,12 +3295,12 @@ UIK.templates = {};
                 lastExtent = this.getLastExtentFromCookie();
                 if (lastExtent) {
 //                    view.$document.trigger('/uik/map/setView', [lastExtent.latlng, lastExtent.zoom]);
-                    viewmodel.map.setView(extentFromUrl.lastExtent.latlng, lastExtent.zoom);
+                    viewmodel.map.setView(lastExtent.latlng, lastExtent.zoom);
                     this.setLastExtentToCookie(lastExtent.latlng, lastExtent.zoom);
                     view.$document.trigger('/uik/permalink/update', [viewmodel.map.getCenter(), viewmodel.map.getZoom()]);
                     return false;
                 } else {
-                    view.$document.trigger('/uik/map/setView', [extentFromUrl.latlng, extentFromUrl.zoom]);
+                    view.$document.trigger('/uik/map/setView', [this.defaultExtent.latlng, this.defaultExtent.zoom]);
                     return false;
                 }
             }
@@ -4823,13 +4895,13 @@ UIK.templates = {};
 })(jQuery, UIK);
 
 UIK.templates = {};
-UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
-UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
-UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<div class="header">Это местоположение УИК в 2012 году (выборы Президента):</div> <table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
-UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
-UIK.templates['addressSearchTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#matches}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> {{display_name}} <a class="target" title="Перейти к объекту"></a> </li> {{/matches}} </ul>');
-UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
-UIK.templates['welcomeTemplate'] = Mustache.compile('<div id="welcomePopup"> <p><strong>Здесь вы можете помочь проверить информацию по местоположениям Участковых избирательных комиссий.</strong></p> <p>Чтобы начать работу - <a target="_blank" href="{{rootUrl}}register">зарегистрируйтесь</a> и найдите интересный вам участок или непроверенные УИКи.</p> <p>Вы можете найти УИКи с помощью этой карты или через <a target="_blank" href="{{rootUrl}}uik/stat">список УИКов</a>. </p> <p>Полезные ссылки:</p> <ul> <li><a target="_blank" href="http://gis-lab.info/qa/uikgeo-manual.html">Руководство пользователя редактора</a></li> <li><a target="_blank" href="http://gis-lab.info/qa/uikgeo.html">О проекте</a></li> <li><a target="_blank" href="http://gis-lab.info/forum/viewforum.php?f=55">Задать вопросы или обсудить на форуме</a></li> <li>Контакты: <a href="mailto:uikgeo@gis-lab.info">uikgeo@gis-lab.info</a></li> </ul> {{#first}} <div class="start"> <input type="button" class="btn btn-primary" value="Начать работу!"/> </div> {{/first}} </div> ');
 UIK.templates['uikPopupTemplate'] = Mustache.compile('<div id="uik-popup" class="{{css}} loader"></div>');
-UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> <div class="edit"> <a href="http://www.wikiuiki.org/ik/{{region.id}}-uik-{{uik.number_official}}" target="_blank" class="btn btn-small btn-info">Перейти в wikiuiki</a> {{#isUserEditor}} <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> {{/isUserEditor}} </div> ');
 UIK.templates['userLogsTemplate'] = Mustache.compile('<table class="table table-striped logs"> <caption>Общая статистика</caption> <tr> <th>Показатель</th> <th>Значение</th> </tr> <tr> <td>Всего УИКов</td> <td class="stop">{{count_all}}</td> </tr> <tr> <td>Отредактировано УИКов</td> <td class="stop">{{count_editable}}</td> </tr> <tr> <td>Отредактировано, %</td> <td class="stop">{{percent}}</td> </tr> </table> <table class="table table-striped logs"> <caption>Статистика по пользователям</caption> <tr> <th>Пользователь</th> <th>Кол-во УИКов</th> </tr> {{#user_logs}} <tr> <td>{{user_name}}</td> <td class="stop">{{count_uiks}}</td> </tr> {{/user_logs}} </table>');
+UIK.templates['versionsTemplate'] = Mustache.compile('<ul> <li> <b>v{{num}}</b> {{time}}, {{name}} </li> </ul>');
+UIK.templates['searchResultsTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#uiks}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> <span>{{name}}</span> {{addr}} <a class="target" title="Перейти к УИКу"></a> {{#isAuth}}<a class="edit" title="Редактировать УИК"></a>{{/isAuth}} </li> {{/uiks}} </ul>');
+UIK.templates['uikPopupInfoTemplate'] = Mustache.compile('<table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uik.number_official}}</td> </tr> <tr> <td>ТИК</td> <td>{{tik.name}}</td> </tr> <tr> <td>Регион</td> <td>{{region.name}}</td> </tr> <tr> <td>Адрес голосования</td> <td>{{uik.address_voting}}</td> </tr> <tr> <td>Место помещения голосования</td> <td>{{uik.place_voting}}</td> </tr> <tr> <td>Точность геокодирования</td> <td>{{geo_precision.name_ru}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uik.comment}}</td> </tr> <tr> <td>Проверен</td> <td> {{#uik.is_applied}}Да{{/uik.is_applied}} {{^uik.is_applied}}Нет{{/uik.is_applied}} </td> </tr> {{#isBlocked}} <tr class="block"> {{#isUnBlocked}} <td>Заблокирована вами</td> <td> <button class="btn btn-small btn-primary block" id="unblock" type="button">Разблокировать</button> </td> {{/isUnBlocked}} {{^isUnBlocked}} <td>Заблокировал</td> <td>{{userBlocked}}</td> {{/isUnBlocked}} </tr> {{/isBlocked}} </table> <div class="edit"> <a href="http://www.wikiuiki.org/ik/{{region.id}}-uik-{{uik.number_official}}" target="_blank" class="btn btn-small btn-info">Перейти в wikiuiki</a> {{#isUserEditor}} <button class="btn btn-small btn-primary {{#isBlock}}block{{/isBlock}}" id="edit" type="button" {{#editDenied}}disabled="disabled"{{/editDenied}}>Редактировать</button> {{/isUserEditor}} </div> ');
+UIK.templates['osmPopupTemplate'] = Mustache.compile('<div class="osm-popup"> <div class="caption"> <span>{{id}}</span> <a href="{{link}}" target="_blank" title="Посмотреть на OpenStreetMaps" class="osm"></a> </div> <table class="table table-striped"> {{#tags}} <tr> <td>{{key}}</td> <td>{{val}}</td> </tr> {{/tags}} </table> </div>');
+UIK.templates['alertsTemplate'] = Mustache.compile('<div id="alert_{{id}}" class="alert alert-{{type}}" style="display: none;"> <button type="button" class="close" data-dismiss="alert">&times;</button> <strong>{{statusText}}</strong> {{text}} </div>');
+UIK.templates['welcomeTemplate'] = Mustache.compile('<div id="welcomePopup"> <p><strong>Здесь вы можете помочь проверить информацию по местоположениям Участковых избирательных комиссий.</strong></p> <p>Чтобы начать работу - <a target="_blank" href="{{rootUrl}}register">зарегистрируйтесь</a> и найдите интересный вам участок или непроверенные УИКи.</p> <p>Вы можете найти УИКи с помощью этой карты или через <a target="_blank" href="{{rootUrl}}uik/stat">список УИКов</a>. </p> <p>Полезные ссылки:</p> <ul> <li><a target="_blank" href="http://gis-lab.info/qa/uikgeo-manual.html">Руководство пользователя редактора</a></li> <li><a target="_blank" href="http://gis-lab.info/qa/uikgeo.html">О проекте</a></li> <li><a target="_blank" href="http://gis-lab.info/forum/viewforum.php?f=55">Задать вопросы или обсудить на форуме</a></li> <li>Контакты: <a href="mailto:uikgeo@gis-lab.info">uikgeo@gis-lab.info</a></li> </ul> {{#first}} <div class="start"> <input type="button" class="btn btn-primary" value="Начать работу!"/> </div> {{/first}} </div> ');
+UIK.templates['uik2012PopupInfoTemplate'] = Mustache.compile('<div class="header">Это местоположение УИК в 2012 году (выборы Президента):</div> <table class="table table-striped"> <tr> <td>Номер УИКа</td> <td>{{uikp.name}}</td> </tr> <tr> <td>Адрес</td> <td>{{uikp.address}}</td> </tr> <tr> <td>Комментарий</td> <td>{{uikp.comment}}</td> </tr> </table> ');
+UIK.templates['addressSearchTemplate'] = Mustache.compile('<ul class="{{cssClass}}"> {{#matches}} <li data-lat={{lat}} data-lon={{lon}} data-id={{id}}> {{display_name}} <a class="target" title="Перейти к объекту"></a> </li> {{/matches}} </ul>');
