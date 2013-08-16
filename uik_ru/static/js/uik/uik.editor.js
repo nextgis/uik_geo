@@ -43,6 +43,7 @@
 
         bindEvents: function () {
             var context = this;
+
             UIK.view.$editorContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
                 context.toggleEditor();
             });

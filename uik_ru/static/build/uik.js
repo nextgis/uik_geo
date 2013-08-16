@@ -3954,6 +3954,7 @@ UIK.templates = {};
 
         bindEvents: function () {
             var context = this;
+
             UIK.view.$editorContainer.find('span.icon-collapse, div.title').off('click').on('click', function () {
                 context.toggleEditor();
             });
@@ -4487,12 +4488,21 @@ UIK.templates = {};
     $.extend(UIK.uiks, {
 
         handleUrl: function () {
-            var uikFromUrl = this.getUikFromUrl();
+            var context =  this,
+                uikFromUrl = this.getUikFromUrl();
 
             if (uikFromUrl) {
-                $.when(this.getAjaxUik(uikFromUrl)).then(function (uik) {
-                    UIK.call('/uik/uiks/popup/openByUik', [uik]);
-                });
+                if (uikFromUrl.editable === true && UIK.viewmodel.isAuth === true) {
+                    $.when(this.getAjaxUik(uikFromUrl)).then(function (ajaxUik) {
+                        UIK.call('/uik/map/setView', [[ajaxUik.uik.geom.lat, ajaxUik.uik.geom.lng], 17]);
+                        context.setUikSelected(ajaxUik);
+                        UIK.view.$document.trigger('/uik/editor/startEdit');
+                    });
+                } else {
+                    $.when(this.getAjaxUik(uikFromUrl)).then(function (uik) {
+                        UIK.call('/uik/uiks/popup/openByUik', [uik]);
+                    });
+                }
             }
         },
 

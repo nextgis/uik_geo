@@ -76,7 +76,7 @@ UIK.templates = {};
                     },
                     createLayer: function () {
                         return new L.MarkerClusterGroup({
-                            disableClusteringAtZoom: 17,
+                            disableClusteringAtZoom: 15,
                             iconCreateFunction: function(cluster) {
                                 return new L.DivIcon({
                                     html: '<div><span>' + cluster.getChildCount() + '</span></div>',
