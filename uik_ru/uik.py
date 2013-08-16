@@ -97,7 +97,7 @@ def get_uik(context, request):
 
     id = request.matchdict.get('id', None)
     region_id = request.matchdict.get('region_id', None)
-    uik_official_number = request.matchdict.get('region_id', None)
+    uik_official_number = request.matchdict.get('official_number', None)
 
     if id is not None:
         clauses.append(Uik.id == id)

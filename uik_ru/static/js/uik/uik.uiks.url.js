@@ -13,7 +13,7 @@
 
             if (uikFromUrl) {
                 $.when(this.getAjaxUik(uikFromUrl)).then(function (uik) {
-
+                    UIK.call('/uik/uiks/popup/openByUik', [uik]);
                 });
             }
         },
