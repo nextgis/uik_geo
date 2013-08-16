@@ -21,6 +21,7 @@
                     });
                 } else {
                     $.when(this.getAjaxUik(uikFromUrl)).then(function (uik) {
+                        UIK.viewmodel.map.setZoom(17);
                         UIK.call('/uik/uiks/popup/openByUik', [uik]);
                     });
                 }
