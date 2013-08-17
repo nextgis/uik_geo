@@ -18,8 +18,13 @@
 
         bindEvents: function () {
             var context = this;
+
             UIK.view.$document.on('/uik/uiks/updateUiks', function () {
                 context.updatePoints();
+            });
+
+            UIK.subscribe('/uik/uiks/popup/openByUik', function (uik) {
+                context.openUikPopupByUik(uik);
             });
         },
 
@@ -32,12 +37,14 @@
             this.updateUiksByAjax();
         },
 
+
         clearLayers: function () {
             var mapLayers = UIK.viewmodel.mapLayers;
             mapLayers.points.checked.clearLayers();
             mapLayers.points.unchecked.clearLayers();
             mapLayers.points.blocked.clearLayers();
         },
+
 
         updateUiksByAjax: function () {
             var context = this,
@@ -65,6 +72,7 @@
             });
         },
 
+
         renderUiks: function (data) {
             var viewmodel = UIK.viewmodel,
                 pointsLayers = viewmodel.mapLayers.points,
@@ -91,8 +99,8 @@
                         dataPoint = dataPointsIterable[i];
                         marker = L.marker([dataPoint.lat, dataPoint.lon], {icon: icon}).on('click', function (e) {
                             var marker = e.target;
-                            UIK.view.$document.trigger('/uik/map/openPopup', [marker.getLatLng(), htmlPopup]);
-                            context.buildUikPopup(marker.id);
+                            UIK.call('/uik/map/openPopup', [marker.getLatLng(), htmlPopup]);
+                            context.buildUikPopupByClick(marker.id);
                         });
                         marker.id = dataPoint.id;
                         pointsLayers[dataPointType].addLayer(marker);
@@ -101,41 +109,71 @@
             }
         },
 
-        buildUikPopup: function (uikId) {
-            return $.getJSON(document['url_root'] + 'uik/' + uikId, function (data) {
-                if (!UIK.viewmodel.editable) {
-                    UIK.viewmodel.uikSelected = data;
-                }
-                var html = UIK.templates.uikPopupInfoTemplate({
-                    uik: data.uik,
-                    tik: data.tik,
-                    region: data.region,
-                    geo_precision: data.geo_precision,
-                    isUserEditor: UIK.viewmodel.isAuth,
-                    editDenied: UIK.viewmodel.editable || data.uik.is_blocked,
-                    isBlocked: data.uik.is_blocked,
-                    userBlocked: data.uik.user_blocked,
-                    isUnBlocked: data.uik.is_unblocked
-                });
-                $('#uik-popup').removeClass('loader').empty().append(html);
-                $('button#edit').off('click').on('click', function () {
-                    UIK.view.$document.trigger('/uik/editor/startEdit');
-                });
-                if (data.uik.is_unblocked) {
-                    $('#unblock').off('click').on('click', function () {
-                        $.ajax({
-                            type: 'GET',
-                            url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.uik.id
-                        }).done(function () {
-                                UIK.viewmodel.map.closePopup();
-                                UIK.view.$document.trigger('/uik/map/updateAllLayers');
-                        });
-                    });
-                }
+
+        buildUikPopupByClick: function (uikId) {
+            var context = this;
+
+            return $.getJSON(document.url_root + 'uik/' + uikId, function (uikData) {
+                context.setUikSelected(uikData);
+                context.buildUikPopup(uikData);
             }).error(function () {
-                    $('#uik-popup').removeClass('loader').empty().append('Error connection');
-                });
+                $('#uik-popup').removeClass('loader').empty().append('Error connection');
+            });
         },
+
+
+        setUikSelected: function (uik) {
+            var viewmodel = UIK.viewmodel;
+
+            if (!viewmodel.editable) {
+                viewmodel.uikSelected = uik;
+            }
+        },
+
+
+        buildUikPopup: function (ajaxUik) {
+            var html = UIK.templates.uikPopupInfoTemplate({
+                uik: ajaxUik.uik,
+                tik: ajaxUik.tik,
+                region: ajaxUik.region,
+                geo_precision: ajaxUik.geo_precision,
+                isUserEditor: UIK.viewmodel.isAuth,
+                editDenied: UIK.viewmodel.editable || ajaxUik.uik.is_blocked,
+                isBlocked: ajaxUik.uik.is_blocked,
+                userBlocked: ajaxUik.uik.user_blocked,
+                isUnBlocked: ajaxUik.uik.is_unblocked
+            });
+
+            $('#uik-popup').removeClass('loader').empty().append(html);
+
+            $('button#edit').off('click').on('click', function () {
+                UIK.view.$document.trigger('/uik/editor/startEdit');
+            });
+
+            if (ajaxUik.uik.is_unblocked) {
+                $('#unblock').off('click').on('click', function () {
+                    $.ajax({
+                        type: 'GET',
+                        url: document['url_root'] + 'uik/unblock/' + UIK.viewmodel.uikSelected.uik.id
+                    }).done(function () {
+                            UIK.viewmodel.map.closePopup();
+                            UIK.view.$document.trigger('/uik/map/updateAllLayers');
+                        });
+                });
+            }
+        },
+
+
+        openUikPopupByUik: function (ajaxUik) {
+            var uik = ajaxUik.uik,
+                latlng = [uik.geom.lat, uik.geom.lng],
+                html = UIK.templates.uikPopupTemplate({ css: 'edit' });
+
+            UIK.call('/uik/map/openPopup', [latlng, html]);
+            this.setUikSelected(ajaxUik);
+            this.buildUikPopup(ajaxUik);
+        },
+
 
         validateZoom: function () {
             if (UIK.viewmodel.map.getZoom() < 14) {

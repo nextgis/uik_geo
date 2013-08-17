@@ -87,7 +87,7 @@
                         dataPoint = dataPointsIterable[i];
                         marker = L.marker([dataPoint.lat, dataPoint.lon], {icon: icon}).on('click', function (e) {
                             var marker = e.target;
-                            UIK.view.$document.trigger('/uik/map/openPopup', [marker.getLatLng(), htmlPopup]);
+                            UIK.call('/uik/map/openPopup', [marker.getLatLng(), htmlPopup]);
                             context.buildUikPopup(marker.id);
                         });
                         marker.id = dataPoint.id;

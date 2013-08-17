@@ -9,12 +9,22 @@
     $.extend(UIK.uiks, {
 
         handleUrl: function () {
-            var uikFromUrl = this.getUikFromUrl();
+            var context =  this,
+                uikFromUrl = this.getUikFromUrl();
 
             if (uikFromUrl) {
-                $.when(this.getAjaxUik(uikFromUrl)).then(function (uik) {
-
-                });
+                if (uikFromUrl.editable === true && UIK.viewmodel.isAuth === true) {
+                    $.when(this.getAjaxUik(uikFromUrl)).then(function (ajaxUik) {
+                        UIK.call('/uik/map/setView', [[ajaxUik.uik.geom.lat, ajaxUik.uik.geom.lng], 17]);
+                        context.setUikSelected(ajaxUik);
+                        UIK.view.$document.trigger('/uik/editor/startEdit');
+                    });
+                } else {
+                    $.when(this.getAjaxUik(uikFromUrl)).then(function (uik) {
+                        UIK.viewmodel.map.setZoom(17);
+                        UIK.call('/uik/uiks/popup/openByUik', [uik]);
+                    });
+                }
             }
         },
 

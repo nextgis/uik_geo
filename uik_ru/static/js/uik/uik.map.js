@@ -37,9 +37,9 @@
 
             });
 
-            view.$document.on('/uik/map/openPopup', function (e, latlng, html) {
-                var viewmodel = UIK.viewmodel,
-                    map = viewmodel.map;
+            UIK.subscribe('/uik/map/openPopup', function (latlng, html) {
+                var map = UIK.viewmodel.map;
+
                 map.panTo(latlng);
                 map.openPopup(L.popup().setLatLng(latlng).setContent(html));
             });
