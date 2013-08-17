@@ -15,7 +15,7 @@
 ##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
 ##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
 ##   	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.css')}" />
-    <link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik-' + request.registry.settings['static_version'] + '.min.css')}">
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik-' + request.registry.settings['static_version'] + '.css')}">
 ##   	<!--[if lte IE 8]><!--<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.ie.css')}" />--><![endif]-->
 
 
