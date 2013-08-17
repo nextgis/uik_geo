@@ -27,7 +27,6 @@
     <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 
     <script type="text/javascript" src="${request.static_url('uik_ru:static/build/uik-' + request.registry.settings['static_version'] + '.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates-' + request.registry.settings['static_version'] + '.js')}"></script>
 
 ##    <script src="${request.static_url('uik_ru:static/js/Leaflet.markercluster/leaflet.markercluster-src.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery/jquery.cookie.js')}"></script>
@@ -59,7 +58,7 @@
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.josm.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.versions.js')}"></script>
 ##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.tab.js')}"></script>
-##    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates-' + request.registry.settings['static_version'] + '.js')}"></script>
 
 </head>
 <body class="editor-collapsed loading">
