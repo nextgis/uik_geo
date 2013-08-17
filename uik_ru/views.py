@@ -21,7 +21,12 @@ def home(request):
     session = DBSession()
     geocoding_precisions = session.query(GeocodingPrecision).order_by(asc(GeocodingPrecision.id)).all()
 
-    return {'u_name': user_name, 'project': 'uik_ru', 'geocoding_precisions': geocoding_precisions}
+    return {
+        'u_name': user_name,
+        'project': 'uik_ru',
+        'geocoding_precisions': geocoding_precisions,
+        'static_version': request.registry.settings['static_version']
+    }
 
 @view_config(route_name='home', request_method='POST', renderer='base.mako')
 def home_signin(request):
@@ -44,6 +49,8 @@ def home_signin(request):
             request.session['u_id'] = user.id
             request.response.set_cookie('sk', value=request.session['sk'], max_age=86400)
             result['u_name'] = user.display_name
+
+    result['static_version'] = request.registry.settings['static_version']
 
     return result
 

@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css"/>
     <![endif]-->
 
-    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
-    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
-    <link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
-   	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.css')}" />
-##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik.min.css')}">
-   	<!--[if lte IE 8]><!--<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.ie.css')}" />--><![endif]-->
+##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/bootstrap.min.css')}">
+##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/css/main.css')}">
+##    <link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.css')}" />
+##   	<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.css')}" />
+    <link rel="stylesheet" href="${request.static_url('uik_ru:static/build/uik-' + request.registry.settings['static_version'] + '.min.css')}">
+##   	<!--[if lte IE 8]><!--<link rel="stylesheet" href="${request.static_url('uik_ru:static/js/Leaflet.markercluster/MarkerCluster.Default.ie.css')}" />--><![endif]-->
 
 
     <script type="text/javascript">
@@ -26,39 +26,40 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 
-##    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/uik.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/uik-' + request.registry.settings['static_version'] + '.js')}"></script>
+    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates-' + request.registry.settings['static_version'] + '.js')}"></script>
 
-    <script src="${request.static_url('uik_ru:static/js/Leaflet.markercluster/leaflet.markercluster-src.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery/jquery.cookie.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery.imagesloaded.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/leaflet/bing.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/mustache.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.config.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.subscriber.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.loader.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.helpers.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.common.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.popup.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.url.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.history.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.helpers.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.manager.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.geocoder.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.address.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.tab.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.url.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks_2012.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.josm.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.versions.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.tab.js')}"></script>
-    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
+##    <script src="${request.static_url('uik_ru:static/js/Leaflet.markercluster/leaflet.markercluster-src.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery/jquery.cookie.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/jquery.imagesloaded.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/leaflet/bing.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/mustache.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.config.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.subscriber.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.loader.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.helpers.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.common.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.popup.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.url.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.history.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.helpers.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.map.manager.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.geocoder.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.address.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.searcher.tab.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks.url.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.uiks_2012.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.alerts.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.user.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.permalink.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.josm.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.versions.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/js/uik/uik.editor.tab.js')}"></script>
+##    <script type="text/javascript" src="${request.static_url('uik_ru:static/build/compile-templates.js')}"></script>
 
 </head>
 <body class="editor-collapsed loading">
