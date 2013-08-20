@@ -32,7 +32,7 @@
                 fields: {
                     number_official: {
                         title: 'Номер',
-                        width: '20%',
+                        width: '5%',
                         display: function (data) {
                             return $('<a target="_blank" href="${request.route_url('home')}' +
                                     '?lat=' + data.record.lat + '&lon=' + data.record.lng + '&zoom=' + 18 + '" >' +
@@ -41,21 +41,21 @@
                     },
                     tik: {
                         title: 'ТИК',
-                        width: '20%'
+                        width: '30%'
                     },
                     region: {
                         title: 'Регион',
-                        width: '20%'
+                        width: '30%'
                     },
                     geocoding_precision: {
-                        title: 'Точность геокодирования',
+                        title: 'Точность',
                         width: '10%',
                         display: function (data) {
                             var geocoding_precision = data.record.geocoding_precision;
                             if (geocoding_precision === 'Район') {
                                 return $('<div class="red" >' + 'Район' + '</div>');
                             } else if (geocoding_precision === 'Населенный пункт') {
-                                return $('<div class="rose" >' + 'Населенный пункт' + '</div>');
+                                return $('<div class="rose" >' + 'Нас. пункт' + '</div>');
                             } else if (geocoding_precision === 'Улица') {
                                 return $('<div class="yellow" >' + 'Улица' + '</div>');
                             } else if (geocoding_precision === 'Дом') {
@@ -75,7 +75,7 @@
                     },
                     comment: {
                         title: 'Комментарий',
-                        width: '20%'
+                        width: '15%'
                     }
                 }
             });
@@ -115,10 +115,10 @@
     </div>
 </div>
 <div class="filtering">
-    <div class="filter f20">
+    <div class="filter f5">
         <input type="text" name="number_official" id="number_official"/>
     </div>
-    <div class="filter f20">
+    <div class="filter f30">
         <select id="tik" name="tik">
             <option selected="selected" value="">Любой</option>
             % for tik in tiks:
@@ -126,7 +126,7 @@
             % endfor
         </select>
     </div>
-    <div class="filter f20">
+    <div class="filter f30">
         <select id="region" name="region">
             <option selected="selected" value="">Любой</option>
             % for region in regions:
