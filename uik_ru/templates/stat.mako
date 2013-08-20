@@ -49,7 +49,7 @@
                     },
                     geocoding_precision: {
                         title: 'Точность геокодирования',
-                        width: '20%',
+                        width: '10%',
                         display: function (data) {
                             var geocoding_precision = data.record.geocoding_precision;
                             if (geocoding_precision === 'Район') {
@@ -64,14 +64,18 @@
                         }
                     },
                     is_applied: {
-                        title: 'Проверен',
-                        width: '20%',
+                        title: 'Принят',
+                        width: '10%',
                         display: function (data) {
                             if (data.record.is_applied === true) {
                                 return $('<div class="green" >' + 'Да' + '</div>');
                             }
                             return $('<div class="red" >' + 'Нет' + '</div>');
                         }
+                    },
+                    comment: {
+                        title: 'Комментарий',
+                        width: '20%'
                     }
                 }
             });
@@ -111,10 +115,10 @@
     </div>
 </div>
 <div class="filtering">
-    <div class="filter">
+    <div class="filter f20">
         <input type="text" name="number_official" id="number_official"/>
     </div>
-    <div class="filter">
+    <div class="filter f20">
         <select id="tik" name="tik">
             <option selected="selected" value="">Любой</option>
             % for tik in tiks:
@@ -122,7 +126,7 @@
             % endfor
         </select>
     </div>
-    <div class="filter">
+    <div class="filter f20">
         <select id="region" name="region">
             <option selected="selected" value="">Любой</option>
             % for region in regions:
@@ -130,7 +134,7 @@
             % endfor
         </select>
     </div>
-    <div class="filter">
+    <div class="filter f10">
         <select id="geocoding_precision" name="geocoding_precision">
             <option selected="selected" value="">Любая</option>
             % for geocoding_precision in geocoding_precisions:
@@ -138,7 +142,7 @@
             % endfor
         </select>
     </div>
-    <div class="filter">
+    <div class="filter f10">
         <select id="is_applied" name="is_applied">
             <option selected="selected" value="">Не важно</option>
             <option value="True">Да</option>

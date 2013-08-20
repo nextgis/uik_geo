@@ -25,11 +25,18 @@ div.filtering {
 }
 
 div.filter {
-    width: 20%;
     display: inline-block;
     margin: 0 -5px 0 0;
     padding: 0px;
     text-align: center;
+}
+
+div.filter.f20 {
+    width: 20%;
+}
+
+div.filter.f10 {
+    width: 10%;
 }
 
 
