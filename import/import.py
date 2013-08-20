@@ -1,11 +1,3 @@
-import csv
-
-from uik_ru.models import Uik, Tik, Region, GeocodingPrecision
-
-import file2model
-import sqlite2model
-
-
 # Run:
 # env/bin/python import/import.py --d uik_ru --h localhost --u uik_ru --p uik_ru  --s import/data/RU-MOW.shp  --tik import/data/tik.csv  --reg import/data/auto_codes.csv --config development.ini
 
@@ -15,40 +7,37 @@ from pyramid.paster import get_appsettings
 from uik_ru.models import DBSession, Base
 
 # Read command line arguments
-# ----------------------------------------
-from optparse import OptionParser
+# ---------------------------
+import argparse
 
-parser = OptionParser()
+parser = argparse.ArgumentParser(add_help=False)
+subparsers = parser.add_subparsers()
 
-# parser.add_option("--d", dest="database")
-# parser.add_option("--h", dest="host")
-# parser.add_option("--u", dest="user")
-# parser.add_option("--p", dest="password")
-parser.add_option("--r", dest="region")
-parser.add_option("--s", dest="shp_file")
-parser.add_option("--tik", dest="csv_file_tik")
-parser.add_option("--sqlite", dest="sqlite_file")
-# parser.add_option("--reg", dest="csv_file_reg")
-parser.add_option("--config", dest="config_file")
+tik_parser = subparsers.add_parser('tik')
+tik_parser.add_argument('--csv', dest='csv', help='path to tik .csv file')
+tik_parser.add_argument('--conf', dest='sql_config', help='path to sqlalchemy config')
 
-(options, args) = parser.parse_args()
+uik_parser = subparsers.add_parser('uik')
+uik_parser.add_argument('--region', dest='region', type=int, help='code of region (ex. 77 for Moscow)')
+uik_parser.add_argument('--sqlt', dest='sqlite', help='path to sqlite database file')
+uik_parser.add_argument('--conf', dest='sql_config', help='path to sqlalchemy config')
+
+args = parser.parse_args()
 
 # Read SQLAlchemy config:
 # ----------------------------------------
-config_uri = options.config_file
-settings = get_appsettings(config_uri)
-engine = engine_from_config(settings, 'sqlalchemy.')
-DBSession.configure(bind=engine)
 
-# !!!
-# Next 2 lines kill all data! Delete them from final version!!!:
-# ----------------------------------------
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+if args.sql_config:
+    config_uri = args.sql_config
+    settings = get_appsettings(config_uri)
+    engine = engine_from_config(settings, 'sqlalchemy.')
+    DBSession.configure(bind=engine)
+else:
+    raise 'sql_config parameter (--conf) is required'
 
-# print file2model.addToGeocodingPrecision(session=DBSession())
-
-# print file2model.addToRegion(options.csv_file_reg, session=DBSession())
-# print sqlite2model.addToTik(options.csv_file_tik,    session=DBSession(), regionID=options.region)
-print sqlite2model.addToUik(options.sqlite_file,        session=DBSession(), regionID=options.region)
-
+if 'csv' in args:
+    import tik2model
+    print tik2model.addToTik(args.csv, session=DBSession())
+elif 'sqlite' in args:
+    import uik2model
+    print uik2model.addToUik(args.sqlite, session=DBSession(), regionID=args.region)
