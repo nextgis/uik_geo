@@ -41,11 +41,15 @@
                     },
                     tik: {
                         title: 'ТИК',
-                        width: '30%'
+                        width: '20%'
                     },
                     region: {
                         title: 'Регион',
-                        width: '30%'
+                        width: '20%'
+                    },
+                    place_voting: {
+                        title: 'Место',
+                        width: '20%'
                     },
                     geocoding_precision: {
                         title: 'Точность',
@@ -86,6 +90,7 @@
                     number_official: $('#number_official').val(),
                     tik: $('#tik').val(),
                     region: $('#region').val(),
+                    place_voting:  $('#place_voting').val(),
                     geocoding_precision: $('#geocoding_precision').val(),
                     is_applied: $('#is_applied').val(),
                     user_id: $('#user').val()
@@ -118,7 +123,7 @@
     <div class="filter f5">
         <input type="text" name="number_official" id="number_official"/>
     </div>
-    <div class="filter f30">
+    <div class="filter f20">
         <select id="tik" name="tik">
             <option selected="selected" value="">Любой</option>
             % for tik in tiks:
@@ -126,13 +131,16 @@
             % endfor
         </select>
     </div>
-    <div class="filter f30">
+    <div class="filter f20">
         <select id="region" name="region">
             <option selected="selected" value="">Любой</option>
             % for region in regions:
                     <option value="${region.id}">${region.name}</option>
             % endfor
         </select>
+    </div>
+    <div class="filter f20">
+        <input type="text" name="place_voting" id="place_voting"/>
     </div>
     <div class="filter f10">
         <select id="geocoding_precision" name="geocoding_precision">

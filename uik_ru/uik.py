@@ -353,12 +353,14 @@ def get_stat(context, request):
             clauses.append(Uik.number_official == request.POST['number_official'])
         if exist_filter_parameter('region', request):
             clauses.append(Uik.region_id == int(request.POST['region']))
+        if exist_filter_parameter('place_voting', request):
+            clauses.append(Uik.place_voting.ilike('%' + request.POST['place_voting'].encode('UTF-8').strip() + '%'))
         if exist_filter_parameter('tik', request):
             clauses.append(Uik.tik_id == int(request.POST['tik']))
         if exist_filter_parameter('user_id', request):
             user_uiks_subq = (session.query(distinct(UikVersions.uik_id).label("uik_id"))
                               .filter(UikVersions.user_id == int(request.POST['user_id']))) \
-                .subquery()
+                              .subquery()
             uiks_from_db = uiks_from_db.join(user_uiks_subq, and_(Uik.id == user_uiks_subq.c.uik_id))
 
     uiks_from_db = uiks_from_db.filter(*clauses)
@@ -387,7 +389,7 @@ def get_stat(context, request):
 
 
 def exist_filter_parameter(param, request):
-    return (param in request.POST) and (len(str(request.POST[param])) > 0)
+    return (param in request.POST) and (len(request.POST[param].encode('UTF-8').strip()) > 0)
 
 
 def create_uik_stat(uik_from_db):
@@ -405,7 +407,9 @@ params = {
     'tik': Tik.name,
     'geocoding_precision': GeocodingPrecision.name_ru,
     'region': Region.name,
-    'is_applied': Uik.is_applied
+    'place_voting': Uik.place_voting,
+    'is_applied': Uik.is_applied,
+    'comment': Uik.comment
 }
 
 
