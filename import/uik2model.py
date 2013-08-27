@@ -2,7 +2,7 @@
 
 import transaction
 
-from uik_ru.models import Uik, UikVersions, GeocodingPrecision
+from uik_ru.models import Uik, UikVersions, GeocodingPrecision, Region
 from uik_ru.models import WKTSpatialElement
 
 import sqlite3 as lite
@@ -119,5 +119,13 @@ def addToUik(fileName, session, regionID):
                 stat['import']['created'] += 1
                 print 'UIK was created'
 
-    print stat
+        region = dbsession.query(Region).filter(Region.id == regionID)
+        region.update({'imported': True})
+        region = region.first()
+        print '\n\rThe region "%(id)s - %(name)s" is marked as imported' % {
+            'id': region.id,
+            'name': region.name
+        }
+
+    print '\n\r%s' % stat
     return success

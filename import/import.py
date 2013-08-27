@@ -37,7 +37,7 @@ else:
 
 if 'csv' in args:
     import tik2model
-    print tik2model.addToTik(args.csv, session=DBSession())
+    tik2model.addToTik(args.csv, session=DBSession())
 elif 'sqlite' in args:
     import uik2model
-    print uik2model.addToUik(args.sqlite, session=DBSession(), regionID=args.region)
+    uik2model.addToUik(args.sqlite, session=DBSession(), regionID=args.region)

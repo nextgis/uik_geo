@@ -19,6 +19,7 @@ requires = [
     'psycopg2',
     'geoalchemy',
     'shapely',
+    'apscheduler',
     ]
 
 setup(name='uik_ru',
