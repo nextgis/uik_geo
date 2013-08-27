@@ -1,7 +1,7 @@
 README
 
-This project is an attempt to build a crowdsourcing tool to collect spatial information on voting stations in Russia.
+This project is a crowdsourcing tool to collect spatial information on 90000+ voting stations in Russia.
 
-Working demo: http://demo.nextgis.ru/uik_ru/
+The project is running full speed at: http://uikgeo.gis-lab.info
 
-Project is in progress
+Contributions are welcome!
