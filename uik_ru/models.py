@@ -246,7 +246,7 @@ class User(Base):
     @classmethod
     def password_hash(cls, password, salt):
         import hashlib
-        return hashlib.sha1(password + salt).hexdigest()
+        return hashlib.sha1(password.encode('utf-8') + salt).hexdigest()
 
     def as_dict(self, **addon):
         return dict(id=self.id, email=self.email, display_name=self.display_name, **addon)
