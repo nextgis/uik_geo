@@ -15,6 +15,7 @@
 			var v = UIK.view;
 			UIK.view.$manager = $('#manager');
 			this.addTileLayer('osm', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', '© OpenStreetMap contributors');
+			this.addTileLayer('irs', 'http://irs.gis-lab.info/?layers=irs&request=GetTile&z={z}&x={x}&y={y}', 'Kosmosnimki.ru IRS');
 			this.addBingLayer('AujH--7B6FRTK8b81QgPhuvw_Sb3kc8hBO-Lp5OLNyhCD4ZQoGGW4cQS6zBgaeEh');
 			UIK.view.$tileLayers = v.$map.find('div.leaflet-tile-pane div.leaflet-layer');
 			this.bindLayerManagerEvents();

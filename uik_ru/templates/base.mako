@@ -175,6 +175,9 @@
         <div class="icon bing" title="Слой Bing" data-layer="bing">
             <button></button>
         </div>
+        <div class="icon irs" title="Слой Kosmosnimki IRS" data-layer="irs">
+            <button></button>
+        </div>
     </div>
 </div>
 <div class="stat-panel panel">
