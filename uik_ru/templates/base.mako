@@ -180,6 +180,7 @@
 <div class="stat-panel panel">
     <div class="log panel-item"><a target="_blank" href="${request.route_url('logs')}" title="Статистика пользователей"></a></div>
     <div class="stat panel-item"><a target="_blank" href="${request.route_url('statistic')}" title="Статистика по УИКам"></a></div>
+    <div class="export panel-item"><a target="_blank" href="${request.route_url('uik_export_page')}" title="Выгрузки по регионам"></a></div>
 </div>
 <div class="help-panel panel">
     <div class="help panel-item"><a href="javascript:void(0)" title="Руководство пользователя"></a></div>

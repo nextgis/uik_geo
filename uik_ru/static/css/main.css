@@ -256,9 +256,17 @@ div.panel div.stat:hover a {
     background: url('../img/sm-icons.png') -116px -190px;
 }
 
+div.panel div.export a {
+    background: url('../img/sm-icons.png') -144px -190px;
+}
+
+div.panel div.export:hover a {
+    background: url('../img/sm-icons.png') -172px -190px;
+}
+
 body div.help-panel {
     left: 309px;
-    top: 232px;
+    top: 273px;
 }
 
 body.searcher-collapsed div.help-panel {
