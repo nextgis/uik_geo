@@ -50,7 +50,7 @@
 				'layer' : UIK.viewmodel.map.addLayer(layer, true),
 				'index' : this._lastIndex
 			};
-			this._lastIndex =+ 1;
+			this._lastIndex += 1;
 		},
 
 		addBingLayer: function (key) {
@@ -59,7 +59,7 @@
 				'layer' : UIK.viewmodel.map.addLayer(bingLayer, true),
 				'index' : this._lastIndex
 			};
-			this._lastIndex =+ 1;
+			this._lastIndex += 1;
 		}
 
 	});
