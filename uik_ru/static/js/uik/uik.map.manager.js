@@ -37,10 +37,11 @@
 				v = UIK.view,
 				$tileLayers = $(UIK.viewmodel.map.getPanes().tilePane).find('div.leaflet-layer');
 			if (nameLayer) {
-				v.$body.removeClass(vm.currentTileLayer).addClass(nameLayer);
+				if (vm.currentTileLayer) UIK.viewmodel.map.removeLayer(this._layers[vm.currentTileLayer].layer);
 				vm.currentTileLayer = nameLayer;
-				$tileLayers.hide().eq(this._layers[nameLayer].index).show();
+				UIK.viewmodel.map.addLayer(this._layers[nameLayer].layer, true);
 			} else {
+			  // TODO not updated
 				$tileLayers.hide().eq(this._layers[vm.currentTileLayer].index).show();
 			}
 		},
@@ -48,7 +49,7 @@
 		addTileLayer: function (nameLayer, url, attribution) {
 			var layer = new L.TileLayer(url, {minZoom: 8, maxZoom: 18, attribution: attribution});
 			this._layers[nameLayer] = {
-				'layer' : UIK.viewmodel.map.addLayer(layer, true),
+				'layer' : layer,
 				'index' : this._lastIndex
 			};
 			this._lastIndex += 1;
@@ -57,7 +58,7 @@
 		addBingLayer: function (key) {
 			var bingLayer = new L.BingLayer(key, {minZoom: 8, maxZoom: 18});
 			this._layers['bing'] = {
-				'layer' : UIK.viewmodel.map.addLayer(bingLayer, true),
+				'layer' : bingLayer,
 				'index' : this._lastIndex
 			};
 			this._lastIndex += 1;
