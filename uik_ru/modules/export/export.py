@@ -2,6 +2,9 @@ from uik_ru.models import *
 from uik_ru.helpers import get_utf_encoded_value
 
 from sqlalchemy.orm import joinedload
+from os import path, makedirs
+from xml.etree.ElementTree import Element, SubElement, tostring
+import csv
 
 
 class UikExportStrategy():
@@ -37,38 +40,70 @@ class UikExportStrategy():
             self.export_region(region.id)
 
 
-class CsvUikExportStrategy():
-    def __init__(self, dir_csv_file=''):
-        self.dir = dir_csv_file
+class GeoCsvUikExportStrategy():
+    def __init__(self, dir_destination=''):
+        self.root_dir = dir_destination
         self.csv_file = None
         self.writer = None
         from collections import OrderedDict
         self.scheme = OrderedDict([
-            ('id', None),
-            ('lat', None),
-            ('lon', None),
-            ('number_official', None),
-            ('address_voting', None),
-            ('place_voting', None),
-            ('comment', None),
-            ('is_applied', None),
-            ('geocoding_precision', None),
-            ('tik', None),
-            ('region', None)
+            ('id', 'Integer(5)'),
+            ('lat', 'Real(10.7)'),
+            ('lon', 'Real(10.7)'),
+            ('number_official', 'String(255)'),
+            ('address_voting', 'String(255)'),
+            ('place_voting', 'String(255)'),
+            ('comment', 'String(255)'),
+            ('is_applied', 'String(255)'),
+            ('geocoding_precision', 'String(255)'),
+            ('tik', 'String(255)'),
+            ('region', 'String(255)')
         ])
+        self.__temp_uik = self.scheme.copy()
 
     def start(self, region_id):
-        import csv
-        self.csv_file = open('%(dir)s%(reg)s.csv' % {
-            'dir': self.dir,
-            'reg': region_id
-        }, 'w+')
-        self.csv_file.truncate()
+        work_dir = path.join(self.root_dir, str(region_id))
+        file_name_by_region_id = str(region_id)
+        if not path.exists(work_dir):
+            makedirs(work_dir)
+
+        self.__create_prj_file(work_dir, file_name_by_region_id)
+        self.__create_vrt_file(work_dir, file_name_by_region_id)
+        self.__create_csvt_file(work_dir, file_name_by_region_id)
+
+        self.csv_file = open(path.join(work_dir, file_name_by_region_id + '.csv'), 'w+')
         self.writer = csv.DictWriter(self.csv_file, self.scheme)
         self.writer.writeheader()
 
+    def __create_prj_file(self, dir_destination, file_name):
+        content = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137,298.257223563]],'\
+                  'PRIMEM["Greenwich",0],UNIT["Degree",0.017453292519943295]]'
+        prj_file = open(path.join(dir_destination, file_name + '.prj'), 'w+')
+        prj_file.write(content)
+        prj_file.close()
+
+    def __create_vrt_file(self, dir_destination, file_name):
+        root = Element('OGRVRTDataSource')
+        ogr_vrt_layer = SubElement(root, 'OGRVRTLayer', {'name': file_name})
+        SubElement(ogr_vrt_layer, 'SrcDataSource', {'relativeToVRT': '1'}).text = file_name + '.csv'
+        SubElement(ogr_vrt_layer, 'LayerSRS').text = 'EPSG:4326'
+        SubElement(ogr_vrt_layer, 'GeometryType').text = 'wkbPoint'
+        SubElement(ogr_vrt_layer, 'GeometryField', {
+            'encoding': 'WKT',
+            'field':  'WKT'}
+        )
+        vrt_file = open(path.join(dir_destination, file_name + '.vkt'), 'w+')
+        vrt_file.write(tostring(root))
+        vrt_file.close()
+
+    def __create_csvt_file(self, dir_destination, file_name):
+        csvt_file = open(path.join(dir_destination, file_name + '.csvt'), 'w+')
+        csvt_writer = csv.DictWriter(csvt_file, self.scheme)
+        csvt_writer.writerow(self.scheme)
+        csvt_file.close()
+
     def export(self, Uik):
-        uik_csv = self.scheme
+        uik_csv = self.__temp_uik
         uik_csv['id'] = Uik[0].id
         uik_csv['lon'] = Uik[1]
         uik_csv['lat'] = Uik[2]

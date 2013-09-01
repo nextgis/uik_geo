@@ -8,14 +8,15 @@ import zipfile
 
 
 def zip_all(dir):
-    for file_obj_name in listdir(dir):
-        full_name = join(dir, file_obj_name)
-        zip = zipfile.ZipFile('%s.zip' % full_name, 'w')
-        if isfile(full_name):
-            zip.write(full_name, arcname=file_obj_name)
+    for dir_name in listdir(dir):
+        dir_full_name = join(dir, dir_name)
+
+        if not isfile(dir_full_name):
+            zip = zipfile.ZipFile('%s.zip' % dir_full_name, 'w')
+
+            for file_name in listdir(dir_full_name):
+                full_file_name = join(dir_full_name, file_name)
+                zip.write(full_file_name, arcname=file_name)
+
             zip.close()
-            remove(full_name)
-        else:
-            zip_dir(full_name, zip)
-            zip.close()
-            rmtree(full_name)
+            rmtree(dir_full_name)

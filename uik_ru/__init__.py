@@ -3,7 +3,7 @@ from sqlalchemy import engine_from_config
 from pyramid_beaker import session_factory_from_settings
 from pyramid_beaker import set_cache_regions_from_settings
 from apscheduler.scheduler import Scheduler
-from modules.export.export import UikExportStrategy, CsvUikExportStrategy
+from modules.export.export import UikExportStrategy, GeoCsvUikExportStrategy
 from modules.export.zip import zip_all
 
 from .models import (
@@ -22,7 +22,7 @@ def start_export():
         rmtree(export_dir_name)
     os.makedirs(export_dir_name)
 
-    exporter = UikExportStrategy(CsvUikExportStrategy(export_dir_name))
+    exporter = UikExportStrategy(GeoCsvUikExportStrategy(export_dir_name))
     exporter.export_all_regions()
     zip_all(export_dir_name)
 
