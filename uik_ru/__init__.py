@@ -31,7 +31,7 @@ def start_scheduler():
     scheduler = Scheduler()
     scheduler.start()
     start_export()
-    scheduler.add_cron_job(start_export, month='*', day='*', hour='3')
+    scheduler.add_cron_job(start_export, month='*', day='*', hour='16')
 
 
 def main(global_config, **settings):
