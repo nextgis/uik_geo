@@ -15,7 +15,6 @@
         initHistoryModule: function () {
             this.bindEvents();
             this.pushCurrentExtent();
-            UIK.alerts.showAlert('historyShortcuts');
         },
 
 
