@@ -17,19 +17,3 @@ def get_export_page(context, request):
         regions.append(region.to_dict())
 
     return {'regions': regions}
-
-@view_config(route_name='uik_export', request_method='GET')
-def get_export_file(context, request):
-    region_id = request.matchdict.get('region_id', None)
-    file_type = request.matchdict.get('file_type', None)
-
-    file_name = '%(region_id)s.%(file_type)s.zip' % {
-        'region_id': region_id,
-        'file_type': file_type
-    }
-
-    response = FileResponse(
-        pkg_resources.resource_filename('uik_ru', join('data/export/uiks/', file_name)),
-        request=request
-    )
-    return response

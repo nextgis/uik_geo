@@ -18,7 +18,8 @@ def start_export():
     export_dir_name = os.path.join(dir, 'data/export/uiks/')
 
     from shutil import rmtree
-    rmtree(export_dir_name)
+    if os.path.exists(export_dir_name):
+        rmtree(export_dir_name)
     os.makedirs(export_dir_name)
 
     exporter = UikExportStrategy(CsvUikExportStrategy(export_dir_name))
@@ -43,6 +44,7 @@ def main(global_config, **settings):
     config.set_session_factory(session_factory)
     start_scheduler()
     config.add_static_view('static', 'static', cache_max_age=3600)
+    config.add_static_view('data', 'data', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('uiks', '/uik/all')
     config.add_route('stat_json', '/uik/stat/json')
@@ -56,6 +58,5 @@ def main(global_config, **settings):
     config.add_route('logs', '/logs')
     config.add_route('uikp_all', '/uikp/all')
     config.add_route('uikp', '/uikp/{id}')
-    config.add_route('uik_export', '/export/uiks/{file_type}/{region_id}')
     config.scan()
     return config.make_wsgi_app()

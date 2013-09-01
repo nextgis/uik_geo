@@ -50,8 +50,6 @@ class CsvUikExportStrategy():
             ('number_official', None),
             ('address_voting', None),
             ('place_voting', None),
-            ('address_office', None),
-            ('place_office', None),
             ('comment', None),
             ('is_applied', None),
             ('geocoding_precision', None),
@@ -77,8 +75,6 @@ class CsvUikExportStrategy():
         uik_csv['number_official'] = Uik[0].number_official
         uik_csv['address_voting'] = get_utf_encoded_value(Uik[0].address_voting)
         uik_csv['place_voting'] = get_utf_encoded_value(Uik[0].place_voting)
-        uik_csv['address_office'] = get_utf_encoded_value(Uik[0].address_office)
-        uik_csv['place_office'] = get_utf_encoded_value(Uik[0].place_office)
         uik_csv['comment'] = get_utf_encoded_value(Uik[0].comment)
         uik_csv['is_applied'] = Uik[0].is_applied
         uik_csv['geocoding_precision'] = get_utf_encoded_value(Uik[0].geocoding_precision.name)

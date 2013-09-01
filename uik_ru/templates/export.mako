@@ -18,13 +18,13 @@
 </head>
 <body style="margin: 10px;">
 <h2>Выгрузки по регионам</h2>
+<p>Обновление выгрузок - ежедневное, время обновления: 16:00</p>
 <table class="table table-striped">
     <thead>
     <tr>
         <th>Код</th>
         <th>Регион</th>
         <th>.csv</th>
-##        <th>.shp</th>
     </tr>
     </thead>
     <tbody>
@@ -33,8 +33,8 @@
                     <tr>
                         <td>${region['id']}</td>
                         <td>${region['name']}</td>
-                        <td><a href="/export/uiks/csv/${region['id']}">${region['id']}.csv.zip</a></td>
-##                        <td><a href="/export/${region['id']}.shp.zip/">${region['id']}.shp.zip</a></td>
+                        <td><a href="/data/export/uiks/${region['id']}.csv.zip" title="${region['id']} - ${region['name']}">
+                            ${region['id']}.csv.zip</a></td>
                     </tr>
                 % endif
             % endfor
