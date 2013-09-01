@@ -34,7 +34,7 @@
                         <td>${region['id']}</td>
                         <td>${region['name']}</td>
                         <td><a href="/data/export/uiks/${region['id']}.zip" title="${region['id']} - ${region['name']}">
-                            ${region['id']}.csv.zip</a></td>
+                            ${region['id']}.zip</a></td>
                     </tr>
                 % endif
             % endfor
