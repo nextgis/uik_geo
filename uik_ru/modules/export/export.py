@@ -5,6 +5,7 @@ from sqlalchemy.orm import joinedload
 from os import path, makedirs
 from xml.etree.ElementTree import Element, SubElement, tostring
 import csv
+import shutil
 
 
 class UikExportStrategy():
@@ -41,8 +42,9 @@ class UikExportStrategy():
 
 
 class GeoCsvUikExportStrategy():
-    def __init__(self, dir_destination=''):
+    def __init__(self, dir_destination='', dir_template=''):
         self.root_dir = dir_destination
+        self.templates_dir = dir_template
         self.csv_file = None
         self.writer = None
         from collections import OrderedDict
@@ -70,6 +72,7 @@ class GeoCsvUikExportStrategy():
         self.__create_prj_file(work_dir, file_name_by_region_id)
         self.__create_vrt_file(work_dir, file_name_by_region_id)
         self.__create_csvt_file(work_dir, file_name_by_region_id)
+        self.__create_readme_file(work_dir)
 
         self.csv_file = open(path.join(work_dir, file_name_by_region_id + '.csv'), 'w+')
         self.writer = csv.DictWriter(self.csv_file, self.scheme)
@@ -103,6 +106,11 @@ class GeoCsvUikExportStrategy():
         csvt_writer = csv.DictWriter(csvt_file, self.scheme)
         csvt_writer.writerow(self.scheme)
         csvt_file.close()
+
+    def __create_readme_file(self, dir_destination, file_name='README.txt'):
+        readmy_template_path = path.join(self.templates_dir, file_name)
+        if path.exists(readmy_template_path):
+            shutil.copy(readmy_template_path, path.join(dir_destination, file_name))
 
     def export(self, Uik):
         uik_csv = self.__temp_uik

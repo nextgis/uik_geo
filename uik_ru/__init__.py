@@ -14,15 +14,16 @@ from .models import (
 
 def start_export():
     import os
-    dir = os.path.dirname(__file__)
-    export_dir_name = os.path.join(dir, 'data/export/uiks/')
+    root_dir = os.path.dirname(__file__)
+    export_dir_name = os.path.join(root_dir, 'data/export/uiks/')
+    template_dir_name = os.path.join(root_dir, 'data/templates/')
 
     from shutil import rmtree
     if os.path.exists(export_dir_name):
         rmtree(export_dir_name)
     os.makedirs(export_dir_name)
 
-    exporter = UikExportStrategy(GeoCsvUikExportStrategy(export_dir_name))
+    exporter = UikExportStrategy(GeoCsvUikExportStrategy(export_dir_name, template_dir_name))
     exporter.export_all_regions()
     zip_all(export_dir_name)
 
