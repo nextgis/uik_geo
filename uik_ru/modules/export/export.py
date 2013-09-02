@@ -89,9 +89,11 @@ class GeoCsvUikExportStrategy():
         SubElement(ogr_vrt_layer, 'LayerSRS').text = 'EPSG:4326'
         SubElement(ogr_vrt_layer, 'GeometryType').text = 'wkbPoint'
         SubElement(ogr_vrt_layer, 'GeometryField', {
-            'encoding': 'WKT',
-            'field':  'WKT'}
-        )
+            'encoding': 'PointFromColumns',
+            'x':  'lon',
+            'y': 'lat'
+        })
+
         vrt_file = open(path.join(dir_destination, file_name + '.vrt'), 'w+')
         vrt_file.write(tostring(root))
         vrt_file.close()
