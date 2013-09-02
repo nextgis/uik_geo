@@ -92,7 +92,7 @@ class GeoCsvUikExportStrategy():
             'encoding': 'WKT',
             'field':  'WKT'}
         )
-        vrt_file = open(path.join(dir_destination, file_name + '.vkt'), 'w+')
+        vrt_file = open(path.join(dir_destination, file_name + '.vrt'), 'w+')
         vrt_file.write(tostring(root))
         vrt_file.close()
 
