@@ -109,8 +109,9 @@ class GeoCsvUikExportStrategy():
 
     def __create_readme_file(self, dir_destination, file_name='README.txt'):
         readmy_template_path = path.join(self.templates_dir, file_name)
+        readmy_work = path.join(dir_destination, file_name)
         if path.exists(readmy_template_path):
-            shutil.copy(readmy_template_path, path.join(dir_destination, file_name))
+            shutil.copy(readmy_template_path, readmy_work)
 
     def export(self, Uik):
         uik_csv = self.__temp_uik
