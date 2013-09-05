@@ -216,11 +216,11 @@ body div.panel {
 
 body div.stat-panel {
     left: 309px;
-    top: 142px;
+    top: 172px;
 }
 
 body.searcher-collapsed div.stat-panel {
-    top: 185px;
+    top: 210px;
     left: 3px;
 }
 
@@ -266,11 +266,11 @@ div.panel div.export:hover a {
 
 body div.help-panel {
     left: 309px;
-    top: 273px;
+    top: 302px;
 }
 
 body.searcher-collapsed div.help-panel {
-    top: 277px;
+    top: 338px;
     left: 3px;
 }
 
@@ -578,13 +578,12 @@ body #manager {
 }
 
 body.searcher-collapsed #manager {
-    top: 105px;
+    top: 99px;
     left: 3px;
 }
 
 #manager div.group {
     width: 37px;
-    height: 70px;
     border: 1px solid #AFAFAF;
     border-radius: 4px 4px 4px 4px;
     background-color: #F5F5F5;
@@ -615,6 +614,10 @@ body.searcher-collapsed #manager {
     background: url('../img/sm-icons.png') -105px -35px;
 }
 
+#manager div.icon.irs button {
+    background: url('../img/sm-icons.png') -105px 0;
+}
+
 body.osm #manager div.icon.osm button,
 #manager div.icon.osm:hover button {
     background: url('../img/sm-icons.png') -77px -35px;
@@ -625,8 +628,14 @@ body.bing #manager div.icon.bing button,
     background: url('../img/sm-icons.png') -133px -35px;
 }
 
+body.irs #manager div.icon.irs button,
+#manager div.icon.irs:hover button {
+    background: url('../img/sm-icons.png') -133px 0;
+}
+
 body.osm #manager div.icon.osm,
 body.bing #manager div.icon.bing,
+body.irs #manager div.icon.irs,
 body.bing #manager div.icon.josm {
     border: 1px solid #838383;
 }
