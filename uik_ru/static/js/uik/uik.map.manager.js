@@ -33,16 +33,19 @@
 		},
 
 		onLayer: function (nameLayer) {
-			var vm = UIK.viewmodel,
-				v = UIK.view,
-				$tileLayers = $(UIK.viewmodel.map.getPanes().tilePane).find('div.leaflet-layer');
+			var viewmodel = UIK.viewmodel,
+				view = UIK.view,
+				$tileLayers = $(viewmodel.map.getPanes().tilePane).find('div.leaflet-layer');
 			if (nameLayer) {
-				if (vm.currentTileLayer) UIK.viewmodel.map.removeLayer(this._layers[vm.currentTileLayer].layer);
-				vm.currentTileLayer = nameLayer;
-				UIK.viewmodel.map.addLayer(this._layers[nameLayer].layer, true);
+                view.$body.removeClass(viewmodel.currentTileLayer).addClass(nameLayer);
+				if (viewmodel.currentTileLayer) {
+                    viewmodel.map.removeLayer(this._layers[viewmodel.currentTileLayer].layer);
+                }
+				viewmodel.currentTileLayer = nameLayer;
+                viewmodel.map.addLayer(this._layers[nameLayer].layer, true);
 			} else {
 			  // TODO not updated
-				$tileLayers.hide().eq(this._layers[vm.currentTileLayer].index).show();
+				$tileLayers.hide().eq(this._layers[viewmodel.currentTileLayer].index).show();
 			}
 		},
 
