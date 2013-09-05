@@ -170,9 +170,9 @@
 <div id="scale-panel">
 	<table style="width: 100%">
 		<tr><th colspan="3">Масштаб до...</th></tr>
-		<tr><td><a class="vilage" href="javascript:void(0)" title="Zoom x13"/>Села</a></td>
-		    <td><a class="hamlet" href="javascript:void(0)" title="Zoom x15"/>Деревни</a></td>
-		    <td><a class="building" href="javascript:void(0)" title="Zoom x17"/>Дома</a></td>
+		<tr><td><a class="vilage" href="javascript:void(0)" title="Zoom x13">Села</a></td>
+		    <td><a class="hamlet" href="javascript:void(0)" title="Zoom x15">Деревни</a></td>
+		    <td><a class="building" href="javascript:void(0)" title="Zoom x17">Дома</a></td>
 		</tr>
 	</table>
 </div>
