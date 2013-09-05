@@ -68,7 +68,6 @@
             var configPoints = UIK.config.data.points,
                 layerName,
                 pointLayer,
-                editGroup,
                 layerIndex = {},
                 indexesSort = [];
             UIK.viewmodel.mapLayers.points = {};
@@ -95,7 +94,6 @@
 
         bindMapEvents: function () {
             var context = this,
-                view = UIK.view,
                 viewmodel = UIK.viewmodel;
 
             viewmodel.map.on('moveend', function (e) {

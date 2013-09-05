@@ -75,16 +75,7 @@ UIK.templates = {};
                         return UIK.map.getIcon('uik-2012', 20);
                     },
                     createLayer: function () {
-                        return new L.MarkerClusterGroup({
-                            disableClusteringAtZoom: 15,
-                            iconCreateFunction: function(cluster) {
-                                return new L.DivIcon({
-                                    html: '<div><span>' + cluster.getChildCount() + '</span></div>',
-                                    className: 'marker-cluster marker-cluster-large',
-                                    iconSize: new L.Point(40, 40)
-                                });
-                            }
-                        });
+                        return new L.featureGroup();
                     },
                     searchCssClass: 'uik2012',
                     z: 4

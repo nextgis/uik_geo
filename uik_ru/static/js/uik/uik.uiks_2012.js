@@ -109,11 +109,7 @@
         },
 
         validateZoom: function () {
-            if (UIK.viewmodel.map.getZoom() < 14) {
-                UIK.alerts.showAlert('zoom');
-                return false;
-            }
-            return true;
+            return UIK.viewmodel.map.getZoom() >= 16;
         }
     });
 })(jQuery, UIK);
