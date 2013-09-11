@@ -59,6 +59,7 @@ class GeoCsvUikExportStrategy():
             ('is_applied', 'String(255)'),
             ('geocoding_precision', 'String(255)'),
             ('tik', 'String(255)'),
+            ('tik_id', 'Integer(5)'),
             ('region', 'String(255)')
         ])
         self.__temp_uik = self.scheme.copy()
@@ -125,6 +126,7 @@ class GeoCsvUikExportStrategy():
         uik_csv['is_applied'] = Uik[0].is_applied
         uik_csv['geocoding_precision'] = get_utf_encoded_value(Uik[0].geocoding_precision.name)
         uik_csv['tik'] = get_utf_encoded_value(Uik[0].tik.name)
+        uik_csv['tik_id'] = Uik[0].tik.id
         uik_csv['region'] = get_utf_encoded_value(Uik[0].region.name)
         self.writer.writerow(uik_csv)
 
