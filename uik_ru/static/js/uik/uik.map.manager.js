@@ -45,7 +45,7 @@
                 viewmodel.map.addLayer(this._layers[nameLayer].layer, true);
 			} else {
 			  // TODO not updated
-				$tileLayers.hide().eq(this._layers[viewmodel.currentTileLayer].index).show();
+//				$tileLayers.hide().eq(this._layers[viewmodel.currentTileLayer].index).show();
 			}
 		},
 
