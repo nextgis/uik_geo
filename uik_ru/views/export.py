@@ -16,4 +16,6 @@ def get_export_page(context, request):
     for region in imported_regions:
         regions.append(region.to_dict())
 
+    session.close()
+
     return {'regions': regions}

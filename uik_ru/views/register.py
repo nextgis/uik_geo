@@ -38,14 +38,17 @@ def register_post(request):
         errors.append(u'Вы не указали пароль')
 
     if not errors:
-        user = User()
-        user.display_name = request.POST['name']
-        user.email = request.POST['email']
-        user.password = User.password_hash(request.POST['pass'], 'rte45EWRRT')
-        user.registered_time = datetime.datetime.now()
-        session.add(user)
-        transaction.commit()
+        with transaction.manager:
+            user = User()
+            user.display_name = request.POST['name']
+            user.email = request.POST['email']
+            user.password = User.password_hash(request.POST['pass'], 'rte45EWRRT')
+            user.registered_time = datetime.datetime.now()
+            session.add(user)
         info = u'Вы зарегистрированы. Поздравляем!'
+
+    session.close()
+
     return {
         'errors': errors,
         'info': info

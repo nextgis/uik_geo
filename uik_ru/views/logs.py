@@ -41,6 +41,9 @@ def get_logs(context, request):
                 'rank': rank
             })
             rank += 1
+
+    session.close()
+
     return {
         'results': results
     }

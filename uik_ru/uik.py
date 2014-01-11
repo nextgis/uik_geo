@@ -77,7 +77,7 @@ def get_all(context, request):
     uiks_for_json['points']['layers']['unchecked']['count'] = len(uiks_for_json['points']['layers']['unchecked']['elements'])
 
     uiks_result = {'data': uiks_for_json}
-
+    session.close()
     return Response(json.dumps(uiks_result), content_type='application/json')
 
 
@@ -89,6 +89,7 @@ def _get_uik_from_uik_db(uik_from_db):
         'lon': uik_from_db[1],
         'lat': uik_from_db[2]
     }
+
 
 @view_config(route_name='uik', request_method='GET')
 def get_uik(context, request):
@@ -139,6 +140,7 @@ def get_uik(context, request):
         request.session['u_id'] == uik[0].user_block.id:
         uik_res['uik']['is_unblocked'] = True
 
+    session.close()
     return Response(json.dumps(uik_res), content_type='application/json')
 
 
@@ -151,57 +153,63 @@ def get_uik_by_off_number(context, request):
 @authorized()
 def update_uik(context, request):
     uik = json.loads(request.POST['uik'])
-    session = DBSession()
-    from helpers import str_to_boolean
-    session.query(Uik).filter(Uik.id == uik['id']).update({
-        Uik.address_voting: uik['address_voting'],
-        Uik.place_voting: uik['place_voting'],
-        Uik.is_applied: str_to_boolean(uik['is_applied']),
-        Uik.comment: uik['comment'],
-        Uik.geocoding_precision_id: uik['geo_precision'],
-        Uik.is_blocked: False,
-        Uik.user_block_id: None
-    }, synchronize_session=False)
-    sql = 'UPDATE uiks SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :uik_id'
-    session.execute(sql, {
-        'wkt': 'POINT(%s %s)' % (uik['geom']['lng'], uik['geom']['lat']),
-        'uik_id': uik['id']
-    })
 
-    log = UikVersions()
-    log.uik_id = uik['id']
-    log.user_id = request.session['u_id']
-    from datetime import datetime
-    log.time = datetime.now()
-    log.dump = log.to_json_binary_dump(uik)
-    session.add(log)
+    with transaction.manager:
+        session = DBSession()
+        from helpers import str_to_boolean
+        session.query(Uik).filter(Uik.id == uik['id']).update({
+            Uik.address_voting: uik['address_voting'],
+            Uik.place_voting: uik['place_voting'],
+            Uik.is_applied: str_to_boolean(uik['is_applied']),
+            Uik.comment: uik['comment'],
+            Uik.geocoding_precision_id: uik['geo_precision'],
+            Uik.is_blocked: False,
+            Uik.user_block_id: None
+        }, synchronize_session=False)
+        sql = 'UPDATE uiks SET point=ST_GeomFromText(:wkt, 4326) WHERE id = :uik_id'
+        session.execute(sql, {
+            'wkt': 'POINT(%s %s)' % (uik['geom']['lng'], uik['geom']['lat']),
+            'uik_id': uik['id']
+        })
 
-    transaction.commit()
+        log = UikVersions()
+        log.uik_id = uik['id']
+        log.user_id = request.session['u_id']
+        from datetime import datetime
+        log.time = datetime.now()
+        log.dump = log.to_json_binary_dump(uik)
+        session.add(log)
+
     return Response()
+
 
 @view_config(route_name='uik_block', request_method='GET')
 @authorized()
 def uik_block(context, request):
-    id = request.matchdict.get('id', None)
-    session = DBSession()
-    session.query(Uik).filter(Uik.id == id).update({
-        Uik.is_blocked: True,
-        Uik.user_block_id: request.session['u_id']
-    })
-    transaction.commit()
+    uik_id = request.matchdict.get('id', None)
+
+    with transaction.manager:
+        session = DBSession()
+        session.query(Uik).filter(Uik.id == uik_id).update({
+            Uik.is_blocked: True,
+            Uik.user_block_id: request.session['u_id']
+        })
+
     return Response()
 
 
 @view_config(route_name='uik_unblock', request_method='GET')
 @authorized()
 def uik_unblock(context, request):
-    id = request.matchdict.get('id', None)
-    session = DBSession()
-    session.query(Uik).filter(Uik.id == id).update({
-        Uik.is_blocked: False,
-        Uik.user_block_id: None
-    })
-    transaction.commit()
+    uik_id = request.matchdict.get('id', None)
+
+    with transaction.manager:
+        session = DBSession()
+        session.query(Uik).filter(Uik.id == uik_id).update({
+            Uik.is_blocked: False,
+            Uik.user_block_id: None
+        })
+
     return Response()
 
 
@@ -258,6 +266,7 @@ def get_president_uiks(context, request):
         uiks_for_json['points']['layers']['uik_2012']['elements'].append(_get_uik2012_from_uik_db(uik))
         uiks_for_json['points']['layers']['uik_2012']['count'] = uiks_for_json['points']['count']
 
+    session.close()
     return Response(json.dumps(uiks_for_json), content_type='application/json')
 
 
@@ -268,13 +277,14 @@ def _get_uik2012_from_uik_db(uik_from_db):
             'lon': uik_from_db[1],
             'lat': uik_from_db[2]}
 
+
 @view_config(route_name='uikp', request_method='GET')
 def get_uik2012(context, request):
-    id = request.matchdict.get('id', None)
+    uik_id = request.matchdict.get('id', None)
     session = DBSession()
     uik = session.query(VotingStation, Location, Location.point.x, Location.point.y) \
         .join(VotingStation.location) \
-        .filter(VotingStation.id == id).one()
+        .filter(VotingStation.id == uik_id).one()
 
     uik_res = {
         'uikp': {
@@ -287,6 +297,7 @@ def get_uik2012(context, request):
 
     uik_res['uikp']['geom'] = {'id': uik[1].id, 'lng': uik[2], 'lat': uik[3]}
 
+    session.close()
     return Response(json.dumps(uik_res), content_type='application/json')
 
 
@@ -341,9 +352,12 @@ def get_stat(context, request):
         .limit(request.params['jtPageSize']) \
         .all()
 
+    records = [create_uik_stat(uik) for uik in uiks_from_db]
+    session.close()
+
     return Response(json.dumps({
         'Result': 'OK',
-        'Records': [create_uik_stat(uik) for uik in uiks_from_db],
+        'Records': records,
         'TotalRecordCount': count
     }), content_type='application/json')
 
@@ -394,6 +408,8 @@ def get_stat_page(context, request):
     user_uiks_logs = session.query(User, user_uiks_count_sbq.c.count_uiks) \
         .outerjoin(user_uiks_count_sbq, User.id == user_uiks_count_sbq.c.user_id) \
         .order_by(User.display_name)
+
+    session.close()
 
     return {
         'tiks': session.query(Tik).order_by(Tik.name).all(),

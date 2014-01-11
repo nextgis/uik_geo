@@ -14,6 +14,7 @@ def home(request):
 
     session = DBSession()
     geocoding_precisions = session.query(GeocodingPrecision).order_by(asc(GeocodingPrecision.id)).all()
+    session.close()
 
     return {
         'u_name': user_name,
@@ -33,6 +34,7 @@ def home_signin(request):
     else:
         email = request.POST['mail']
         password = request.POST['pass']
+
         session = DBSession()
         user = session.query(User) \
             .filter(User.email == email, User.password == User.password_hash(password, 'rte45EWRRT')) \
@@ -43,6 +45,7 @@ def home_signin(request):
             request.session['u_id'] = user.id
             request.response.set_cookie('sk', value=request.session['sk'], max_age=86400)
             result['u_name'] = user.display_name
+        session.close()
 
     result['static_version'] = request.registry.settings['static_version']
 
