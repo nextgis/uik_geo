@@ -1,11 +1,11 @@
 # encoding: utf-8
 
+import os
 import transaction
+import sqlite3 as lite
 
 from uik_ru.models import Uik, UikVersions, GeocodingPrecision, Region
 from uik_ru.models import WKTSpatialElement
-
-import sqlite3 as lite
 
 
 def addToUik(fileName, session, regionID):
@@ -31,7 +31,6 @@ def addToUik(fileName, session, regionID):
         precisions['district'] = precisions['region']
 
         # getting uiks from the region with edited label
-        uiks_with_versions = dict()
         uiks_with_versions_from_db = dbsession.query(Uik, UikVersions) \
             .outerjoin(UikVersions, Uik.id == UikVersions.uik_id) \
             .filter(Uik.region_id == regionID) \
@@ -52,9 +51,14 @@ def addToUik(fileName, session, regionID):
         con.row_factory = lite.Row
         cur = con.cursor()
 
-        import os
-        table_name = os.path.splitext(os.path.basename(fileName))[0]
-        for row in cur.execute("SELECT * FROM '%(table_name)s'" % {'table_name': table_name}):
+        sqlite_table_name = os.path.splitext(os.path.basename(fileName))[0]
+
+        get_sqlite_table_columns = cur.execute('PRAGMA table_info("%(table_name)s");' % {'table_name': sqlite_table_name})
+        sqlite_table_columns = {}
+        for column_info in get_sqlite_table_columns:
+            sqlite_table_columns[column_info[1]] = True
+
+        for row in cur.execute("SELECT * FROM '%(table_name)s'" % {'table_name': sqlite_table_name}):
             is_db_existed = row['uik'] in uiks_with_versions
             is_uik_edited = (row['uik'] in uiks_with_versions) and (uiks_with_versions[row['uik']]['edited'])
 
@@ -80,9 +84,9 @@ def addToUik(fileName, session, regionID):
                 'number_official': row['uik'],
                 'number_composite': '_'.join([str(row['tik_id']), str(row['uik'])]),
                 'address_voting': row['addr_v'],
-                'place_voting': row['place_v'],
-                'address_office': row['addr_o'],
-                'place_office': row['place_o'],
+                'place_voting': row['place_v'] if 'place_v' in sqlite_table_columns else None,
+                'address_office': row['addr_o'] if 'addr_o' in sqlite_table_columns else None,
+                'place_office': row['place_o'] if 'place_o' in sqlite_table_columns else None,
                 'comment': None,
                 'is_applied': False,
                 'geocoding_precision_id': precisions[row['g_status']],
