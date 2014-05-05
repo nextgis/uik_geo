@@ -182,7 +182,10 @@
         buildLayer: function (data) {
             L.geoJson(data, {
                 style: function (feature) {
-                    return {color: UIK.regions.colorMap[feature.properties.NAME]};
+                    return {
+                        color: UIK.regions.colorMap[feature.properties.NAME],
+                        "weight": 2
+                    };
                 },
                 onEachFeature: function (feature, layer) {
                     var popupContent = 'Название: ' + feature.properties.NAME +
