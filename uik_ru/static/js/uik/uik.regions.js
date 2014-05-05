@@ -8,7 +8,7 @@
     UIK.regions = {};
 
     UIK.regions.colorMap = {
-        '"Мосрентген"': '#0000CD',
+        'Мосрентген': '#0000CD',
         'Академический': '#0000FF',
         'Алексеевский': '#006400',
         'Алтуфьевский': '#008000',
@@ -165,8 +165,16 @@
 
         getData: function () {
             var that = this;
-            $.getJSON(document['url_root'] + 'static/data/mos-mo-splitted.json', function (data) {
-                that.buildLayer(data);
+
+            $.ajax({
+                dataType: "json",
+                url: document['url_root'] + 'static/data/mos-mo-splitted.json',
+                success: function (data) {
+                    that.buildLayer(data);
+                },
+                error: function (data, status, error) {
+                    alert(data, status, error);
+                }
             });
         },
 
