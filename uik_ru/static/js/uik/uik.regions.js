@@ -62,23 +62,44 @@
 
 
         getData: function () {
-            var that = this;
+            var that = this,
+                getRegionsData = new $.Deferred(),
+                getLinesData = new $.Deferred();
 
             $.ajax({
                 dataType: "json",
                 url: document['url_root'] + 'static/data/mos-mo-splitted.json',
                 success: function (data) {
-                    that.buildLayer(data);
-                    that.bindRegionLayersEvent();
+                    that.buildRegionsLayer(data);
+                    getRegionsData.resolve();
                 },
                 error: function (data, status, error) {
                     alert(data, status, error);
                 }
             });
+
+            $.ajax({
+                dataType: "json",
+                url: document['url_root'] + 'static/data/mos-io-lines.json',
+                success: function (data) {
+                    that.buildBordersDistrictsLayer(data);
+                    getLinesData.resolve();
+                },
+                error: function (data, status, error) {
+                    alert(data, status, error);
+                }
+            });
+
+            $.when(getRegionsData.promise(), getLinesData.promise()).then(function () {
+                that.bindRegionLayersEvent();
+                that.verifyLayersByZoom();
+                UIK.viewmodel.map.addLayer(that.bordersDistrictsLayer);
+            });
         },
 
+
         regionsLayer: null,
-        buildLayer: function (data) {
+        buildRegionsLayer: function (data) {
             this.regionsLayer = L.geoJson(data, {
                 style: function (feature) {
                     return {
@@ -97,21 +118,43 @@
                     layer.bindPopup(popupContent);
                 }
             });
-            UIK.viewmodel.map.addLayer(this.regionsLayer);
         },
+
+
+        bordersDistrictsLayer: null,
+        buildBordersDistrictsLayer: function (data) {
+            this.bordersDistrictsLayer = L.geoJson(data, {
+                style: function (feature) {
+                    return {
+                        color: '#0000FF',
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0
+                    };
+                }
+            });
+        },
+
 
         bindRegionLayersEvent: function () {
             var that = this;
             UIK.viewmodel.map.on('moveend', function (e) {
                 var map = e.target,
                     zoom = map.getZoom();
-
-                if (zoom > 14) {
-                    UIK.viewmodel.map.removeLayer(that.regionsLayer);
-                } else {
-                    UIK.viewmodel.map.addLayer(that.regionsLayer);
-                }
+                that.verifyLayersByZoom(zoom);
             });
+        },
+
+        verifyLayersByZoom: function (zoom) {
+            if (!zoom) {
+                zoom = UIK.viewmodel.map.getZoom();
+            }
+            if (zoom > 14) {
+                UIK.viewmodel.map.removeLayer(this.regionsLayer);
+            } else {
+                UIK.viewmodel.map.addLayer(this.regionsLayer);
+                this.regionsLayer.bringToBack();
+            }
         }
     });
 })(jQuery, UIK);
