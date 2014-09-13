@@ -19,6 +19,10 @@
 <body style="margin: 10px;">
 <h2>Выгрузки по регионам</h2>
 <p>Обновление выгрузок - ежедневное, время обновления: 16:00</p>
+<p>Лицензия: ODbL, http://opendatacommons.org/licenses/odbl/1-0/</p>
+<p>Цитирование:</p>
+<p>Местоположения избирательных комиссий, собранные в рамках проекта УИК ГЕО
+Базовая картооснова © Участники OpenStreetMap</p>
 <table class="table table-striped">
     <thead>
     <tr>
