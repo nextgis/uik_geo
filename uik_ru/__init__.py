@@ -44,6 +44,7 @@ def main(global_config, **settings):
     config = Configurator(settings=settings)
     config.set_session_factory(session_factory)
     start_scheduler()
+    config.include('pyramid_mako')
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_static_view('data', 'data', cache_max_age=3600)
     config.add_route('home', '/')
