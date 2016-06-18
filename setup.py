@@ -9,17 +9,17 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = [
     'pyramid',
     'pyramid_beaker',
-    'SQLAlchemy',
+    'pyramid_mako',
+    'SQLAlchemy==0.8.4',
     'transaction',
     'pyramid_tm',
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
-
     'psycopg2',
-    'geoalchemy',
+    'geoalchemy==0.7.2',
     'shapely',
-    'apscheduler'
+    'apscheduler==2.1.0'
     ]
 
 setup(name='uik_ru',
