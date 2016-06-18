@@ -1,5 +1,7 @@
-# uik_geo
+# UIK GEO
 Сrowdsourcing project to collect spatial information on voting stations in Russia
+
+[![https://github.com/nextgis/uik_geo](https://raw.githubusercontent.com/nextgis/uik_geo/master/README_uik_geo.gif)](https://github.com/nextgis/uik_geo)
 
 License
 -------------
